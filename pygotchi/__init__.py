@@ -1,0 +1,1 @@
+from pygotchi import Tamagotchi
