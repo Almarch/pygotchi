@@ -4,6 +4,7 @@
 #include <chrono> // high resolution clock
 #include <cstring> // memcpy
 #include <stdlib.h> // exit
+#include "rom.h"
 
 #define CPU_SPEED_RATIO           1
 #define TICK_FREQUENCY        32768 // Hz

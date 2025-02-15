@@ -1,13 +1,11 @@
 #ifndef Tama_H
 #define Tama_H
 
-#include "rom.h"
 #include <stdint.h> // uint8_t etc
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
 #include <vector>
-
 
 #define tamalib_set_button(btn, state)		hw_set_button(btn, state)
 #define tamalib_set_speed(speed)			cpu_set_speed(speed)
