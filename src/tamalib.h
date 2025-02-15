@@ -3,6 +3,11 @@
 
 #include "rom.h"
 #include <stdint.h> // uint8_t etc
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/numpy.h>
+#include <vector>
+
 
 #define tamalib_set_button(btn, state)		hw_set_button(btn, state)
 #define tamalib_set_speed(speed)			cpu_set_speed(speed)
@@ -159,17 +164,17 @@ public:
   Tama();
 
   // Getters
-  Rcpp::LogicalVector GetIcon();
-  Rcpp::NumericMatrix GetMatrix();
+  std::vector<bool> GetIcon();
+  std::vector<std::vector<bool>> GetMatrix() GetMatrix();
   int GetFreq();
-  Rcpp::LogicalVector GetButton();
-  Rcpp::NumericVector GetCPU();
-  Rcpp::NumericVector GetROM();
+  std::vector<bool> GetButton()
+  std::vector<double> GetCPU();
+  std::vector<double> GetROM();
   
   // Setters
   void SetButton(int n, bool state);
-  void SetCPU(Rcpp::NumericVector res);
-  void SetROM(Rcpp::NumericVector rom);
+  void SetCPU(const std::vector<double>& res);
+  void SetROM(const std::vector<double>& rom);
 
   // public methods
   void start();
