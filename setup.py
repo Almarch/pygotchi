@@ -4,7 +4,7 @@ import pybind11
 ext_modules = [
     Extension(
         "tama_module",
-        sources=["src/Tamagotchi.cpp", "src/tamalib.cpp"],
+        sources=["src/Tamagotchi.cpp"],
         include_dirs=[pybind11.get_include(), "src"]
     )
 ]
