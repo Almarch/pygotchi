@@ -1,4 +1,4 @@
-dist/*
-pygotchi.egg-info/*
+dist
+pygotchi.egg-info
 *.ipynb
 *.bin

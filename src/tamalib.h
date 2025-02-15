@@ -1,6 +1,7 @@
 #ifndef Tama_H
 #define Tama_H
 
+#include "rom.h"
 #include <stdint.h> // uint8_t etc
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
