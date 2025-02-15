@@ -165,9 +165,9 @@ public:
 
   // Getters
   std::vector<bool> GetIcon();
-  std::vector<std::vector<bool>> GetMatrix() GetMatrix();
+  std::vector<std::vector<bool>> GetMatrix();
   int GetFreq();
-  std::vector<bool> GetButton()
+  std::vector<bool> GetButton();
   std::vector<double> GetCPU();
   std::vector<double> GetROM();
   

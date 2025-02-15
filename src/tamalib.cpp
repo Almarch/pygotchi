@@ -2003,9 +2003,9 @@ void Tama::stop(){
     keep_going = false;
 }
 
-Rcpp::LogicalVector Tama::GetIcon() { 
+std::vector<bool> Tama::GetIcon() { 
 
-    Rcpp::LogicalVector icon (ICON_NUM) ;
+    std::vector<bool> icon (ICON_NUM) ;
 
     int i;
     for (i = 0 ; i < ICON_NUM ; i++) {
@@ -2014,18 +2014,18 @@ Rcpp::LogicalVector Tama::GetIcon() {
     
     return icon; }
 
-Rcpp::NumericMatrix Tama::GetMatrix() { 
-
-    Rcpp::NumericMatrix matrix( LCD_HEIGHT , LCD_WIDTH );
+  std::vector<std::vector<bool>> Tama::GetMatrix() {
+    std::vector<std::vector<bool>> matrix(LCD_HEIGHT, std::vector<bool>(LCD_WIDTH, false));
     int i, j, k;
     for (i = 0 ; i < LCD_HEIGHT ; i++) {
         for (j = 0 ; j < LCD_WIDTH/8 ; j++) {
-           for (k = 0; k < 8; k++) {
-            matrix( i , 8 * j + 7 - k ) = (int)(matrix_buffer[(u8_t)i][(u8_t)j] >> k) & 1;
-           }
+          for (k = 0; k < 8; k++) {
+            matrix[i][8 * j + 7 - k] = (int)(matrix_buffer[(u8_t)i][(u8_t)j] >> k) & 1;
+          }
         }
     }
-    return matrix; }
+    return matrix;
+  }
 
 int Tama::GetFreq() { return play_freq; }
 
@@ -2037,8 +2037,8 @@ void Tama::SetButton(int n, bool state){
   }
 }
 
-Rcpp::LogicalVector Tama::GetButton(){
-    Rcpp::LogicalVector button (BUTTON_NUM) ;
+std::vector<bool> Tama::GetButton(){
+    std::vector<bool> button (BUTTON_NUM) ;
 
     int i;
     for (i = 0 ; i < BUTTON_NUM ; i++) {
@@ -2048,10 +2048,10 @@ Rcpp::LogicalVector Tama::GetButton(){
     return button; 
 }
 
-Rcpp::NumericVector Tama::GetCPU(){
+std::vector<double> Tama::GetCPU(){
     uint32_t i = 0;
     unsigned char cpu[sizeof(cpu_state_t) + MEMORY_SIZE];
-    Rcpp::NumericVector res(sizeof(cpu));
+    std::vector<double> res(sizeof(cpu));
 
     cpu_get_state(&cpuState);
 
@@ -2068,7 +2068,7 @@ Rcpp::NumericVector Tama::GetCPU(){
     return res;
 }
 
-void Tama::SetCPU(Rcpp::NumericVector res){
+void Tama::SetCPU(std::vector<double> res){
     uint32_t i = 0;
     unsigned char cpu[sizeof(cpu_state_t) + MEMORY_SIZE];
     for (i = 0; i < sizeof(cpu) ; i++){
@@ -2086,9 +2086,9 @@ void Tama::SetCPU(Rcpp::NumericVector res){
     }
 }
 
-Rcpp::NumericVector Tama::GetROM() {
+std::vector<double> Tama::GetROM() {
   uint32_t i = 0;
-  Rcpp::NumericVector rom(sizeof(g_program_b12));
+  std::vector<double> rom(sizeof(g_program_b12));
   for (i = 0; i < sizeof(g_program_b12); i++)
     {
         rom[i] = (unsigned int)g_program_b12[i];
@@ -2096,7 +2096,7 @@ Rcpp::NumericVector Tama::GetROM() {
     return rom;
 }
 
-void Tama::SetROM(Rcpp::NumericVector rom) {
+void Tama::SetROM(std::vector<double> rom) {
   uint32_t i = 0;
   for (i = 0; i < sizeof(g_program_b12); i++)
     {
