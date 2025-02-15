@@ -1,1 +1,1 @@
-from ._tamagotchi import Tamagotchi
+from tamalib import Tamagotchi

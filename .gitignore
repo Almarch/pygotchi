@@ -2,3 +2,5 @@ dist
 pygotchi.egg-info
 *.ipynb
 *.bin
+build
+*.pyc

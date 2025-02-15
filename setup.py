@@ -1,11 +1,12 @@
 from setuptools import setup, Extension
 import pybind11
+import os
 
 ext_modules = [
     Extension(
-        "tama_module",
-        sources=["src/Tamagotchi.cpp"],
-        include_dirs=[pybind11.get_include(), "src"]
+        "tamalib",
+        sources=["src/tamalib.cpp"],
+        include_dirs=[pybind11.get_include()]
     )
 ]
 

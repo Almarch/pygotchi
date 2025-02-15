@@ -7,7 +7,7 @@ pip install build
 cd pygotchi
 python -m build
 cd ..
-pip install pygotchi
+pip install ./pygotchi
 ```
 
 To do:
