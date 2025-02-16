@@ -16,6 +16,8 @@ setup(
     packages=["pygotchi"],
     ext_modules=ext_modules,
     install_requires=["pybind11"],
-    package_data={"pygotchi": ["data/*"]},
+    package_data={
+        "pygotchi": ["data/*.png"],  # Ensure image is included
+    },
     include_package_data=True,
 )

@@ -1,12 +1,11 @@
 from ._tamalib import Tama as CppTama
 from .conversion import int2bin, bin2int
+from images import background
 import numpy as np
 import matplotlib.pyplot as plt
-
-
 class Tama(CppTama):
     
-    def display(self, background):
+    def display(self, background = background):
 
         raster = 1-np.array(self.GetMatrix())
         

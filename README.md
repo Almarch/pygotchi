@@ -4,19 +4,23 @@ Implements first-gen Tamagotchis in Python
 
 ## Overview
 
-The goal of this package is to carry [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing this low-level library an an high-level language aims at facilitating its implementation in a server-client logic.
+The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing this low-level library an an high-level language aims at facilitating its implementation as a web service.
 
-The server-client logic is meaningful for Tamagotchis as it allows 2 functionnalities that were pivotal at the time of the original toy
+The server-client web logic is meaningful for Tamagotchis as it allows 2 functionnalities that were at the core of the original game:
 
 - Ubiquity. Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
 - Real-time consistency. The original toy was real time, embedding an actual watch ; and the creature had a strict schedule that the player had to respect. The server can keep track of time.
 
 ## Background
 
+<!--
+
 - TamaLib
 - ArduinoGotchi
 - TamaR
 - New ROMs !
+
+-->
 
 ## Installation
 
