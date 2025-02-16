@@ -178,13 +178,13 @@ public:
   std::vector<std::vector<bool>> GetMatrix();
   int GetFreq();
   std::vector<bool> GetButton();
-  std::vector<double> GetCPU();
-  std::vector<double> GetROM();
+  std::vector<int> GetCPU();
+  std::vector<int> GetROM();
   
   // Setters
   void SetButton(int n, bool state);
-  void SetCPU(const std::vector<double> res);
-  void SetROM(const std::vector<double> rom);
+  void SetCPU(const std::vector<int> res);
+  void SetROM(const std::vector<int> rom);
 
   // public methods
   void start();
@@ -2240,10 +2240,10 @@ std::vector<bool> Tama::GetButton(){
     return button; 
 }
 
-std::vector<double> Tama::GetCPU(){
+std::vector<int> Tama::GetCPU(){
     uint32_t i = 0;
     unsigned char cpu[sizeof(cpu_state_t) + MEMORY_SIZE];
-    std::vector<double> res(sizeof(cpu));
+    std::vector<int> res(sizeof(cpu));
 
     cpu_get_state(&cpuState);
 
@@ -2260,7 +2260,7 @@ std::vector<double> Tama::GetCPU(){
     return res;
 }
 
-void Tama::SetCPU(const std::vector<double> res){
+void Tama::SetCPU(const std::vector<int> res){
     uint32_t i = 0;
     unsigned char cpu[sizeof(cpu_state_t) + MEMORY_SIZE];
     for (i = 0; i < sizeof(cpu) ; i++){
@@ -2278,9 +2278,9 @@ void Tama::SetCPU(const std::vector<double> res){
     }
 }
 
-std::vector<double> Tama::GetROM() {
+std::vector<int> Tama::GetROM() {
   uint32_t i = 0;
-  std::vector<double> rom(sizeof(g_program_b12));
+  std::vector<int> rom(sizeof(g_program_b12));
   for (i = 0; i < sizeof(g_program_b12); i++)
     {
         rom[i] = (unsigned int)g_program_b12[i];
@@ -2288,7 +2288,7 @@ std::vector<double> Tama::GetROM() {
     return rom;
 }
 
-void Tama::SetROM(const std::vector<double> rom) {
+void Tama::SetROM(const std::vector<int> rom) {
   uint32_t i = 0;
   for (i = 0; i < sizeof(g_program_b12); i++)
     {
