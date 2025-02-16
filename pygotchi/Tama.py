@@ -7,13 +7,15 @@ class Tama(CppTama):
     
     def display(self, background = background):
 
-        raster = 1-np.array(self.GetMatrix())
+        raster = np.zeros((16,32,4))
+        raster[..., 3] = np.array(self.GetMatrix())
         
         fig, ax = plt.subplots()
-        ax.imshow(background)
-        ax.imshow(raster, cmap='gray', interpolation='nearest')
+        ax.imshow(background , extent=[-1, 33, -1, 33])
+        ax.imshow(raster, interpolation = None , extent=[0, 32, 8, 24])
+
         ax.axis('off')
-        fig.show()
+        plt.show()
 
     def click(self):
         pass
@@ -23,7 +25,21 @@ class Tama(CppTama):
 
     def reset(self):
         self.stop()
-        obj = [0 for i in range(9216)]
+        obj = [0 for i in range(384)]
+        obj[ 1] = 1
+        obj[ 8] = 1
+        obj[32] = 96
+        obj[33] = 219
+        obj[34] = 127
+        obj[35] = 42
+        obj[36] = 203
+        obj[37] = 113
+        obj[43] = 12
+        obj[47] = 10
+        obj[51] = 8
+        obj[55] = 6
+        obj[59] = 4
+        obj[63] = 2
         self.SetCPU(obj)
 
     def save(self):
