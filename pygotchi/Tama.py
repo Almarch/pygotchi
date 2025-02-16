@@ -1,8 +1,6 @@
 from ._tamalib import Tama as CppTama
 
 class Tama(CppTama):
-    def is_alive(self):
-        return True
     
     def display(self):
         pass
@@ -29,15 +27,12 @@ class Tama(CppTama):
         obj = self.GetROM()
         obj = [f"{num:02X}" for num in obj]
         obj = "".join(obj)
-        bin_data = []
-        j = 0
-        for i in range(len(obj) + len(obj) // 3):
-            if (i + 3) % 4 == 0:
-                bin_data.append("0")
-            else:
-                bin_data.append(obj[j])
-                j += 1
-        bin_data = "".join(bin_data)
+        unfiltered_obj = []
+        for i in range(len(obj)):
+            if(i % 3 == 0):
+                unfiltered_obj.append("0")
+            unfiltered_obj.append(obj[i])
+        bin_data = "".join(unfiltered_obj)
         bin_data = bytes.fromhex(bin_data)
         return bin_data
 
