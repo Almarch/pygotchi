@@ -26,31 +26,27 @@ class Tama(CppTama):
         pass
 
     def dump(self):
-        self.SetROM(obj_nums)
-        obj_list = [f"{num:02X}" for num in obj_nums]
-        tmp = "".join(obj_list)
-        obj = []
+        obj = self.GetROM()
+        obj = [f"{num:02X}" for num in obj]
+        obj = "".join(obj)
+        bin = []
         j = 0
-        for i in range(len(tmp) + len(tmp) // 3):
+        for i in range(len(obj) + len(obj) // 3):
             if (i + 3) % 4 == 0:
-                obj.append("0")
+                bin.append("0")
             else:
-                obj.append(tmp[j])
+                bin.append(obj[j])
                 j += 1
-        hex_string = "".join(obj)
-        byte_data = bytes.fromhex(hex_string)
-        file_handle = open(bin_file, "wb")  
-        file_handle.write(byte_data)  
-        file_handle.close()
+        bin = "".join(bin)
+        bin = bytes.fromhex(bin)
+        return(bin)
 
-    def flash(self):
-        file_handle = open(bin_file, "rb")
-        obj = file_handle.read() 
-        obj = "".join(f"{byte:02X}" for byte in obj)
-        tmp = "".join(obj[i] for i in range(len(obj)) if (i + 3) % 4)
-        obj_list = [tmp[2 * i: 2 * i + 2] for i in range(len(tmp) // 2)]
-        obj_nums = [int(hex_str, 16) for hex_str in obj_list]
-        self.SetROM(obj_nums)
+    def flash(self, bin):
+        obj = "".join(f"{byte:02X}" for byte in bin)
+        obj = "".join(obj[i] for i in range(len(obj)) if (i + 3) % 4)
+        obj = [obj[2 * i: 2 * i + 2] for i in range(len(obj) // 2)]
+        obj = [int(hex_str, 16) for hex_str in obj]
+        self.SetROM(obj)
 
     
 
