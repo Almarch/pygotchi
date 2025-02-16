@@ -1,6 +1,6 @@
 from ._tamalib import Tama as CppTama
 from .conversion import int2bin, bin2int
-from .images import background
+from .images import background, icons
 import numpy as np
 import matplotlib.pyplot as plt
 class Tama(CppTama):
@@ -9,12 +9,22 @@ class Tama(CppTama):
 
         raster = np.zeros((16,32,4))
         raster[..., 3] = np.array(self.GetMatrix())
+        ics = self.GetIcon()
         
         fig, ax = plt.subplots()
         ax.imshow(background , extent=[-1, 33, -1, 33])
         ax.imshow(raster, interpolation = None , extent=[0, 32, 8, 24])
-
+        if ics[1]: ax.imshow(icons["food"]     , interpolation = None, extent=[ 2, 6,26.25,29.75])
+        if ics[2]: ax.imshow(icons["lights"]   , interpolation = None, extent=[10,14,26.25,29.75])
+        if ics[3]: ax.imshow(icons["game"]     , interpolation = None, extent=[18,22,26.25,29.75])
+        if ics[4]: ax.imshow(icons["medicine"] , interpolation = None, extent=[26,30,26.5 ,29.75])
+        if ics[5]: ax.imshow(icons["bathroom"] , interpolation = None, extent=[ 2, 6, 2.5 , 5.5 ])
+        if ics[6]: ax.imshow(icons["status"]   , interpolation = None, extent=[10,14, 2.5,  5.25])
+        if ics[7]: ax.imshow(icons["training"] , interpolation = None, extent=[18,22, 2.5,  5.5 ])
+        if ics[8]: ax.imshow(icons["attention"], interpolation = None, extent=[26,30, 2.5,  5   ])
         ax.axis('off')
+        ax.set_xlim(0,32)
+        ax.set_ylim(0,32)
         plt.show()
 
     def click(self):
