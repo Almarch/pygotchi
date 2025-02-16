@@ -1,4 +1,5 @@
 from ._tamalib import Tama as CppTama
+from .conversion import int2bin, bin2int
 
 class Tama(CppTama):
     
@@ -12,41 +13,26 @@ class Tama(CppTama):
         pass
 
     def reset(self):
-        pass
+        self.stop()
+        obj = [0 for i in range(9216)]
+        self.SetCPU(obj)
 
-    def glimpse(self):
-        pass
-    
     def save(self):
-        pass
+        self.stop()
+        obj = self.GetCPU()
+        return int2bin(obj)
     
-    def load(self):
-        pass
+    def load(self, bin):
+        self.stop()
+        obj = bin2int(bin)
+        self.SetCPU(obj)
 
     def dump(self):
         obj = self.GetROM()
-        obj = [f"{num:02X}" for num in obj]
-        obj = "".join(obj)
-        unfiltered_obj = []
-        for i in range(len(obj)):
-            if(i % 3 == 0):
-                unfiltered_obj.append("0")
-            unfiltered_obj.append(obj[i])
-        bin_data = "".join(unfiltered_obj)
-        bin_data = bytes.fromhex(bin_data)
-        return bin_data
+        return int2bin(obj)
 
     def flash(self, bin):
-        obj = "".join(f"{byte:02X}" for byte in bin)
-        filtered_obj = []
-        for i in range(len(obj)):
-            if(i % 4 == 0):
-                continue
-            else:
-                filtered_obj.append(obj[i])
-        filtered_obj
-        obj = "".join(filtered_obj)
-        obj = [int(obj[2 * i: 2 * i + 2], 16) for i in range(len(obj) // 2)]
+        obj = bin2int(bin)
         self.SetROM(obj)
         
 
