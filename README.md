@@ -93,14 +93,7 @@ tama.start()
 ```
 
 <!--
-
 To do:
-
-- windows compilation (why does it work with rcpp)
-- test each cpp method
-- add py methods (background, icons...)
-- webapp (streamlit ?)
+- webapp
 - implement new compatibility (recent tamalib commits)
-- readme
-- 
 -->
