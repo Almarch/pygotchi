@@ -1,1 +1,1 @@
-from pygotchi import Tamagotchi
+from .Tama import Tama

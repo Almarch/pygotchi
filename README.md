@@ -14,7 +14,9 @@ To do:
 
 - bind python <=> cpp
 - compile !
-- test each cpp
+- windows compilation (why does it work with rcpp)
+- test each cpp method
 - add py methods (background, icons...)
 - webapp (streamlit ?)
 - implement new compatibility (recent tamalib commits)
+- readme

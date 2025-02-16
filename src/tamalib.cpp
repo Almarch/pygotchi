@@ -2299,8 +2299,8 @@ void Tama::SetROM(const std::vector<double> rom) {
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(tamalib, m) {
-    py::class_<Tama>(m, "Tamagotchi")
+PYBIND11_MODULE(_tamalib, m) {
+    py::class_<Tama>(m, "Tama")
         .def(py::init<>())
         .def("start", &Tama::start)
         .def("stop", &Tama::stop)

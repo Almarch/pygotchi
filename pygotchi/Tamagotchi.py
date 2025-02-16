@@ -1,1 +1,0 @@
-from tamalib import Tamagotchi
