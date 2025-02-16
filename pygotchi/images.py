@@ -16,4 +16,4 @@ for icon in [
     "status",
     "training"
 ]:
-    icons[icon] = mpimg.imread(os.path.join(_pkg_dir, "data", "background.png"))
+    icons[icon] = mpimg.imread(os.path.join(_pkg_dir, "data", icon + ".png"))
