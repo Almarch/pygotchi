@@ -1,4 +1,4 @@
-# <img src="https://static.wikia.nocookie.net/tamagotchi/images/7/7c/Nyorotchi_anim_gen1.gif/revision/latest?cb=20181014132249" alt="TaMaGoTcHi" width="50"/> PyGoTcHi
+# PyGoTcHi <img src="https://static.wikia.nocookie.net/tamagotchi/images/7/7c/Nyorotchi_anim_gen1.gif/revision/latest?cb=20181014132249" alt="PyGoTcHi" align="right" width="50"/>
 
 The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
@@ -9,11 +9,12 @@ The web server-client logic makes a special sense for Tamagotchis as it unlocks 
 
 ## State of developement
 
-Tamalib is well bound to the Tama class of this package. The package builds on Linux and on the WSL, but not on Windows yet. All methods seem to work but test without a web UI is approximative. The next steps are:
+Tamalib is well bound to the `Tama` class of this package. The package builds on Linux and on the WSL, but not on pure Windows yet. All methods seem to work, but tests without a web UI is approximative. The next steps are:
 
 - develop a web UI ;
 - adapt Tamalib to a variety of 1st gen ROMs, following the recent Tamalib developments ;
-- develop this documentation.
+- dockerize the web UI ;
+- write this documentation.
 
 ## Background
 *pass*
@@ -45,7 +46,7 @@ pip install ./pygotchi
 ```
 
 ## With Docker
-
+*pass*
 
 ## Start the emulation
 
