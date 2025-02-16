@@ -1,6 +1,6 @@
 from ._tamalib import Tama as CppTama
 from .conversion import int2bin, bin2int
-from images import background
+from .images import background
 import numpy as np
 import matplotlib.pyplot as plt
 class Tama(CppTama):
