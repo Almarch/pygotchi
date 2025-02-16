@@ -28,10 +28,12 @@ class Tama(CppTama):
         self.SetCPU(obj)
 
     def dump(self):
+        self.stop()
         obj = self.GetROM()
         return int2bin(obj)
 
     def flash(self, bin):
+        self.stop()
         obj = bin2int(bin)
         self.SetROM(obj)
         
