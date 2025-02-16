@@ -45,10 +45,12 @@ cd ..
 pip install ./pygotchi
 ```
 
-## With Docker
+### With Docker
 *pass*
 
-## Start the emulation
+## Use from Python
+
+### Start the emulation
 
 A Tamagotchi must be instanciated. Then, use the `start` and `stop` methods in order to activate it or to pause it:
 
@@ -66,7 +68,7 @@ tama.flash(bin)
 
 The emulation can be started and resumed with the corresponding methods: `start` and `stop`.
 
-## Basic commands
+### Basic commands
 
 The screen can be rendered using `display` and the sound frequency is available with `GetFreq`.
 
@@ -81,7 +83,7 @@ time.sleep(3)
 tama.display()
 ```
 
-## Saving the game
+### Saving the game
 
 The game may be saved anytime using the `save` command:
 
@@ -101,3 +103,6 @@ bin = cpu_file.read()
 tama.load(bin)
 tama.start()
 ```
+
+## Web deployment
+*pass*
