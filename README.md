@@ -1,12 +1,8 @@
 # <img src="https://static.wikia.nocookie.net/tamagotchi/images/7/7c/Nyorotchi_anim_gen1.gif/revision/latest?cb=20181014132249" alt="TaMaGoTcHi" width="50"/> PyGoTcHi
 
-Implements first-gen Tamagotchis in Python
+The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing this low-level library an an high-level language aims at facilitating its deployment as a web service.
 
-## Overview
-
-The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing this low-level library an an high-level language aims at facilitating its implementation as a web service.
-
-The server-client web logic is meaningful for Tamagotchis as it allows 2 functionnalities that were at the core of the original game:
+The web server-client logic specially make sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
 - Ubiquity. Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
 - Real-time consistency. The original toy was real time, embedding an actual watch ; and the creature had a strict schedule that the player had to respect. The server can keep track of time.
@@ -48,8 +44,14 @@ A Tamagotchi must be instanciated. Then, use the `start` and `stop` methods in o
 
 ```py
 tama = Tama()
-tama.start()
-tama.stop()
+```
+
+The emulator comes with a blank ROM slot. The ROM must be inserted with the `flash` method:
+
+```py
+rom_file = open("roms/p1.bin", "rb")
+bin = rom_file.read() 
+tama.flash(bin)
 ```
 
 ## Basic commands
@@ -67,24 +69,18 @@ time.sleep(3)
 tama.display()
 ```
 
-## ROM
+## Saving the game
 
-The emulator comes with a blank ROM slot. The ROM must be `flash`ed and `dump`ed using the methods:
-
-```py
-rom_file = open("roms/p1.bin", "rb")
-bin = rom_file.read() 
-tama.flash(bin)
-```
-
-and:
+The game may be saved anytime using the `save` command:
 
 ```py
-bin = tama.dump()
+bin = tama.save()
 rom_file = open("roms/tmp.bin", "wb")  
 rom_file.write(bin)  
 rom_file.close()
 ```
+
+<!--
 
 To do:
 
@@ -94,3 +90,5 @@ To do:
 - webapp (streamlit ?)
 - implement new compatibility (recent tamalib commits)
 - readme
+- 
+-->
