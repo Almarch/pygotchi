@@ -1,13 +1,22 @@
 # <img src="https://static.wikia.nocookie.net/tamagotchi/images/7/7c/Nyorotchi_anim_gen1.gif/revision/latest?cb=20181014132249" alt="TaMaGoTcHi" width="50"/> PyGoTcHi
 
-The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing this low-level library an an high-level language aims at facilitating its deployment as a web service.
+The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
-The web server-client logic specially make sense for Tamagotchis as it unlocks two key functionnalities of the original game:
+The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
-- Ubiquity. Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
-- Real-time consistency. The original toy was real time, embedding an actual watch ; and the creature had a strict schedule that the player had to respect. The server can keep track of time.
+- Ubiquity: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
+- Real-time consistency: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
+
+## State of developement
+
+Tamalib is well bound to the Tama class of this package. The package builds on Linux and on the WSL, but not on Windows yet. All methods seem to work but test without a web UI is approximative. The next steps are:
+
+- develop a web UI ;
+- adapt Tamalib to a variety of 1st gen ROMs, following the recent Tamalib developments ;
+- develop this documentation.
 
 ## Background
+*pass*
 
 <!--
 
@@ -25,7 +34,7 @@ The web server-client logic specially make sense for Tamagotchis as it unlocks t
 
 ### As a Python package
 
-Currently the tamalib is only compilable from linux (or WSL). It was compilable from windows on tamaR so this may likely be fixed later.
+Build the package with `build` and install it with `pip`:
 
 ```sh
 pip install build
@@ -91,9 +100,3 @@ bin = cpu_file.read()
 tama.load(bin)
 tama.start()
 ```
-
-<!--
-To do:
-- webapp
-- implement new compatibility (recent tamalib commits)
--->
