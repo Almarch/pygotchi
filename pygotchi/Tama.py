@@ -3,8 +3,13 @@ from .conversion import int2bin, bin2int
 from .images import background, icons
 import numpy as np
 import matplotlib.pyplot as plt
+import time
+import threading
 
 class Tama(CppTama):
+    def __init__(self):
+        super().__init__()
+        self.lock = threading.Lock() 
     
     def display(self, background = background):
 
@@ -28,8 +33,17 @@ class Tama(CppTama):
         ax.set_ylim(0,32)
         plt.show()
 
-    def click(self):
-        pass
+
+    def click(self, button, delay=0.1):
+        assert all(b in ["A", "B", "C"] for b in button)
+        assert delay > 0
+
+        with self.lock:
+            for b in button:
+                self.SetButton({"A": 0, "B": 1, "C": 2}[b], True)
+            time.sleep(delay)
+            for b in [0, 1, 2]:
+                self.SetButton(b, False)
 
     def poke(self): # new
         pass

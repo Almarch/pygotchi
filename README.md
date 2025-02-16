@@ -52,13 +52,20 @@ tama.start()
 tama.stop()
 ```
 
-The screen can be rendered using `display`:
+## Basic commands
+
+The screen can be rendered using `display` and the sound frequency is available with `GetFreq`.
+
+Action the 3 buttons `A`, `B` and `C` with the `click` method. Beware the click method use `await asyncio.sleep(delay)` so it should be run as an asynchronous task.
 
 ```py
+import time
+from threading import Thread
+tama.start()
+Thread(target=tama.click, args=("B", 0.5)).start()
+time.sleep(3)
 tama.display()
 ```
-
-And the sound frequency is available with `GetFreq`.
 
 ## ROM
 
