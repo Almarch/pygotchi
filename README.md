@@ -54,6 +54,8 @@ bin = rom_file.read()
 tama.flash(bin)
 ```
 
+The emulation can be started and resumed with the corresponding methods: `start` and `stop`.
+
 ## Basic commands
 
 The screen can be rendered using `display` and the sound frequency is available with `GetFreq`.
@@ -74,10 +76,20 @@ tama.display()
 The game may be saved anytime using the `save` command:
 
 ```py
+tama.stop()
 bin = tama.save()
-rom_file = open("roms/tmp.bin", "wb")  
-rom_file.write(bin)  
-rom_file.close()
+cpu_file = open("roms/save.bin", "wb")  
+cpu_file.write(bin)  
+cpu_file.close()
+```
+
+It is then loaded the same way the ROM is flashed:
+
+```py
+cpu_file = open("roms/save.bin", "rb")
+bin = cpu_file.read() 
+tama.load(bin)
+tama.start()
 ```
 
 <!--
