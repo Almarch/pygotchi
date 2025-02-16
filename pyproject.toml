@@ -4,5 +4,8 @@ requires = [
     "wheel",
     "pybind11",
     "matplotlib",
+    "numpy",
+    "importlib",
+    "Pillow"
 ]
 build-backend = "setuptools.build_meta"

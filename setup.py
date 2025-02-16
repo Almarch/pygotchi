@@ -16,5 +16,6 @@ setup(
     packages=["pygotchi"],
     ext_modules=ext_modules,
     install_requires=["pybind11"],
-    package_data={"my_package": ["data/*"]},
+    package_data={"pygotchi": ["data/*"]},
+    include_package_data=True,
 )

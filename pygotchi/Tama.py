@@ -1,10 +1,20 @@
 from ._tamalib import Tama as CppTama
 from .conversion import int2bin, bin2int
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Tama(CppTama):
     
-    def display(self):
-        pass
+    def display(self, background):
+
+        raster = 1-np.array(self.GetMatrix())
+        
+        fig, ax = plt.subplots()
+        ax.imshow(background)
+        ax.imshow(raster, cmap='gray', interpolation='nearest')
+        ax.axis('off')
+        fig.show()
 
     def click(self):
         pass
