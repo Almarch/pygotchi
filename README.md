@@ -17,7 +17,10 @@ The server-client web logic is meaningful for Tamagotchis as it allows 2 functio
 
 - TamaLib
 - ArduinoGotchi
+- C++...
 - TamaR
+    - automatic care: will not be implemented here but looking forward to see the same as tamaR
+    - p2 conversion: now useless
 - New ROMs !
 
 -->
@@ -48,6 +51,14 @@ tama = Tama()
 tama.start()
 tama.stop()
 ```
+
+The screen can be rendered using `display`:
+
+```py
+tama.display()
+```
+
+And the sound frequency is available with `GetFreq`.
 
 ## ROM
 
