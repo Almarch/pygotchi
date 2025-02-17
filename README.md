@@ -9,7 +9,7 @@ The web server-client logic makes a special sense for Tamagotchis as it unlocks 
 
 ## State of developement
 
-Tamalib is well bound to the `Tama` class of this package. The package builds on Linux and on the WSL, but not on pure Windows yet. All methods seem to work, but tests without a web UI is approximative. The next steps are:
+Tamalib is well bound to the `Tama` class of this package. The package builds on Linux and on the WSL, but not on pure Windows yet. All methods seem to work, but tests without an UI are approximative. The next steps are:
 
 - develop a web UI ;
 - adapt Tamalib to a variety of 1st gen ROMs, following the recent Tamalib developments ;
@@ -45,14 +45,11 @@ cd ..
 pip install ./pygotchi
 ```
 
-### With Docker
-*pass*
-
 ## Use from Python
 
 ### Start the emulation
 
-A Tamagotchi must be instanciated. Then, use the `start` and `stop` methods in order to activate it or to pause it:
+A new Tamagotchi must be instanciated:
 
 ```py
 tama = Tama()
@@ -66,9 +63,13 @@ bin = rom_file.read()
 tama.flash(bin)
 ```
 
-The emulation can be started and resumed with the corresponding methods: `start` and `stop`.
+The emulation can be launched and paused with the corresponding methods: `start` and `stop`:
 
-### Basic commands
+```py
+tama.start()
+```
+
+### Commands
 
 The screen can be rendered using `display` and the sound frequency is available with `GetFreq`.
 
@@ -77,32 +78,35 @@ Action the 3 buttons `A`, `B` and `C` with the `click` method. Beware the click 
 ```py
 import time
 from threading import Thread
-tama.start()
+
 Thread(target=tama.click, args=("B", 0.5)).start()
 time.sleep(3)
 tama.display()
 ```
-
-### Saving the game
 
 The game may be saved anytime using the `save` command:
 
 ```py
 tama.stop()
 bin = tama.save()
-cpu_file = open("roms/save.bin", "wb")  
+cpu_file = open("pets/save.bin", "wb")  
 cpu_file.write(bin)  
 cpu_file.close()
 ```
 
-It is then loaded the same way the ROM is flashed:
+It can then be resumed with `load`:
 
 ```py
-cpu_file = open("roms/save.bin", "rb")
+cpu_file = open("pets/save.bin", "rb")
 bin = cpu_file.read() 
 tama.load(bin)
 tama.start()
 ```
 
 ## Web deployment
+
+### Launch with Docker
+*pass*
+
+### Open to the web
 *pass*
