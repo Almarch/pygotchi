@@ -1,24 +1,30 @@
-# <img src="pygotchi/www/img/icon.png" alt="PyGoTcHi" width="40"/> The TaMaGoTcHi is live on Python ! 
+# <img src="pygotchi/www/img/icon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live on Python ! 
 
-The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
+The goal of this package is to port [TamaLIB](https://github.com/jcrona/tamalib) to Python. Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
 The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
 - Ubiquity: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
 - Real-time consistency: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
+A web app is readily available with the package. It is dockerized for ease of deployment.
+
 ## 0. State of developement
 
-This is still a work in progress.
+🚧 This is still a work in progress.
 
 To do:
 
-- develop a web UI ;
-- adapt Tamalib to a variety of 1st gen ROMs, following the recent Tamalib developments ;
-- fix windows compilation (maybe)
-- write this documentation.
+- keep developing the web UI
+- adapt `tamalib.cpp` to a variety of 1st gen ROMs, following the recent TamaLIB developments
 
 ## 1. Run the app
+
+Start by cloning the repo:
+
+```sh
+git clone https://github.com/almarch/pygotchi.git
+```
 
 ### 1.1. Run with Docker
 
@@ -50,7 +56,7 @@ The app is now available at http://localhost:8000.
 
 ## 2. Deploy the app
 
-Now that the app is available at port 8000, it may be deployed online. The server will be assumed to be a linux computer behind a router with a fixed public IP.
+Now that the app is available at port 8000, it may be deployed online. The server will be assumed to be a linux computer behind a router with a fixed public IP. It may just as well be a VPS.
 
 First of all, you need the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many benevolent website, for instance [this one](https://myip.com). The private IP can be accessed with the command:
 
@@ -129,7 +135,7 @@ The Tamagotchi runs backend, so it remains alive when the user disconnects.
 
 ## 3. Use from Python
 
-The package binds a `Tama` Python class to Tamalib. It is thus possible to interact directly with it once the package has been installed.
+The package binds a `Tama` Python class to TamaLIB. It is thus possible to interact directly with it once the package has been installed.
 
 ### 3.1. Launch the emulation
 
@@ -190,11 +196,13 @@ tama.start()
 
 ## 4. Background
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. The Arduino version is the starting point for a C++ module, allowing portage on higher-level object-oriented languages.
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. The Arduino version is the starting point for a C++ module aiming portage on higher-level object-oriented languages.
 
- I ported TamaLIB on the [R](https://github.com/almarch/tamaR) software environment, with an R-Shiny web app. The R project was built targeting the sole P1 game. The app encompassed a function to switch the sprites to the P2, and an algorithm to automatically care for the pet. Nevertheless, the core functionnality of tamaR had been to deploy TamaLIB on the web, in a server-client logic.
+I ported TamaLIB on the [R](https://github.com/almarch/tamaR) software environment, with an R-Shiny web app. The R project was developed aiming the sole P1 ROM that was available at this time. The app encompassed a function to switch the sprites to the P2, and an algorithm to automatically care for the pet. Nevertheless, the core functionnality of the R project had been to deploy TamaLIB on the web, in a server-client logic.
 
-More recently, new first generation ROMs have leaked and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the tamaR project into a Python framework. Python is both more popular and more efficient. The aim of this new version is to deliver a better version of TamaLIB as a web service.
+More recently, new first-generation ROMs have leaked and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R. The goal of this new version is to deliver an improved version of TamaLIB as a web service.
+
+On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). A solution to build the package on windows.
 
 ## 5. License
 
