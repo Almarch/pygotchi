@@ -164,7 +164,7 @@ tama.start()
 
 The screen can be rendered using `display` and the sound frequency is available with `GetFreq`.
 
-Action the 3 buttons `A`, `B` and `C` with the `click` method. Beware the click method use `await asyncio.sleep(delay)` so it should be run as an asynchronous task.
+Action the 3 buttons `A`, `B` and `C` with the `click` method.
 
 ```py
 import time
