@@ -13,11 +13,17 @@ ext_modules = [
 setup(
     name="pygotchi",
     version="0.0.0",
-    packages=["pygotchi"],
+    packages=[
+        "pygotchi",
+        "pygotchi.www",
+        "pygotchi.www.img"
+    ],
     ext_modules=ext_modules,
     install_requires=["pybind11"],
     package_data={
-        "pygotchi": ["data/*.png"],  # Ensure image is included
+        "pygotchi": [
+            "www/**/*"
+        ],
     },
     include_package_data=True,
 )

@@ -2,7 +2,7 @@ import os
 import matplotlib.image as mpimg
 
 _pkg_dir = os.path.dirname(__file__)
-background = mpimg.imread(os.path.join(_pkg_dir, "data", "background.png"))
+background = mpimg.imread(os.path.join(_pkg_dir, "www", "img", "background.png"))
 
 icons = {}
 
@@ -16,4 +16,4 @@ for icon in [
     "status",
     "training"
 ]:
-    icons[icon] = mpimg.imread(os.path.join(_pkg_dir, "data", icon + ".png"))
+    icons[icon] = mpimg.imread(os.path.join(_pkg_dir, "www", "img", icon + ".png"))

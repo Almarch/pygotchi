@@ -1,0 +1,136 @@
+
+* {
+	font-family: "Comic Neue", cursive;
+	font-weight: 400;
+	font-style: normal;
+}
+
+/* General Styling */
+body {
+	background: #1F1F1F;
+	color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Menu Icon */
+/* Menu Icon (☰) */
+.menu-icon {
+    position: fixed;  /* Keeps it always in place */
+    top: 15px;        /* Distance from the top */
+    right: 15px;      /* Distance from the right */
+    font-size: 24px;  /* Make it readable */
+    cursor: pointer;
+    background: #333; /* Set the color you want */
+    color: white;     /* Make the text visible */
+    padding: 10px 15px;
+    border-radius: 5px;
+    z-index: 1000;    /* Ensure it stays above other elements */
+}
+
+.menu-icon.hidden {
+    opacity: 0;      /* Fully transparent */
+    pointer-events: none; /* Prevents clicks when hidden */
+}
+
+/* Sidebar (Initially Hidden Completely Off-Screen) */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Move it further out of the viewport */
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: right 0.4s ease-in-out;
+    padding: 20px;
+    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* When Sidebar is Open */
+.sidebar.open {
+    right: 0; /* Slide into view */
+}
+
+
+/* Close button */
+.sidebar .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.main-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+    margin-top: 50px;
+}
+
+/* Shake Animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25%, 75% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.1s ease-in-out 20;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;  /* Stack elements vertically */
+    align-items: center;     /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    height: 100vh;           /* Full height of viewport */
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Action Buttons */
+.action-btn {
+	width: 65px;
+    height: 65px;
+	text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow:  0 5px rgb(120,200,244);
+	color: black;
+    cursor: pointer;
+    margin: 5px;
+	background-image: -o-linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	background-image: -moz-linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	background-image: -webkit-linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	background-image: linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	font-family: "Comic Neue", cursive;
+	font-weight: 700;
+	font-style: normal;
+}
+
+.action-btn:active  {
+	box-shadow: none;
+	position: relative;
+	top: 5px;
+}
+
+

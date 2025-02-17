@@ -3,8 +3,19 @@ requires = [
     "setuptools",
     "wheel",
     "pybind11",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pygotchi"
+version = "0.0.0"
+dependencies = [
+    "pybind11",
     "matplotlib",
     "numpy",
     "thread6",
+    "fastapi",
+    "uvicorn",
+    "jinja2",
 ]
-build-backend = "setuptools.build_meta"
+
