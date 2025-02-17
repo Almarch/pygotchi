@@ -6,5 +6,7 @@ requires = [
     "matplotlib",
     "numpy",
     "thread6",
+    "fastapi",
+    "uvicorn"
 ]
 build-backend = "setuptools.build_meta"

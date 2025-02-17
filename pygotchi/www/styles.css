@@ -1,0 +1,55 @@
+
+* {
+	font-family: "Comic Neue", cursive;
+	font-weight: 400;
+	font-style: normal;
+}
+
+body {
+	background: #1F1F1F;
+	color: white;
+}
+
+.panel-body {
+	background-color: #3F3F3F !important; /* Customize the color */
+}
+
+.care-class {
+	font-weight: 700;
+	font-size: 1.5em;
+}
+
+.big {
+	width: 65px;
+    height: 65px;
+ }
+
+.small {
+	width: 45px;
+    height: 45px;
+}
+
+.big, .small {
+	text-align: center;
+    display: inline-flex; /* Use flexbox for centering */
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    box-shadow:  0 5px rgb(120,200,244);
+	color: black;
+    cursor: pointer;
+    margin: 5px;
+	background-image: -o-linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	background-image: -moz-linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	background-image: -webkit-linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	background-image: linear-gradient(left top, rgb(247, 200, 220) 40%, rgb(255, 255, 255) 60%, rgb(185, 227, 249) 80%);
+	font-family: "Comic Neue", cursive;
+	font-weight: 700;
+	font-style: normal;
+}
+
+.big:active, .small:active {
+	box-shadow: none;
+	position: relative;
+	top: 5px;
+}

@@ -1,4 +1,4 @@
-# PyGoTcHi <img src="https://static.wikia.nocookie.net/tamagotchi/images/7/7c/Nyorotchi_anim_gen1.gif/revision/latest?cb=20181014132249" alt="PyGoTcHi" align="right" width="100"/>
+# <img src="pygotchi/www/icon.png" alt="PyGoTcHi" width="25"/> PyGoTcHi 
 
 The goal of this package is to port [Tamalib](https://github.com/jcrona/tamalib) to the [most famous language in Github in 2024](https://github.blog/news-insights/octoverse/octoverse-2024/). Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
