@@ -13,3 +13,12 @@ document.getElementById("main-image").addEventListener("click", function() {
         this.classList.remove("shake");
     }, 500);
 });
+
+// Microphone Toggle (🔊 to 🔇)
+document.getElementById("mic-btn").addEventListener("click", function() {
+    if (this.textContent === "🔊") {
+        this.textContent = "🔇"; // Muted
+    } else {
+        this.textContent = "🔊"; // Unmuted
+    }
+});

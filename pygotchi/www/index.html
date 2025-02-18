@@ -7,6 +7,7 @@
     <title>TaMaGoTcHi</title>
     <link rel="stylesheet" href="www/styles.css">
     <link rel="icon" type="image/png" href="www/img/icon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -18,7 +19,38 @@
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
         <button class="close-btn" onclick="toggleMenu()">✖</button>
-        <p>Sidebar Content</p>
+        <br>
+        <br>
+        <br>
+        <!-- On/Off Switch -->
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+        <br>
+        <br>
+        <!-- File Upload -->
+        <div class="file-controls">
+            <!-- Flash ROM (Upload) -->
+            <label for="rom-upload" class="up-down rom"><i class="fas fa-arrow-up"></i> Flash ROM</label>
+            <input type="file" id="rom-upload" accept="image/*" hidden>
+        
+            <!-- Dump ROM (Download) -->
+            <button id="rom-download" class="up-down rom"><i class="fas fa-arrow-down"></i> Dump ROM</button>
+        </div>
+
+        <div class="file-controls">
+            <!-- Flash CPU (Upload) -->
+            <label for="cpu-upload" class="up-down cpu"><i class="fas fa-arrow-up"></i> Load CPU</label>
+            <input type="file" id="cpu-upload" accept="image/*" hidden>
+        
+            <!-- Dump CPU (Download) -->
+            <button id="cpu-download" class="up-down cpu"><i class="fas fa-arrow-down"></i> Save CPU</button>
+        </div>
+        <br>
+        
+        <!-- Microphone Toggle -->
+        <button id="mic-btn">🔊</button>
     </div>
 
     <!-- Main Content -->
