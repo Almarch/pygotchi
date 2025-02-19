@@ -187,6 +187,7 @@ public:
   void SetROM(const std::vector<int> rom);
 
   // public methods
+  bool runs();
   void start();
   void stop();
 
@@ -2105,8 +2106,6 @@ void tamalib_register_hal(hal_t *hal)
 
 void tamalib_mainloop_step_by_step(void)
 {
-  timestamp_t ts;
-
   if (!g_hal->handler()) {
     //tamalib_step();
 
@@ -2195,6 +2194,10 @@ void Tama::stop(){
     keep_going = false;
 }
 
+bool Tama::runs() {
+  return keep_going;
+}
+
 std::vector<bool> Tama::GetIcon() { 
 
     std::vector<bool> icon (ICON_NUM) ;
@@ -2204,7 +2207,8 @@ std::vector<bool> Tama::GetIcon() {
         icon[i] = icon_buffer[(u8_t)i] != 0;
     }
     
-    return icon; }
+    return icon;
+  }
 
   std::vector<std::vector<bool>> Tama::GetMatrix() {
     std::vector<std::vector<bool>> matrix(LCD_HEIGHT, std::vector<bool>(LCD_WIDTH, false));
@@ -2304,6 +2308,7 @@ PYBIND11_MODULE(_tamalib, m) {
         .def(py::init<>())
         .def("start", &Tama::start)
         .def("stop", &Tama::stop)
+        .def("runs", &Tama::runs)
         .def("GetFreq", &Tama::GetFreq)
         .def("GetMatrix", &Tama::GetMatrix)
         .def("GetIcon", &Tama::GetIcon)

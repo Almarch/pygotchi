@@ -16,7 +16,6 @@ def main():
             print("Error: Port must be an integer.")
             sys.exit(1)
 
-    print(f"Starting server on {host}:{port}...")
     uvicorn.run("pygotchi.app:app", host=host, port=port, reload=False)
 
 if __name__ == "__main__":
