@@ -187,9 +187,9 @@ public:
   void SetROM(const std::vector<int> rom);
 
   // public methods
-  bool runs();
-  void start();
-  void stop();
+  bool Runs();
+  void Start();
+  void Stop();
 
 private: 
 };
@@ -2184,17 +2184,17 @@ Tama::Tama() {
     tamalib_init(1000000);
 }
 
-void Tama::start(){
+void Tama::Start(){
     pthread_t thread;
     keep_going = true;
     pthread_create(&thread, 0, tamalib_mainloop, 0);
 }
 
-void Tama::stop(){
+void Tama::Stop(){
     keep_going = false;
 }
 
-bool Tama::runs() {
+bool Tama::Runs() {
   return keep_going;
 }
 
@@ -2306,9 +2306,9 @@ namespace py = pybind11;
 PYBIND11_MODULE(_tamalib, m) {
     py::class_<Tama>(m, "Tama")
         .def(py::init<>())
-        .def("start", &Tama::start)
-        .def("stop", &Tama::stop)
-        .def("runs", &Tama::runs)
+        .def("Start", &Tama::Start)
+        .def("Stop", &Tama::Stop)
+        .def("Runs", &Tama::Runs)
         .def("GetFreq", &Tama::GetFreq)
         .def("GetMatrix", &Tama::GetMatrix)
         .def("GetIcon", &Tama::GetIcon)

@@ -168,9 +168,7 @@ Action the 3 buttons `A`, `B` and `C` with the `click` method.
 
 ```py
 import time
-from threading import Thread
-
-Thread(target=tama.click, args=("B", 0.5)).start()
+tama.click("B", 0.5)
 time.sleep(3)
 tama.display()
 ```
