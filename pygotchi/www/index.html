@@ -32,25 +32,40 @@
         <!-- File Upload -->
         <div class="file-controls">
             <!-- Flash ROM (Upload) -->
-            <label for="rom-upload" class="up-down rom"><i class="fas fa-arrow-up"></i> Flash ROM</label>
+            <label for="rom-upload" class="up-down"><i class="fa-solid fa-cloud-arrow-up"></i> Flash ROM</label>
             <input type="file" id="rom-upload" accept="image/*" hidden>
         
             <!-- Dump ROM (Download) -->
-            <button id="rom-download" class="up-down rom"><i class="fas fa-arrow-down"></i> Dump ROM</button>
+            <button id="rom-download" class="up-down"><i class="fa-solid fa-floppy-disk"></i> Dump ROM</button>
         </div>
 
         <div class="file-controls">
             <!-- Flash CPU (Upload) -->
-            <label for="cpu-upload" class="up-down cpu"><i class="fas fa-arrow-up"></i> Load CPU</label>
+            <label for="cpu-upload" class="up-down"><i class="fa-solid fa-cloud-arrow-up"></i> Load CPU</label>
             <input type="file" id="cpu-upload" accept="image/*" hidden>
         
             <!-- Dump CPU (Download) -->
-            <button id="cpu-download" class="up-down cpu"><i class="fas fa-arrow-down"></i> Save CPU</button>
+            <button id="cpu-download" class="up-down"><i class="fa-solid fa-floppy-disk"></i> Save CPU</button>
+        </div>
+
+        <div class="file-controls">       
+            <!-- Reset CPU -->
+            <button id="cpu-reset" class="up-down"><i class="fa-solid fa-skull"></i> Reset CPU</button>
         </div>
         <br>
         
         <!-- Microphone Toggle -->
         <button id="mic-btn">🔊</button>
+        <br>
+
+        <div class="file-controls">
+            <div class="custom-select">
+                <select>
+                    <option value="p1">P1 theme</option>
+                </select>
+            </div>
+        </div>
+
     </div>
 
     <!-- Main Content -->

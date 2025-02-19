@@ -177,11 +177,11 @@ body {
   }
   
   input:checked + .slider {
-    background-color: gold;
+    background-color: blue;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px gold;
+    box-shadow: 0 0 1px blue;
   }
   
   input:checked + .slider:before {
@@ -230,28 +230,45 @@ body {
     gap: 10px; /* Space between icon and text */
     font-weight: bold;
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.2); /* Soft shadow effect */
-}
-
-.up-down:hover{
-    transform: scale(1.1);
-}
-
-
-.rom {
     background: lightblue;
     color: white;
 }
 
-.rom:hover {
+.up-down:hover{
+    transform: scale(1.1);
     background: deepskyblue;
 }
 
-/* Download Button */
-.cpu {
-    background: pink;
-    color: white;
+/* Select list style */
+.custom-select {
+    position: relative;
+    display: inline-block;
 }
 
-.cpu:hover {
-    background: hotpink;
+select {
+    appearance: none;
+    background-color: #fff;
+    border: 2px solid #3498db;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+    width: 200px;
+    cursor: pointer;
+    outline: none;
+}
+
+select:focus {
+    border-color: #2980b9;
+}
+
+.custom-select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 14px;
+    color: #3498db;
 }
