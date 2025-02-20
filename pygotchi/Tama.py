@@ -1,4 +1,4 @@
-from ._tamalib import Tama as CppTama
+from ._tamalib import Tama as Tamalib
 from .conversion import int2bin, bin2int
 from .images import background, icons
 import numpy as np
@@ -6,39 +6,39 @@ import matplotlib.pyplot as plt
 import time
 from threading import Lock, Thread
 
-class Tama(CppTama):
+class Tama():
     def __init__(self):
-        super().__init__()
-        self.lock = Lock() 
+        self.__tamalib__ = Tamalib
+        self.__lock__ = Lock() 
 
     def start(self):
-        with self.lock:
-            self.Start()
+        with self.__lock__:
+            self.__tamalib__.Start()
     def stop(self):
-        with self.lock:
-            self.Stop()        
+        with self.__lock__:
+            self.__tamalib__.Stop()        
     def runs(self):
-        with self.lock:
-            res = self.Runs()
+        with self.__lock__:
+            res = self.__tamalib__.Runs()
         return res
     def matrix(self):
-        with self.lock:
-            res = self.GetMatrix()
+        with self.__lock__:
+            res = self.__tamalib__.GetMatrix()
         return res
     def freq(self):
-        with self.lock:
-            res = self.GetFreq()
+        with self.__lock__:
+            res = self.__tamalib__.GetFreq()
         return res
-    def icon(self):
-        with self.lock:
-            res = self.GetIcon()
+    def icons(self):
+        with self.__lock__:
+            res = self.__tamalib__.GetIcon()
         return res
     
     def display(self, background = background):
 
         raster = np.zeros((16,32,4))
         raster[..., 3] = np.array(self.matrix())
-        ics = self.icon()
+        ics = self.icons()
         
         fig, ax = plt.subplots()
         ax.imshow(background , extent=[-1, 33, -1, 33])
@@ -57,25 +57,22 @@ class Tama(CppTama):
         plt.show()
 
     def __click__(self, button, delay):
-        with self.lock:
+        with self.__lock__:
             for b in button:
-                self.SetButton({"A": 0, "B": 1, "C": 2}[b], True)
+                self.__tamalib__.SetButton({"A": 0, "B": 1, "C": 2}[b], True)
         time.sleep(delay)
-        with self.lock:
+        with self.__lock__:
             for b in [0, 1, 2]:
-                self.SetButton(b, False)
+                self.__tamalib__.SetButton(b, False)
 
     def click(self, button, delay=0.1):
-        assert all(b in ["A", "B", "C"] for b in button)
-        assert delay > 0
+        
         Thread(target=self.__click__, args=(button, delay)).start()
 
     def poke(self): # new
         pass
 
     def reset(self):
-        running = self.runs()
-        self.stop()
         obj = [0 for i in range(384)]
         obj[ 1] = 1
         obj[ 8] = 1
@@ -92,44 +89,42 @@ class Tama(CppTama):
         obj[59] = 4
         obj[63] = 2
 
-        with self.lock:
-            self.SetCPU(obj)
-        if(running):
-            self.start()
+        self.stop()
+        with self.__lock__:
+            self.__tamalib__.SetCPU(obj)
 
     def save(self):
         running = self.runs()
         self.stop()
-        with self.lock:
-            obj = self.GetCPU()
-        if(running):
+        with self.__lock__:
+            obj = self.__tamalib__.GetCPU()
+        if running:
             self.start()
         return int2bin(obj)
     
     def load(self, bin):
+        obj = bin2int(bin)
         running = self.runs()
         self.stop()
-        obj = bin2int(bin)
-        with self.lock:
-            self.SetCPU(obj)
-        if(running):
+        with self.__lock__:
+            self.__tamalib__.SetCPU(obj)
+        if running:
             self.start()
 
     def dump(self):
         running = self.runs()
         self.stop()
-        with self.lock:
-            obj = self.GetROM()
-        if(running):
+        with self.__lock__:
+            obj = self.__tamalib__.GetROM()
+        if running:
             self.start()
         return int2bin(obj)
 
     def flash(self, bin):
+        obj = bin2int(bin)
         running = self.runs()
         self.stop()
-        obj = bin2int(bin)
-        with self.lock:
-            self.SetROM(obj)
-        if(running):
+        with self.__lock__:
+            self.__tamalib__.SetROM(obj)
+        if running:
             self.start()
-

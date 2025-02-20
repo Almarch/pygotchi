@@ -174,7 +174,7 @@ public:
   Tama();
 
   // Getters
-  std::vector<bool> GetIcon();
+  std::vector<bool> GetIcons();
   std::vector<std::vector<bool>> GetMatrix();
   int GetFreq();
   std::vector<bool> GetButton();
@@ -2198,7 +2198,7 @@ bool Tama::Runs() {
   return keep_going;
 }
 
-std::vector<bool> Tama::GetIcon() { 
+std::vector<bool> Tama::GetIcons() { 
 
     std::vector<bool> icon (ICON_NUM) ;
 
@@ -2311,7 +2311,7 @@ PYBIND11_MODULE(_tamalib, m) {
         .def("Runs", &Tama::Runs)
         .def("GetFreq", &Tama::GetFreq)
         .def("GetMatrix", &Tama::GetMatrix)
-        .def("GetIcon", &Tama::GetIcon)
+        .def("GetIcons", &Tama::GetIcons)
         .def("SetCPU", &Tama::SetCPU)
         .def("GetCPU", &Tama::GetCPU)
         .def("GetROM", &Tama::GetROM)

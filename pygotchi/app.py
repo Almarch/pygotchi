@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -20,35 +20,93 @@ async def serve_homepage(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.websocket("/ws/video")
-async def websocket_screen(websocket: WebSocket):
+async def websocket_video(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        await websocket.send_json(
-             {
-                  "matrix": tama.matrix(),
-                  "icon": tama.icon(),
-                  "runs": tama.runs(),
-             }
-        )
-        await asyncio.sleep(1/6)
+    try:
+        while True:
+            await websocket.send_json(
+                {
+                    "matrix": tama.matrix(),
+                    "icon": tama.icons(),
+                    "runs": tama.runs(),
+                }
+            )
+            await asyncio.sleep(1 / 6)
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        print(f"WebSocket error: {e}")
+        await websocket.close(code=1011)
 
 @app.websocket("/ws/audio")
 async def websocket_audio(websocket: WebSocket):
     await websocket.accept()
-    while True:
-        await websocket.send_json({"freq": tama.freq()})
-        await asyncio.sleep(1/100)
+    try:
+        while True:
+            await websocket.send_json({"freq": tama.freq()})
+            await asyncio.sleep(1 / 20)
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        print(f"WebSocket error: {e}")
+        await websocket.close(code=1011)
 
 @app.post("/rom")
-async def flash_rom(file: UploadFile = File(...)):
+async def post_rom(file: UploadFile = File(...)):
 
 @app.get("/rom")
-async def dump_rom():
-    return tama.dump()
+async def get_rom():
+    try:
+        data = tama.dump()
+        return Response(
+            content=data,
+            media_type="application/octet-stream",
+            headers={"Content-Disposition": 'attachment; filename="rom.bin"'}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/cpu")
-async def load_cpu(file: UploadFile = File(...)):
+async def post_cpu(file: UploadFile = File(...)):
 
 @app.get("/cpu")
-async def save_cpu():
-    return tama.save()
+async def get_cpu():
+    try:
+        data = tama.save()
+        return Response(
+            content=data,
+            media_type="application/octet-stream",
+            headers={"Content-Disposition": 'attachment; filename="cpu.bin"'}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/manage")
+async def manage(do: str):
+    match do:
+        case "start":
+            tama.start()
+            return {"manage": "Tama started"}
+        case "stop":
+            tama.stop()
+            return {"manage": "Tama stopped"}
+        case "reset":
+            tama.reset()
+            return {"manage": "Tama reset"}
+        case _:
+            raise HTTPException(status_code=400, detail = "Invalid manage action")
+
+@app.post("/click")
+async def click(button: str):
+    match button:
+        case "A":
+            tama.click("A", .1)
+            return {"click": "A"}
+        case "B":
+            tama.click("B", .1)
+            return {"click": "B"}
+        case "C":
+            tama.click("C", .1)
+            return {"click": "C"}
+        case _:
+            raise HTTPException(status_code=400, detail = "Invalid click action")

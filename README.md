@@ -1,6 +1,6 @@
 # <img src="pygotchi/www/img/icon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live on Python ! 
 
-The goal of this package is to port [TamaLIB](https://github.com/jcrona/tamalib) to Python. Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
+The goal of this package is to port [TamaLIB](https://github.com/jcrona/tamalib) to Python (>3.10). Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
 The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
