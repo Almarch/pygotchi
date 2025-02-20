@@ -8,7 +8,7 @@ from threading import Lock, Thread
 
 class Tama():
     def __init__(self):
-        self.__tamalib__ = Tamalib
+        self.__tamalib__ = Tamalib()
         self.__lock__ = Lock() 
 
     def start(self):
@@ -31,7 +31,7 @@ class Tama():
         return res
     def icons(self):
         with self.__lock__:
-            res = self.__tamalib__.GetIcon()
+            res = self.__tamalib__.GetIcons()
         return res
     
     def display(self, background = background):
