@@ -13,6 +13,7 @@ ext_modules = [
 setup(
     name="pygotchi",
     version="0.0.0",
+    python_requires=">=3.10",
     packages=[
         "pygotchi",
         "pygotchi.www",
