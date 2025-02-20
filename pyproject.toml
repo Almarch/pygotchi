@@ -20,5 +20,6 @@ dependencies = [
     "jinja2",
     "asyncio",
     "python-multipart",
+    "websockets"
 ]
 

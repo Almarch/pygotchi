@@ -70,12 +70,20 @@ body {
     right: 15px;
 }
 
-.main-image {
-    width: 200px;
-    height: 200px;
-    object-fit: cover;
-    cursor: pointer;
-    margin-top: 50px;
+#main-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Position the canvas exactly over the image */
+#pixel-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Match image dimensions */
+    height: 100%;
+    pointer-events: none; /* Allows interactions with buttons below */
 }
 
 /* Shake Animation */
