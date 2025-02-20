@@ -51,7 +51,7 @@ async def websocket_audio(websocket: WebSocket):
         await websocket.close(code=1011)
 
 @app.post("/rom")
-async def post_cpu(file: UploadFile = File()):
+async def Flash_ROM(file: UploadFile = File()):
     try:
         content = await file.read()
         tama.flash(content)
@@ -60,7 +60,7 @@ async def post_cpu(file: UploadFile = File()):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/rom")
-async def get_rom():
+async def Dump_ROM():
     try:
         data = tama.dump()
         return Response(
@@ -72,7 +72,7 @@ async def get_rom():
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/cpu")
-async def post_cpu(file: UploadFile = File()):
+async def Load_CPU(file: UploadFile = File()):
     try:
         content = await file.read()
         tama.load(content)
@@ -81,7 +81,7 @@ async def post_cpu(file: UploadFile = File()):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/cpu")
-async def get_cpu():
+async def Save_CPU():
     try:
         data = tama.save()
         return Response(

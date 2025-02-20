@@ -34,25 +34,19 @@
             <!-- Flash ROM (Upload) -->
             <label for="rom-upload" class="up-down"><i class="fa-solid fa-cloud-arrow-up"></i> Flash ROM</label>
             <input type="file" id="rom-upload" accept="image/*" hidden>
-        
-            <!-- Dump ROM (Download) -->
-            <button id="rom-download" class="up-down"><i class="fa-solid fa-floppy-disk"></i> Dump ROM</button>
+
+            <!-- Load CPU  -->
+            <label for="cpu-upload" class="up-down"><i class="fa-solid fa-cloud-arrow-up"></i> Load CPU</label>
+            <input type="file" id="cpu-upload" accept="image/*" hidden>
         </div>
 
         <div class="file-controls">
-            <!-- Flash CPU (Upload) -->
-            <label for="cpu-upload" class="up-down"><i class="fa-solid fa-cloud-arrow-up"></i> Load CPU</label>
-            <input type="file" id="cpu-upload" accept="image/*" hidden>
-        
-            <!-- Dump CPU (Download) -->
-            <button id="cpu-download" class="up-down"><i class="fa-solid fa-floppy-disk"></i> Save CPU</button>
-        </div>
+           <!-- Dump CPU (Download) -->
+           <button id="cpu-download" class="up-down"><i class="fa-solid fa-floppy-disk"></i> Save CPU</button>
 
-        <div class="file-controls">       
             <!-- Reset CPU -->
             <button id="cpu-reset" class="up-down"><i class="fa-solid fa-skull"></i> Reset CPU</button>
-        </div>
-        <br>
+         </div>
         
         <!-- Microphone Toggle -->
         <button id="mic-btn">🔊</button>
