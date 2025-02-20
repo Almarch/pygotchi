@@ -6,7 +6,6 @@ import asyncio
 import os
 from .Tama import Tama
 
-
 app = FastAPI()
 tama = Tama()
 
@@ -52,7 +51,13 @@ async def websocket_audio(websocket: WebSocket):
         await websocket.close(code=1011)
 
 @app.post("/rom")
-async def post_rom(file: UploadFile = File(...)):
+async def post_cpu(file: UploadFile = File()):
+    try:
+        content = await file.read()
+        tama.flash(content)
+        return {"posted": "rom"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/rom")
 async def get_rom():
@@ -67,7 +72,13 @@ async def get_rom():
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/cpu")
-async def post_cpu(file: UploadFile = File(...)):
+async def post_cpu(file: UploadFile = File()):
+    try:
+        content = await file.read()
+        tama.load(content)
+        return {"posted": "rom"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/cpu")
 async def get_cpu():
