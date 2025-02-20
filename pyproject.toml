@@ -18,5 +18,6 @@ dependencies = [
     "uvicorn",
     "jinja2",
     "asyncio",
+    "python-multipart",
 ]
 
