@@ -174,7 +174,7 @@ public:
   Tama();
 
   // Getters
-  std::vector<bool> GetIcon();
+  std::vector<bool> GetIcons();
   std::vector<std::vector<bool>> GetMatrix();
   int GetFreq();
   std::vector<bool> GetButton();
@@ -187,8 +187,9 @@ public:
   void SetROM(const std::vector<int> rom);
 
   // public methods
-  void start();
-  void stop();
+  bool Runs();
+  void Start();
+  void Stop();
 
 private: 
 };
@@ -2105,8 +2106,6 @@ void tamalib_register_hal(hal_t *hal)
 
 void tamalib_mainloop_step_by_step(void)
 {
-  timestamp_t ts;
-
   if (!g_hal->handler()) {
     //tamalib_step();
 
@@ -2185,17 +2184,21 @@ Tama::Tama() {
     tamalib_init(1000000);
 }
 
-void Tama::start(){
+void Tama::Start(){
     pthread_t thread;
     keep_going = true;
     pthread_create(&thread, 0, tamalib_mainloop, 0);
 }
 
-void Tama::stop(){
+void Tama::Stop(){
     keep_going = false;
 }
 
-std::vector<bool> Tama::GetIcon() { 
+bool Tama::Runs() {
+  return keep_going;
+}
+
+std::vector<bool> Tama::GetIcons() { 
 
     std::vector<bool> icon (ICON_NUM) ;
 
@@ -2204,7 +2207,8 @@ std::vector<bool> Tama::GetIcon() {
         icon[i] = icon_buffer[(u8_t)i] != 0;
     }
     
-    return icon; }
+    return icon;
+  }
 
   std::vector<std::vector<bool>> Tama::GetMatrix() {
     std::vector<std::vector<bool>> matrix(LCD_HEIGHT, std::vector<bool>(LCD_WIDTH, false));
@@ -2302,11 +2306,12 @@ namespace py = pybind11;
 PYBIND11_MODULE(_tamalib, m) {
     py::class_<Tama>(m, "Tama")
         .def(py::init<>())
-        .def("start", &Tama::start)
-        .def("stop", &Tama::stop)
+        .def("Start", &Tama::Start)
+        .def("Stop", &Tama::Stop)
+        .def("Runs", &Tama::Runs)
         .def("GetFreq", &Tama::GetFreq)
         .def("GetMatrix", &Tama::GetMatrix)
-        .def("GetIcon", &Tama::GetIcon)
+        .def("GetIcons", &Tama::GetIcons)
         .def("SetCPU", &Tama::SetCPU)
         .def("GetCPU", &Tama::GetCPU)
         .def("GetROM", &Tama::GetROM)
