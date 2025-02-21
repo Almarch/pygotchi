@@ -10,17 +10,24 @@ class Tama():
     def __init__(self):
         self.__tamalib__ = Tamalib()
         self.__lock__ = Lock() 
+    
+    def __wait__(self):
+        time.sleep(.1)
 
-    def start(self):
-        with self.__lock__:
-            self.__tamalib__.Start()
-    def stop(self):
-        with self.__lock__:
-            self.__tamalib__.Stop()        
     def runs(self):
         with self.__lock__:
             res = self.__tamalib__.Runs()
         return res
+
+    def start(self):
+        if not self.runs():
+            with self.__lock__:
+                self.__tamalib__.Start()
+
+    def stop(self):
+        with self.__lock__:
+            self.__tamalib__.Stop()        
+
     def matrix(self):
         with self.__lock__:
             res = self.__tamalib__.GetMatrix()
@@ -89,42 +96,48 @@ class Tama():
         obj[59] = 4
         obj[63] = 2
 
-        self.stop()
         with self.__lock__:
+            self.__tamalib__.Stop()
+            self.__wait__()
             self.__tamalib__.SetCPU(obj)
 
     def save(self):
-        running = self.runs()
-        self.stop()
         with self.__lock__:
+            running = self.__tamalib__.Runs()
+            self.__tamalib__.Stop()
+            self.__wait__()
             obj = self.__tamalib__.GetCPU()
-        if running:
-            self.start()
+            self.__wait__()
+            if running:
+                self.__tamalib__.Start()
         return int2bin(obj)
     
     def load(self, bin):
         obj = bin2int(bin)
-        running = self.runs()
-        self.stop()
         with self.__lock__:
+            running = self.__tamalib__.Runs()
+            self.__tamalib__.Stop()
+            self.__wait__()
             self.__tamalib__.SetCPU(obj)
-        if running:
-            self.start()
+            self.__wait__()
+            if running:
+                self.__tamalib__.Start()
 
     def dump(self):
-        running = self.runs()
-        self.stop()
         with self.__lock__:
+            running = self.__tamalib__.Runs()
+            self.__tamalib__.Stop()
+            self.__wait__()
             obj = self.__tamalib__.GetROM()
-        if running:
-            self.start()
+            self.__wait__()
+            if running:
+                self.__tamalib__.Start()
         return int2bin(obj)
-
+    
     def flash(self, bin):
         obj = bin2int(bin)
-        running = self.runs()
-        self.stop()
         with self.__lock__:
+            self.__tamalib__.Stop()
+            self.__wait__()
             self.__tamalib__.SetROM(obj)
-        if running:
-            self.start()
+        self.reset()

@@ -26,11 +26,11 @@ async def websocket_video(websocket: WebSocket):
             await websocket.send_json(
                 {
                     "matrix": tama.matrix(),
-                    "icon": tama.icons(),
+                    "icons": tama.icons(),
                     "runs": tama.runs(),
                 }
             )
-            await asyncio.sleep(1 / 6)
+            await asyncio.sleep(1 / 5)
     except WebSocketDisconnect:
         print("Client disconnected")
     except Exception as e:

@@ -11,7 +11,7 @@ body {
 	color: white;
     margin: 0;
     padding: 0;
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: center;
     height: 100vh;
@@ -70,20 +70,73 @@ body {
     right: 15px;
 }
 
-#main-image {
-    width: 100%;
-    height: auto;
-    display: block;
+.screen-container {
+    position: relative; /* Ensures absolute positioning works inside */
+    display: inline-block; /* Prevents unnecessary stretching */
+    height: 250px;
+    width: 250px;
 }
 
-/* Position the canvas exactly over the image */
-#pixel-canvas {
+#main-image {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%; /* Match image dimensions */
-    height: 100%;
-    pointer-events: none; /* Allows interactions with buttons below */
+    display: block; /* Removes default inline spacing */
+    top: -3%;
+    left: -3%;
+    width: 106%; /* Ensure it scales properly */
+    height: 106%;
+    z-index: 1;
+}
+
+#canvas-pixels {
+    position: absolute;
+    top: 25%;
+    left: 0%;
+    width: 100%;
+    height: auto;
+    z-index: 3; /* Places it above the image */
+    pointer-events: none; /* Allows clicks to go through to buttons below */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges; /* Alternative for some browsers */
+}
+
+.icon {
+    position: absolute;
+    width: auto;
+    height: 10%;
+    z-index: 2;
+}
+
+#icon-1 {
+    top: 8%;
+    left: 10%;
+}
+#icon-2 {
+    top: 8%;
+    left: 33%;
+}
+#icon-3 {
+    top: 8%;
+    left: 57%;
+}
+#icon-4 {
+    top: 8%;
+    left: 80%;
+}
+#icon-5 {
+    top: 82%;
+    left: 10%;
+}
+#icon-6 {
+    top: 82%;
+    left: 33%;
+}
+#icon-7 {
+    top: 82%;
+    left: 57%;
+}
+#icon-8 {
+    top: 82%;
+    left: 80%;
 }
 
 /* Shake Animation */

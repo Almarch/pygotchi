@@ -9,15 +9,6 @@ The web server-client logic makes a special sense for Tamagotchis as it unlocks 
 
 A web app is readily available with the package. It is dockerized for ease of deployment.
 
-## 0. State of developement
-
-🚧 This is still a work in progress.
-
-To do:
-
-- keep developing the web UI
-- adapt `tamalib.cpp` to a variety of 1st gen ROMs, following the recent TamaLIB developments
-
 ## 1. Run the app
 
 Start by cloning the repo:
@@ -205,6 +196,8 @@ I ported TamaLIB on the [R](https://github.com/almarch/tamaR) software environme
 More recently, new first-generation ROMs have leaked and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R. The goal of this new version is to deliver an improved version of TamaLIB as a web service.
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). A solution to build the package on windows.
+
+🚧 Adaptation to the whole new first-generation ROM collection is still on the backlog.
 
 ## 5. License
 
