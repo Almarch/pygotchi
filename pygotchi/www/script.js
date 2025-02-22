@@ -66,7 +66,7 @@ function drawMatrix(matrix) {
 // Function to draw icons
 function drawIcons(icons) {
     for (let i = 0; i < 8; i++) {
-        let icon = document.getElementById(`icon-${i + 1}`);
+        let icon = document.getElementById(`icon-${i}`);
         if (icon) {
             icon.style.display = icons[i] ? "block" : "none";
         }
@@ -140,7 +140,6 @@ document.getElementById("mic-btn").addEventListener("click", function() {
     }
 });
 
-
 document.getElementById("A").addEventListener("click", function() {
     fetch("/click?button=A", {
         method: "POST",
@@ -177,9 +176,21 @@ document.getElementById("C").addEventListener("click", function() {
     .catch(error => console.error("Error:", error));
 });
 
-document.getElementById("cpu-reset").addEventListener("click", function() {
-    fetch("/manage?do=reset", {
+document.getElementById("AC").addEventListener("click", function() {
+    fetch("/click?button=AC", {
         method: "POST",
+        headers: {
+            "accept": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Success:", data))
+    .catch(error => console.error("Error:", error));
+});
+
+document.getElementById("cpu-reset").addEventListener("click", function() {
+    fetch("/cpu", {
+        method: "DELETE",
         headers: {
             "accept": "application/json"
         }

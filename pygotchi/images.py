@@ -2,18 +2,9 @@ import os
 import matplotlib.image as mpimg
 
 _pkg_dir = os.path.dirname(__file__)
-background = mpimg.imread(os.path.join(_pkg_dir, "www", "img", "background.png"))
+background = mpimg.imread(os.path.join(_pkg_dir, "www", "img", "p1", "background.png"))
 
 icons = {}
 
-for icon in [
-    "attention",
-    "bathroom",
-    "food",
-    "game",
-    "lights",
-    "medicine",
-    "status",
-    "training"
-]:
-    icons[icon] = mpimg.imread(os.path.join(_pkg_dir, "www", "img", icon + ".png"))
+for icon in ["icon" + str(x) for x in range(8)]:
+    icons[icon] = mpimg.imread(os.path.join(_pkg_dir, "www", "img", "p1", icon + ".png"))

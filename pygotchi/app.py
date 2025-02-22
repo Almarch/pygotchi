@@ -8,6 +8,7 @@ from .Tama import Tama
 
 app = FastAPI()
 tama = Tama()
+background = "p1"
 
 _pkg_dir = os.path.dirname(__file__)
 www_dir = os.path.join(_pkg_dir, "www")
@@ -28,6 +29,7 @@ async def websocket_video(websocket: WebSocket):
                     "matrix": tama.matrix(),
                     "icons": tama.icons(),
                     "runs": tama.runs(),
+                    "background": background,
                 }
             )
             await asyncio.sleep(1 / 5)
@@ -51,10 +53,10 @@ async def websocket_audio(websocket: WebSocket):
         await websocket.close(code=1011)
 
 @app.post("/rom")
-async def Flash_ROM(file: UploadFile = File()):
+async def Load_ROM(file: UploadFile = File()):
     try:
         content = await file.read()
-        tama.flash(content)
+        tama.load("ROM", content)
         return {"posted": "rom"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -62,7 +64,7 @@ async def Flash_ROM(file: UploadFile = File()):
 @app.get("/rom")
 async def Dump_ROM():
     try:
-        data = tama.dump()
+        data = tama.dump("ROM")
         return Response(
             content=data,
             media_type="application/octet-stream",
@@ -71,19 +73,27 @@ async def Dump_ROM():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.delete("/rom")
+async def Delete_ROM():
+    try:
+        tama.reset("ROM")
+        return {"deleted": "rom"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/cpu")
 async def Load_CPU(file: UploadFile = File()):
     try:
         content = await file.read()
-        tama.load(content)
+        tama.load("CPU", content)
         return {"posted": "rom"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/cpu")
-async def Save_CPU():
+async def Dump_CPU():
     try:
-        data = tama.save()
+        data = tama.dump("CPU")
         return Response(
             content=data,
             media_type="application/octet-stream",
@@ -91,9 +101,17 @@ async def Save_CPU():
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.delete("/cpu")
+async def Delete_CPU():
+    try:
+        tama.reset("CPU")
+        return {"deleted": "cpu"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/manage")
-async def manage(do: str):
+async def Manage(do: str):
     match do:
         case "start":
             tama.start()
@@ -101,9 +119,6 @@ async def manage(do: str):
         case "stop":
             tama.stop()
             return {"manage": "Tama stopped"}
-        case "reset":
-            tama.reset()
-            return {"manage": "Tama reset"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid manage action")
 
@@ -112,12 +127,27 @@ async def click(button: str):
     match button:
         case "A":
             tama.click("A", .1)
-            return {"click": "A"}
+            return {"clicked": "A"}
         case "B":
             tama.click("B", .1)
-            return {"click": "B"}
+            return {"clicked": "B"}
         case "C":
             tama.click("C", .1)
-            return {"click": "C"}
+            return {"clicked": "C"}
+        case "AC":
+            tama.click(["A","C"], .5)
+            return {"clicked": "A+C"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
+        
+@app.post("/background")
+async def Change_background(theme: str):
+    match theme:
+        case "p1":
+            background = "p1"
+            return {"background": "p1 theme"}
+        case "p2":
+            background = "p2"
+            return {"background": "p2 theme"}
+        case _:
+            raise HTTPException(status_code=400, detail = "Invalid background")

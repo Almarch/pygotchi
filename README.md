@@ -1,4 +1,4 @@
-# <img src="pygotchi/www/img/icon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live on Python ! 
+# <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live on Python ! 
 
 The goal of this package is to port [TamaLIB](https://github.com/jcrona/tamalib) to Python. Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
@@ -47,7 +47,20 @@ The app is now available at http://localhost:8000.
 
 ### 1.3. Swagger
 
-FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs
+FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. FOr parcimony, not all API are implemented on the UI.
+
+## 2. How to use
+
+### 2.1. Load a ROM
+
+### 2.2. Save the game
+
+### 2.3. About the buzzer
+
+The buzzer may be controlled at 2 levels:
+
+- Using the 🔊 icon: controls the sound on the client side.
+- Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
 
 ## 2. Deploy the app
 
@@ -128,66 +141,7 @@ It can be played from a smartphone. A shortcut to the webpage may be added to th
 
 The Tamagotchi runs backend, so it remains alive when the user disconnects.
 
-## 3. Use from Python
-
-The package binds a `Tama` Python class to TamaLIB. It is thus possible to interact directly with it once the package has been installed.
-
-### 3.1. Launch the emulation
-
-A Tamagotchi object must be instanciated:
-
-```py
-from pygotchi import Tama
-tama = Tama()
-```
-
-The emulator comes with a blank ROM slot. The ROM must be inserted with the `flash` method:
-
-```py
-rom_file = open("roms/p1.bin", "rb")
-bin = rom_file.read() 
-tama.flash(bin)
-```
-
-The emulation can be launched and paused with the corresponding methods: `start` and `stop`:
-
-```py
-tama.start()
-```
-
-### 3.2. Commands
-
-The screen can be rendered using `display` and the sound frequency is available with `GetFreq`.
-
-Action the 3 buttons `A`, `B` and `C` with the `click` method.
-
-```py
-import time
-tama.click("B", 0.5)
-time.sleep(3)
-tama.display()
-```
-
-The game may be saved anytime using the `save` command:
-
-```py
-tama.stop()
-bin = tama.save()
-cpu_file = open("pets/save.bin", "wb")  
-cpu_file.write(bin)  
-cpu_file.close()
-```
-
-It can then be resumed with `load`:
-
-```py
-cpu_file = open("pets/save.bin", "rb")
-bin = cpu_file.read() 
-tama.load(bin)
-tama.start()
-```
-
-## 4. Background
+## 3. Background
 
 The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. The Arduino version is the starting point for a C++ module aiming portage on higher-level object-oriented languages.
 
@@ -202,3 +156,5 @@ On the technical side, all C++ code has been merged into a monolithic `tamalib.c
 ## 5. License
 
 This work is licensed under Attribution-NonCommercial 4.0 International.
+
+All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).

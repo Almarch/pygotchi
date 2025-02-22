@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaMaGoTcHi</title>
     <link rel="stylesheet" href="www/styles.css">
-    <link rel="icon" type="image/png" href="www/img/icon.png">
+    <link rel="icon" type="image/png" href="www/img/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
@@ -24,13 +24,14 @@
         <button class="close-btn" onclick="toggleMenu()">✖</button>
         <br>
         <br>
-        <br>
         <!-- On/Off Switch -->
-        <label id="on-off-switch" class="switch">
-            <input type="checkbox">
-            <span class="slider round"></span>
-        </label>
-        <br>
+        <div class="button-container">
+            <label id="on-off-switch" class="switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <button class="action-btn", id="AC">A+C</button>
+        </div>
         <br>
         <!-- File Upload -->
         <div class="file-controls">
@@ -55,6 +56,7 @@
             <div class="custom-select">
                 <select>
                     <option value="p1">P1 theme</option>
+                    <option value="p2">P2 theme</option>
                 </select>
             </div>
         </div>
@@ -68,16 +70,16 @@
     <div class="container">
 
         <div class = "screen-container" id = "to-shake">
-            <img id="main-image" src="www/img/background.png">
+            <img id="main-image" src="www/img/p1/background.png">
             <div id="canvas-pixels"></div>
-            <img class="icon" id="icon-1" src="www/img/food.png">
-            <img class="icon" id="icon-2" src="www/img/lights.png">
-            <img class="icon" id="icon-3" src="www/img/game.png">
-            <img class="icon" id="icon-4" src="www/img/medicine.png">
-            <img class="icon" id="icon-5" src="www/img/bathroom.png">
-            <img class="icon" id="icon-6" src="www/img/status.png">
-            <img class="icon" id="icon-7" src="www/img/training.png">
-            <img class="icon" id="icon-8" src="www/img/attention.png">
+            <img class="icon" id="icon-0" src="www/img/p1/icon0.png">
+            <img class="icon" id="icon-1" src="www/img/p1/icon1.png">
+            <img class="icon" id="icon-2" src="www/img/p1/icon2.png">
+            <img class="icon" id="icon-3" src="www/img/p1/icon3.png">
+            <img class="icon" id="icon-4" src="www/img/p1/icon4.png">
+            <img class="icon" id="icon-5" src="www/img/p1/icon5.png">
+            <img class="icon" id="icon-6" src="www/img/p1/icon6.png">
+            <img class="icon" id="icon-7" src="www/img/p1/icon7.png">
         </div>
 
         <div class="button-container">

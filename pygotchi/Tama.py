@@ -1,8 +1,5 @@
 from ._tamalib import Tama as Tamalib
 from .conversion import int2bin, bin2int
-from .images import background, icons
-import numpy as np
-import matplotlib.pyplot as plt
 import time
 from threading import Lock, Thread
 
@@ -10,6 +7,22 @@ class Tama():
     def __init__(self):
         self.__tamalib__ = Tamalib()
         self.__lock__ = Lock() 
+        self.__0ROM__ = [0 for i in range(9216)]
+        self.__0CPU__ = [0 for i in range(384)]
+        self.__0CPU__[ 1] = 1
+        self.__0CPU__[ 8] = 1
+        self.__0CPU__[32] = 96
+        self.__0CPU__[33] = 219
+        self.__0CPU__[34] = 127
+        self.__0CPU__[35] = 42
+        self.__0CPU__[36] = 203
+        self.__0CPU__[37] = 113
+        self.__0CPU__[43] = 12
+        self.__0CPU__[47] = 10
+        self.__0CPU__[51] = 8
+        self.__0CPU__[55] = 6
+        self.__0CPU__[59] = 4
+        self.__0CPU__[63] = 2
     
     def __wait__(self):
         time.sleep(.1)
@@ -32,36 +45,16 @@ class Tama():
         with self.__lock__:
             res = self.__tamalib__.GetMatrix()
         return res
+    
     def freq(self):
         with self.__lock__:
             res = self.__tamalib__.GetFreq()
         return res
+    
     def icons(self):
         with self.__lock__:
             res = self.__tamalib__.GetIcons()
         return res
-    
-    def display(self, background = background):
-
-        raster = np.zeros((16,32,4))
-        raster[..., 3] = np.array(self.matrix())
-        ics = self.icons()
-        
-        fig, ax = plt.subplots()
-        ax.imshow(background , extent=[-1, 33, -1, 33])
-        ax.imshow(raster, interpolation = None , extent=[0, 32, 8, 24])
-        if ics[0]: ax.imshow(icons["food"]     , interpolation = None, extent=[ 2, 6,26.25,29.75])
-        if ics[1]: ax.imshow(icons["lights"]   , interpolation = None, extent=[10,14,26.25,29.75])
-        if ics[2]: ax.imshow(icons["game"]     , interpolation = None, extent=[18,22,26.25,29.75])
-        if ics[3]: ax.imshow(icons["medicine"] , interpolation = None, extent=[26,30,26.5 ,29.75])
-        if ics[4]: ax.imshow(icons["bathroom"] , interpolation = None, extent=[ 2, 6, 2.5 , 5.5 ])
-        if ics[5]: ax.imshow(icons["status"]   , interpolation = None, extent=[10,14, 2.5,  5.25])
-        if ics[6]: ax.imshow(icons["training"] , interpolation = None, extent=[18,22, 2.5,  5.5 ])
-        if ics[7]: ax.imshow(icons["attention"], interpolation = None, extent=[26,30, 2.5,  5   ])
-        ax.axis('off')
-        ax.set_xlim(0,32)
-        ax.set_ylim(0,32)
-        plt.show()
 
     def __click__(self, button, delay):
         with self.__lock__:
@@ -79,65 +72,44 @@ class Tama():
     def poke(self): # new
         pass
 
-    def reset(self):
-        obj = [0 for i in range(384)]
-        obj[ 1] = 1
-        obj[ 8] = 1
-        obj[32] = 96
-        obj[33] = 219
-        obj[34] = 127
-        obj[35] = 42
-        obj[36] = 203
-        obj[37] = 113
-        obj[43] = 12
-        obj[47] = 10
-        obj[51] = 8
-        obj[55] = 6
-        obj[59] = 4
-        obj[63] = 2
-
+    def reset(self, what):
         with self.__lock__:
             self.__tamalib__.Stop()
             self.__wait__()
-            self.__tamalib__.SetCPU(obj)
+            if what=="CPU":
+                self.__tamalib__.SetCPU(self.__0CPU__)
+            elif what == "ROM":
+                self.__tamalib__.SetROM(self.__0ROM__)
+                self.__wait__()
+                self.__tamalib__.SetCPU(self.__0CPU__)
 
-    def save(self):
+    def dump(self, what):
         with self.__lock__:
             running = self.__tamalib__.Runs()
             self.__tamalib__.Stop()
             self.__wait__()
-            obj = self.__tamalib__.GetCPU()
+            if what=="CPU":
+                obj = self.__tamalib__.GetCPU()
+            elif what == "ROM":
+                obj = self.__tamalib__.GetROM()
             self.__wait__()
             if running:
                 self.__tamalib__.Start()
         return int2bin(obj)
     
-    def load(self, bin):
+    def load(self, what, bin):
         obj = bin2int(bin)
         with self.__lock__:
             running = self.__tamalib__.Runs()
             self.__tamalib__.Stop()
             self.__wait__()
-            self.__tamalib__.SetCPU(obj)
+            if what=="CPU":
+                self.__tamalib__.SetCPU(obj)
+            elif what == "ROM":
+                self.__tamalib__.SetROM(obj)
             self.__wait__()
-            if running:
-                self.__tamalib__.Start()
+        if what=="CPU" and running:
+            self.start()
+        elif what == "ROM":
+            self.reset("CPU")
 
-    def dump(self):
-        with self.__lock__:
-            running = self.__tamalib__.Runs()
-            self.__tamalib__.Stop()
-            self.__wait__()
-            obj = self.__tamalib__.GetROM()
-            self.__wait__()
-            if running:
-                self.__tamalib__.Start()
-        return int2bin(obj)
-    
-    def flash(self, bin):
-        obj = bin2int(bin)
-        with self.__lock__:
-            self.__tamalib__.Stop()
-            self.__wait__()
-            self.__tamalib__.SetROM(obj)
-        self.reset()

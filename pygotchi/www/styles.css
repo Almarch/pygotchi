@@ -108,35 +108,35 @@ body {
     z-index: 2;
 }
 
-#icon-1 {
+#icon-0 {
     top: 8%;
     left: 10%;
+}
+#icon-1 {
+    top: 8%;
+    left: 33%;
 }
 #icon-2 {
     top: 8%;
-    left: 33%;
+    left: 57%;
 }
 #icon-3 {
     top: 8%;
-    left: 57%;
-}
-#icon-4 {
-    top: 8%;
     left: 80%;
 }
-#icon-5 {
+#icon-4 {
     top: 82%;
     left: 10%;
 }
-#icon-6 {
+#icon-5 {
     top: 82%;
     left: 33%;
 }
-#icon-7 {
+#icon-6 {
     top: 82%;
     left: 57%;
 }
-#icon-8 {
+#icon-7 {
     top: 82%;
     left: 80%;
 }
@@ -161,10 +161,10 @@ body {
     gap: 75px;
 }
 
-/* Button Container */
 .button-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Horizontally centers buttons */
+    align-items: center; /* Vertically centers buttons */
     gap: 25px;
 }
 
@@ -175,8 +175,6 @@ body {
     border: 2px solid #2a2a2a;
     width: 60px; /* Smaller width */
     height: 30px; /* Compact height */
-    font-size: 12px; /* Retro, small font */
-    font-weight: bold;
     border-radius: 15px; /* Soft, pill shape */
     box-shadow: inset -2px -2px 3px rgba(255, 255, 255, 0.1),
                 inset 2px 2px 3px rgba(0, 0, 0, 0.3),
@@ -201,15 +199,20 @@ body {
                 inset 2px 2px 3px rgba(255, 255, 255, 0.1);
     transform: translateY(2px); /* Very subtle press effect */
   }
+
+  #AC {
+    position: relative;
+    font-size: 20px;
+    width: 70px; 
+    height: 38px;
+    border-radius: 25px;
+  }
   
   
 /* On/Off Switch */
 /* The switch - the box around the slider */
 .switch {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-block;
+    position: relative;
     width: 60px;
     height: 34px;
   }
