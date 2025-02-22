@@ -1,4 +1,4 @@
-# <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live on Python ! 
+# <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
 The goal of this package is to port [TamaLIB](https://github.com/jcrona/tamalib) to Python. Bringing the low-level emulator to a high-level language aims at easing its deployment as a web service.
 
@@ -8,6 +8,10 @@ The web server-client logic makes a special sense for Tamagotchis as it unlocks 
 - Real-time consistency: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
 A web app is readily available with the package. It is dockerized for ease of deployment.
+
+<div align="center">
+        <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
+</div>
 
 ## 1. Run the app
 
@@ -155,15 +159,15 @@ The Tamagotchi runs backend, so it remains alive when the user disconnects.
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. The Arduino version is the starting point for a C++ module aiming portage on higher-level object-oriented languages.
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring.
 
-I ported TamaLIB on the [R](https://github.com/almarch/tamaR) software environment, with an R-Shiny web app. The R project was developed aiming the sole P1 ROM that was available at this time. The app encompassed a function to switch the sprites to the P2 ones, and an algorithm to automatically care for the pet. Nevertheless, the core functionnality of the R project had been to deploy TamaLIB on the web, in a server-client logic.
+From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR) and Python. The R project was developed aiming the sole P1 ROM that was available at this time. The app encompassed a function to switch the sprites to the P2 ones, and an algorithm to automatically care for the pet. Nevertheless, the core functionnality of the R project had been to deploy TamaLIB as a web app, in a server-client logic.
 
 More recently, new first-generation ROMs have leaked and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R. The goal of this new version is to deliver an improved version of TamaLIB as a web service.
 
-On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). A solution to build the package on windows has to be developped.
+On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). A solution to compile the package on windows has to be developped (it compiled with Rcpp so this has to be feasible).
 
-🚧 Adaptation to the new first-generation ROM collection is still on the backlog.
+Adaptation to the new first-generation ROM collection is still on the backlog.
 
 ## 5. License
 
