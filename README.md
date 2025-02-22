@@ -142,7 +142,7 @@ server {
 }
 ```
 
-Create a symlink in the /etc/nginx/sites-enabled/ folder, and restard nginx:
+Create a symlink in the /etc/nginx/sites-enabled/ folder, and restart nginx:
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled/app
