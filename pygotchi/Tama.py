@@ -5,6 +5,7 @@ from threading import Lock, Thread
 
 class Tama():
     def __init__(self):
+        self.theme = "p1"
         self.__tamalib__ = Tamalib()
         self.__lock__ = Lock() 
         self.__0ROM__ = [0 for i in range(9216)]

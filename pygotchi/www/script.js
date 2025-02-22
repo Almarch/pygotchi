@@ -40,6 +40,10 @@ wsScreen.onmessage = function(event) {
         drawIcons(data.icons);
     }
 
+    if (data.background) {
+        updateBackground(data.background);
+    }
+
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
         if (switchElement.checked !== data.runs) {  // Only update if the state changes
@@ -48,6 +52,22 @@ wsScreen.onmessage = function(event) {
         }
     }
 };
+
+// Function to update the UI with the correct background
+const mainImage = document.getElementById("main-image");
+function updateBackground(background) {
+    mainImage.src = `www/img/${background}/background.png`;
+
+    for (let i = 0; i < 8; i++) {
+        let icon = document.getElementById(`icon-${i}`);
+        if (icon) {
+            icon.src = `www/img/${background}/icon${i}.png`;
+        }
+    }
+
+    // Ensure the select reflects the current background
+    selectElement.value = background;
+}
 
 // Function to draw pixels
 function drawMatrix(matrix) {
@@ -264,4 +284,15 @@ document.querySelector("#on-off-switch input").addEventListener("change", functi
 
 document.getElementById("cpu-download").addEventListener("click", function() {
     window.location.href = "/cpu";
+});
+
+// Event listener for the select dropdown
+const selectElement = document.querySelector(".custom-select select");
+selectElement.addEventListener("change", function() {
+    fetch("/background?theme=" + selectElement.value, {
+        method: "POST",
+        headers: {
+            "accept": "application/json"
+        }
+    }).catch(error => console.error("Error sending background update:", error));
 });

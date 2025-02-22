@@ -8,7 +8,6 @@ from .Tama import Tama
 
 app = FastAPI()
 tama = Tama()
-background = "p1"
 
 _pkg_dir = os.path.dirname(__file__)
 www_dir = os.path.join(_pkg_dir, "www")
@@ -29,7 +28,7 @@ async def websocket_video(websocket: WebSocket):
                     "matrix": tama.matrix(),
                     "icons": tama.icons(),
                     "runs": tama.runs(),
-                    "background": background,
+                    "background": tama.theme,
                 }
             )
             await asyncio.sleep(1 / 5)
@@ -144,10 +143,10 @@ async def click(button: str):
 async def Change_background(theme: str):
     match theme:
         case "p1":
-            background = "p1"
+            tama.theme = "p1"
             return {"background": "p1 theme"}
         case "p2":
-            background = "p2"
+            tama.theme = "p2"
             return {"background": "p2 theme"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid background")
