@@ -59,7 +59,7 @@ FastAPI apps come with a swagger. Once the app is launched, have a look at: http
 
 <img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="255px" align="right"/>
 
-The game is controled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to "poke" the toy.
+The game is controlled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to "poke" the toy.
 
 A menu (☰) allows administration over the game.
 
