@@ -19,6 +19,8 @@ git clone https://github.com/almarch/pygotchi.git
 
 ### 1.1. Run with Docker
 
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Docker_%28container_engine%29_logo_%28cropped%29.png" width="120px" align="right"/>
+
 ```sh
 cd pygotchi
 docker build -t tama .
@@ -47,15 +49,23 @@ The app is now available at http://localhost:8000.
 
 ### 1.3. Swagger
 
-FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. FOr parcimony, not all API are implemented on the UI.
+FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
 
 ## 2. How to use
 
+<img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="255px" align="right"/>
+
+The game is controled with 3 buttons (A, B, C) with respect to the original toy. A menu (☰) allows administration over the game.
+
 ### 2.1. Load a ROM
+
+From the administration menu, flash a ROM. It should be a 12ko .bin file. Use the switch button to get the emulation started. The ROM is loaded on the server, and the emulation runs server-side.
 
 ### 2.2. Save the game
 
-### 2.3. About the buzzer
+The game may be saved any time using the Save CPU button from the administration menu. The save.bin file may then be loaded again. Ensure consistency between the loaded CPU and the ROM.
+
+### 2.3. Control the sound
 
 The buzzer may be controlled at 2 levels:
 
@@ -143,6 +153,8 @@ The Tamagotchi runs backend, so it remains alive when the user disconnects.
 
 ## 3. Background
 
+<img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
+
 The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. The Arduino version is the starting point for a C++ module aiming portage on higher-level object-oriented languages.
 
 I ported TamaLIB on the [R](https://github.com/almarch/tamaR) software environment, with an R-Shiny web app. The R project was developed aiming the sole P1 ROM that was available at this time. The app encompassed a function to switch the sprites to the P2 ones, and an algorithm to automatically care for the pet. Nevertheless, the core functionnality of the R project had been to deploy TamaLIB on the web, in a server-client logic.
@@ -151,7 +163,7 @@ More recently, new first-generation ROMs have leaked and TamaLIB has been adapte
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). A solution to build the package on windows has to be developped.
 
-🚧 Adaptation to the whole new first-generation ROM collection is still on the backlog.
+🚧 Adaptation to the new first-generation ROM collection is still on the backlog.
 
 ## 5. License
 
