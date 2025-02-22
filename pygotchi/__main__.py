@@ -1,6 +1,4 @@
 import uvicorn
-
-import uvicorn
 import sys
 
 def main():
