@@ -1,3 +1,19 @@
+# Feature/new-roms : to-do list
+
+- transfer [tamaLIB updates](https://github.com/jcrona/tamalib/compare/1f6f51f8a64dbf5822f9b1fd7e34f945688a1ef0...c1e3ecb1ed24647a2683b802549e2c1d278f04bd)
+    - hal.h ✅
+    - hw.h ✅
+    - cpu.c ❌
+    - cpu.h ❌
+    - hw.c ❌
+- test with p1 ❌
+- bind the poke feature ❌
+- test with new roms ❌
+
+<br>
+<br>
+<br>
+
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
 The goal of this Python package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service.

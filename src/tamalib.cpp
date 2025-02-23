@@ -52,10 +52,11 @@ typedef uint32_t u32_t;
 typedef uint32_t timestamp_t; // WARNING: Must be an unsigned type to properly handle wrapping (u32 wraps in around 1h11m when expressed in us)
 
 typedef enum {
-  LOG_ERROR  = 0x1,
-  LOG_INFO  = (0x1 << 1),
+  LOG_ERROR   = 0x1,
+  LOG_INFO    = (0x1 << 1),
   LOG_MEMORY  = (0x1 << 2),
-  LOG_CPU    = (0x1 << 3),
+  LOG_CPU     = (0x1 << 3),
+	LOG_INT		  = (0x1 << 4),
 } log_level_t;
 
 typedef struct {
@@ -78,6 +79,7 @@ typedef enum {
   BTN_LEFT = 0,
   BTN_MIDDLE,
   BTN_RIGHT,
+	BTN_TAP,
 } button_t;
 
 typedef enum {
