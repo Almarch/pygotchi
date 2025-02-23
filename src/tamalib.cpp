@@ -511,20 +511,28 @@ static void generate_interrupt(int_slot_t slot, u8_t bit)
 void cpu_set_input_pin(pin_t pin, pin_state_t state)
 {
   /* Set the I/O */
-  inputs[pin & 0x4].states = (inputs[pin & 0x4].states & ~(0x1 << (pin & 0x3))) | (state << (pin & 0x3));
+  u4_t old_state = (inputs[pin & 0x4].states >> (pin & 0x3)) & 0x1;
 
-  /* Trigger the interrupt (TODO: handle relation register) */
-  if (state == PIN_STATE_LOW) {
+  /* Trigger the interrupt if the state changed */
+  if (state != old_state) {
     switch ((pin & 0x4) >> 2) {
       case 0:
-        generate_interrupt(INT_K00_K03_SLOT, pin & 0x3);
+        /* Active HIGH/LOW depending on the relation register */
+        if (state != ((GET_IO_MEMORY(memory, REG_K00_K03_INPUT_RELATION) >> (pin & 0x3)) & 0x1)) {
+          generate_interrupt(INT_K00_K03_SLOT, pin & 0x3);
+        }
         break;
 
       case 1:
-        generate_interrupt(INT_K10_K13_SLOT, pin & 0x3);
+        /* Active LOW */
+        if (state == PIN_STATE_LOW) {
+          generate_interrupt(INT_K10_K13_SLOT, pin & 0x3);
+        }
         break;
     }
   }
+  /* Set the I/O */
+  inputs[pin & 0x4].states = (inputs[pin & 0x4].states & ~(0x1 << (pin & 0x3))) | (state << (pin & 0x3));
 }
 
 void cpu_sync_ref_timestamp(void)
@@ -597,6 +605,14 @@ static u4_t get_io(u12_t n)
       /* Input (K10-K13) interrupt masks */
       return interrupts[INT_K10_K13_SLOT].mask_reg;
 
+    case REG_CLOCK_TIMER_DATA_1:
+      /* Clock timer data (16-128Hz) */
+      return GET_IO_MEMORY(memory, n);
+
+    case REG_CLOCK_TIMER_DATA_2:
+      /* Clock timer data (1-8Hz) */
+      return GET_IO_MEMORY(memory, n);
+
     case REG_PROG_TIMER_DATA_L:
       /* Prog timer data (low) */
       return prog_timer_data & 0xF;
@@ -617,11 +633,15 @@ static u4_t get_io(u12_t n)
       /* Input port (K00-K03) */
       return inputs[0].states;
 
+    case REG_K00_K03_INPUT_RELATION:
+      /* Input relation register (K00-K03) */
+      return GET_IO_MEMORY(memory, n);
+
     case REG_K10_K13_INPUT_PORT:
       /* Input port (K10-K13) */
       return inputs[1].states;
 
-    case REG_K40_K43_BZ_OUTPUT_PORT:
+    case REG_R40_R43_BZ_OUTPUT_PORT:
       /* Output port (R40-R43) */
       //return io_memory[n - MEM_IO_ADDR_OFS];
       return 0xf;
@@ -678,7 +698,6 @@ static void set_io(u12_t n, u4_t v)
   switch (n) {
     case REG_CLOCK_INT_MASKS:
       /* Clock timer interrupt masks */
-      /* Assume 1Hz timer INT enabled (0x8) */
       interrupts[INT_CLOCK_TIMER_SLOT].mask_reg = v;
       break;
 
@@ -712,6 +731,17 @@ static void set_io(u12_t n, u4_t v)
       interrupts[INT_K10_K13_SLOT].mask_reg = v;
       break;
 
+    case REG_CLOCK_TIMER_DATA_1:
+      /* Write not allowed */
+      /* Clock timer data (16-128Hz) */
+      break;
+
+    case REG_CLOCK_TIMER_DATA_2:
+      /* Write not allowed */
+      /* Clock timer data (1-8Hz) */
+      break;
+
+
     case REG_PROG_TIMER_RELOAD_DATA_L:
       /* Prog timer reload data (low) */
       prog_timer_rld = v | (prog_timer_rld & 0xF0);
@@ -727,7 +757,11 @@ static void set_io(u12_t n, u4_t v)
       /* Write not allowed */
       break;
 
-    case REG_K40_K43_BZ_OUTPUT_PORT:
+    case REG_K00_K03_INPUT_RELATION:
+      /* Input relation register (K00-K03) */
+      break;
+
+    case REG_R40_R43_BZ_OUTPUT_PORT:
       /* Output port (R40-R43) */
       //g_hal->log(LOG_INFO, "Output/Buzzer: 0x%X\n", v);
       hw_enable_buzzer(!(v & 0x8));
@@ -735,7 +769,19 @@ static void set_io(u12_t n, u4_t v)
 
     case REG_CPU_OSC3_CTRL:
       /* CPU/OSC3 clocks switch, CPU voltage switch */
-      /* Assume 32,768 OSC1 selected, OSC3 off, battery >= 3,1V (0x1) */
+      /* Do not care about OSC3 state nor operating voltage */
+      if ((v & 0x8) && cpu_frequency != OSC3_FREQUENCY) {
+        /* OSC3 */
+        cpu_frequency = OSC3_FREQUENCY;
+        scaled_cycle_accumulator = 0;
+        //g_hal->log(LOG_INFO, "Switch to OSC3\n");
+      }
+      if (!(v & 0x8) && cpu_frequency != OSC1_FREQUENCY) {
+        /* OSC1 */
+        cpu_frequency = OSC1_FREQUENCY;
+        scaled_cycle_accumulator = 0;
+        //g_hal->log(LOG_INFO, "Switch to OSC1\n");
+      }
       break;
 
     case REG_LCD_CTRL:
@@ -945,9 +991,9 @@ static void op_jpba_cb(u8_t arg0, u8_t arg1)
 static void op_call_cb(u8_t arg0, u8_t arg1)
 {
   pc = (pc + 1) & 0x1FFF; // This does not actually change the PC register
-  SET_M(sp - 1, PCP);
-  SET_M(sp - 2, PCSH);
-  SET_M(sp - 3, PCSL);
+  SET_M((sp - 1) & 0xFF, PCP);
+  SET_M((sp - 2) & 0xFF, PCSH);
+  SET_M((sp - 3) & 0xFF, PCSL);
   sp = (sp - 3) & 0xFF;
   next_pc = TO_PC(PCB, NPP, arg0);
   call_depth++;
@@ -956,9 +1002,9 @@ static void op_call_cb(u8_t arg0, u8_t arg1)
 static void op_calz_cb(u8_t arg0, u8_t arg1)
 {
   pc = (pc + 1) & 0x1FFF; // This does not actually change the PC register
-  SET_M(sp - 1, PCP);
-  SET_M(sp - 2, PCSH);
-  SET_M(sp - 3, PCSL);
+  SET_M((sp - 1) & 0xFF, PCP);
+  SET_M((sp - 2) & 0xFF, PCSH);
+  SET_M((sp - 3) & 0xFF, PCSL);
   sp = (sp - 3) & 0xFF;
   next_pc = TO_PC(PCB, 0, arg0);
   call_depth++;
@@ -966,27 +1012,33 @@ static void op_calz_cb(u8_t arg0, u8_t arg1)
 
 static void op_ret_cb(u8_t arg0, u8_t arg1)
 {
-  next_pc = M(sp) | (M(sp + 1) << 4) | (M(sp + 2) << 8) | (PCB << 12);
+  next_pc = M(sp) | (M((sp + 1) & 0xFF) << 4) | (M((sp + 2) & 0xFF) << 8) | (PCB << 12);
   sp = (sp + 3) & 0xFF;
-  call_depth--;
+  if (call_depth > 0) {
+		call_depth--;
+	}
 }
 
 static void op_rets_cb(u8_t arg0, u8_t arg1)
 {
-  next_pc = M(sp) | (M(sp + 1) << 4) | (M(sp + 2) << 8) | (PCB << 12);
+  next_pc = M(sp) | (M((sp + 1) & 0xFF) << 4) | (M((sp + 2) & 0xFF) << 8) | (PCB << 12);
   sp = (sp + 3) & 0xFF;
-  next_pc = (pc + 1) & 0x1FFF;
-  call_depth--;
+  next_pc = (next_pc + 1) & 0x1FFF;
+  if (call_depth > 0) {
+		call_depth--;
+	}
 }
 
 static void op_retd_cb(u8_t arg0, u8_t arg1)
 {
-  next_pc = M(sp) | (M(sp + 1) << 4) | (M(sp + 2) << 8) | (PCB << 12);
+  next_pc = M(sp) | (M((sp + 1) & 0xFF) << 4) | (M((sp + 2) & 0xFF) << 8) | (PCB << 12);
   sp = (sp + 3) & 0xFF;
   SET_M(x, arg0 & 0xF);
-  SET_M(x + 1, (arg0 >> 4) & 0xF);
+  SET_M(((x + 1) & 0xFF) | (XP << 8), (arg0 >> 4) & 0xF);
   x = ((x + 2) & 0xFF) | (XP << 8);
-  call_depth--;
+	if (call_depth > 0) {
+		call_depth--;
+	}
 }
 
 static void op_nop5_cb(u8_t arg0, u8_t arg1)
@@ -999,6 +1051,7 @@ static void op_nop7_cb(u8_t arg0, u8_t arg1)
 
 static void op_halt_cb(u8_t arg0, u8_t arg1)
 {
+  cpu_halted = 1;
 }
 
 static void op_inc_x_cb(u8_t arg0, u8_t arg1)
@@ -1202,7 +1255,7 @@ static void op_ldpy_r_cb(u8_t arg0, u8_t arg1)
 static void op_lbpx_cb(u8_t arg0, u8_t arg1)
 {
   SET_M(x, arg0 & 0xF);
-  SET_M(x + 1, (arg0 >> 4) & 0xF);
+  SET_M(((x + 1) & 0xFF) | (XP << 8), (arg0 >> 4) & 0xF);
   x = ((x + 2) & 0xFF) | (XP << 8);
 }
 
@@ -2034,8 +2087,6 @@ int cpu_step(void)
     }
   }
 
- //sprintf(logMsg, "op-code 0x%X (pc = 0x%04X)", op, pc); g_hal->log(LOG_ERROR, logMsg);
-
   if (ops0[i].cycles == 0) {
     //printf(logMsg, "Unknown op-code 0x%X (pc = 0x%04X)\n", op, pc); g_hal->log(LOG_ERROR, logMsg);
     return 1;
@@ -2286,7 +2337,8 @@ void hw_enable_buzzer(bool_t en)
   g_hal->play_frequency(en);
 }
 
-// Constructor
+/*  ==========  Tama class to export  ============ */
+
 Tama::Tama() {
     tamalib_register_hal(&hal);
     tamalib_init(1000000);
@@ -2408,6 +2460,7 @@ void Tama::SetROM(const std::vector<int> rom) {
     }
 }
 
+/*  ==========  Bind to Python  ============ */
 
 namespace py = pybind11;
 
