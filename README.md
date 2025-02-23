@@ -4,7 +4,7 @@
     - hal.h ✅
     - hw.h ✅
     - cpu.c ❌
-    - cpu.h ❌
+    - cpu.h ✅
     - hw.c ✅
 - test with p1 ❌
 - bind the poke feature ❌

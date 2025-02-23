@@ -23,13 +23,31 @@ static unsigned char g_program_b12[9216];
 #define tamalib_refresh_hw()              cpu_refresh_hw()
 #define tamalib_reset()                   cpu_reset()
 
-#define LCD_WIDTH       32
-#define LCD_HEIGHT     16
-#define ICON_NUM        8
-#define ROM_SIZE     9216
-#define BUTTON_NUM      3
+#define LCD_WIDTH         32
+#define LCD_HEIGHT        16
+#define ICON_NUM           8
+#define ROM_SIZE        9216
+#define BUTTON_NUM         3
 
-#define MEMORY_SIZE           0x140 // MEM_RAM_SIZE + MEM_IO_SIZE
+#define MEMORY_SIZE    0x140
+
+#define E0C6S46_SUPPORT
+#define E0C6S48_SUPPORT
+
+#if defined(E0C6S48_SUPPORT)
+/* E0C6S48 (compatible with E0C6S46) */
+#define MEM_RAM_ADDR           0x000
+#define MEM_RAM_SIZE           0x300 // 768 x 4 bits of RAM
+#define MEM_DISPLAY1_ADDR      0xE00
+#define MEM_DISPLAY1_ADDR_OFS  0xB80
+#define MEM_DISPLAY1_SIZE      0x066 // 102 x 4 bits of RAM
+#define MEM_DISPLAY2_ADDR      0xE80
+#define MEM_DISPLAY2_ADDR_OFS  0xBB0
+#define MEM_DISPLAY2_SIZE      0x066 // 102 x 4 bits of RAM
+#define MEM_IO_ADDR            0xF00
+#define MEM_IO_ADDR_OFS        0xF00
+#define MEM_IO_SIZE            0x080
+#elif define(E0C6S46_SUPPORT)
 #define MEM_RAM_ADDR          0x000
 #define MEM_RAM_SIZE          0x280
 #define MEM_DISPLAY1_ADDR     0xE00
@@ -41,6 +59,9 @@ static unsigned char g_program_b12[9216];
 #define MEM_IO_ADDR           0xF00
 #define MEM_IO_ADDR_OFS       0xF00
 #define MEM_IO_SIZE           0x080
+#else
+#error Support for at least one CPU needs to be defined !
+#endif
 
 typedef uint8_t bool_t;
 typedef uint8_t u4_t;
@@ -56,7 +77,7 @@ typedef enum {
   LOG_INFO    = (0x1 << 1),
   LOG_MEMORY  = (0x1 << 2),
   LOG_CPU     = (0x1 << 3),
-	LOG_INT		  = (0x1 << 4),
+  LOG_INT      = (0x1 << 4),
 } log_level_t;
 
 typedef struct {
@@ -79,7 +100,7 @@ typedef enum {
   BTN_LEFT = 0,
   BTN_MIDDLE,
   BTN_RIGHT,
-	BTN_TAP,
+  BTN_TAP,
 } button_t;
 
 typedef enum {
@@ -113,14 +134,22 @@ typedef struct {
   u8_t sp;
   u4_t flags;
   u32_t tick_counter;
-  u32_t clk_timer_timestamp;
+  u32_t clk_timer_2hz_timestamp;
+  u32_t clk_timer_4hz_timestamp;
+  u32_t clk_timer_8hz_timestamp;
+  u32_t clk_timer_16hz_timestamp;
+  u32_t clk_timer_32hz_timestamp;
+  u32_t clk_timer_64hz_timestamp;
+  u32_t clk_timer_128hz_timestamp;
+  u32_t clk_timer_256hz_timestamp;
   u32_t prog_timer_timestamp;
   bool_t prog_timer_enabled;
   u8_t prog_timer_data;
   u8_t prog_timer_rld;
   u32_t call_depth;
   u4_t *memory;
-  interrupt_t interrupts[6];  
+  interrupt_t interrupts[6];
+  bool_t cpu_halted;
  } cpu_state_t;
 
 typedef enum {
@@ -2138,7 +2167,7 @@ bool_t hw_init(void)
   cpu_set_input_pin(PIN_K00, PIN_STATE_HIGH);
   cpu_set_input_pin(PIN_K01, PIN_STATE_HIGH);
   cpu_set_input_pin(PIN_K02, PIN_STATE_HIGH);
-	cpu_set_input_pin(PIN_K03, PIN_STATE_HIGH);
+  cpu_set_input_pin(PIN_K03, PIN_STATE_HIGH);
   return 0;
 }
 
