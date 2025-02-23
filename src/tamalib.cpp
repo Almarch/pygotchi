@@ -249,15 +249,15 @@ private:
 #define CLEAR_D()       {flags &= ~FLAG_D;}
 #define SET_I()         {flags |= FLAG_I;}
 #define CLEAR_I()       {flags &= ~FLAG_I;}
-#define REG_CLK_INT_FACTOR_FLAGS    0xF00
-#define REG_SW_INT_FACTOR_FLAGS     0xF01
-#define REG_PROG_INT_FACTOR_FLAGS   0xF02
-#define REG_SERIAL_INT_FACTOR_FLAGS   0xF03
+#define REG_CLK_INT_FACTOR_FLAGS        0xF00
+#define REG_SW_INT_FACTOR_FLAGS         0xF01
+#define REG_PROG_INT_FACTOR_FLAGS       0xF02
+#define REG_SERIAL_INT_FACTOR_FLAGS     0xF03
 #define REG_K00_K03_INT_FACTOR_FLAGS    0xF04
 #define REG_K10_K13_INT_FACTOR_FLAGS    0xF05
-#define REG_CLOCK_INT_MASKS     0xF10
-#define REG_SW_INT_MASKS      0xF11
-#define REG_PROG_INT_MASKS      0xF12
+#define REG_CLOCK_INT_MASKS       0xF10
+#define REG_SW_INT_MASKS          0xF11
+#define REG_PROG_INT_MASKS        0xF12
 #define REG_SERIAL_INT_MASKS      0xF13
 #define REG_K00_K03_INT_MASKS     0xF14
 #define REG_K10_K13_INT_MASKS     0xF15
@@ -265,19 +265,19 @@ private:
 #define REG_PROG_TIMER_DATA_H     0xF25
 #define REG_PROG_TIMER_RELOAD_DATA_L    0xF26
 #define REG_PROG_TIMER_RELOAD_DATA_H    0xF27
-#define REG_K00_K03_INPUT_PORT      0xF40
-#define REG_K10_K13_INPUT_PORT      0xF42
-#define REG_K40_K43_BZ_OUTPUT_PORT    0xF54
-#define REG_CPU_OSC3_CTRL     0xF70
-#define REG_LCD_CTRL        0xF71
-#define REG_LCD_CONTRAST      0xF72
-#define REG_SVD_CTRL        0xF73
-#define REG_BUZZER_CTRL1      0xF74
-#define REG_BUZZER_CTRL2      0xF75
-#define REG_CLK_WD_TIMER_CTRL     0xF76
-#define REG_SW_TIMER_CTRL     0xF77
-#define REG_PROG_TIMER_CTRL     0xF78
-#define REG_PROG_TIMER_CLK_SEL      0xF79
+#define REG_K00_K03_INPUT_PORT          0xF40
+#define REG_K10_K13_INPUT_PORT          0xF42
+#define REG_K40_K43_BZ_OUTPUT_PORT      0xF54
+#define REG_CPU_OSC3_CTRL      0xF70
+#define REG_LCD_CTRL           0xF71
+#define REG_LCD_CONTRAST       0xF72
+#define REG_SVD_CTRL           0xF73
+#define REG_BUZZER_CTRL1       0xF74
+#define REG_BUZZER_CTRL2       0xF75
+#define REG_CLK_WD_TIMER_CTRL  0xF76
+#define REG_SW_TIMER_CTRL      0xF77
+#define REG_PROG_TIMER_CTRL    0xF78
+#define REG_PROG_TIMER_CLK_SEL 0xF79
 #define INPUT_PORT_NUM        2
 
 static exec_mode_t exec_mode = EXEC_MODE_RUN;
@@ -292,7 +292,13 @@ static cpu_state_t cpuState;
 static bool_t button_buffer[BUTTON_NUM];
 static bool keep_going = false;
 
-const static u8_t seg_pos[40] = {0, 1, 2, 3, 4, 5, 6, 7, 32, 8, 9, 10, 11, 12 ,13 ,14, 15, 33, 34, 35, 31, 30, 29, 28, 27, 26, 25, 24, 36, 23, 22, 21, 20, 19, 18, 17, 16, 37, 38, 39};
+#if defined(E0C6S48_SUPPORT)
+/* 51 segments */
+const static u8_t seg_pos[MEM_DISPLAY1_SIZE/2] = {0, 1, 2, 3, 4, 5, 6, 7, 32, 8, 9, 10, 11, 12 ,13 ,14, 15, 33, 34, 35, 31, 30, 29, 28, 27, 26, 25, 24, 36, 23, 22, 21, 20, 19, 18, 17, 16, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
+#elif defined(E0C6S46_SUPPORT)
+/* 40 segments */
+const static u8_t seg_pos[MEM_DISPLAY1_SIZE/2] = {0, 1, 2, 3, 4, 5, 6, 7, 32, 8, 9, 10, 11, 12 ,13 ,14, 15, 33, 34, 35, 31, 30, 29, 28, 27, 26, 25, 24, 36, 23, 22, 21, 20, 19, 18, 17, 16, 37, 38, 39};
+#endif
 
 static u13_t pc, next_pc;
 static u12_t x, y;
@@ -2128,10 +2134,11 @@ void* tamalib_mainloop(void* nada){
 
 bool_t hw_init(void)
 {
-  /* Buttons are active LOW */
+  /* Buttons/Tap sensor are active LOW */
   cpu_set_input_pin(PIN_K00, PIN_STATE_HIGH);
   cpu_set_input_pin(PIN_K01, PIN_STATE_HIGH);
   cpu_set_input_pin(PIN_K02, PIN_STATE_HIGH);
+	cpu_set_input_pin(PIN_K03, PIN_STATE_HIGH);
   return 0;
 }
 
@@ -2153,6 +2160,10 @@ void hw_set_button(button_t btn, btn_state_t state)
   pin_state_t pin_state = (state == BTN_STATE_PRESSED) ? PIN_STATE_LOW : PIN_STATE_HIGH;
 
   switch (btn) {
+    case BTN_TAP:
+      cpu_set_input_pin(PIN_K03, pin_state);
+      break;
+
     case BTN_LEFT:
       cpu_set_input_pin(PIN_K02, pin_state);
       break;

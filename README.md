@@ -5,7 +5,7 @@
     - hw.h ✅
     - cpu.c ❌
     - cpu.h ❌
-    - hw.c ❌
+    - hw.c ✅
 - test with p1 ❌
 - bind the poke feature ❌
 - test with new roms ❌
