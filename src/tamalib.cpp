@@ -1,4 +1,3 @@
-
 #include <pthread.h>
 #include <thread> // sleep_for
 #include <chrono> // high resolution clock
@@ -19,14 +18,14 @@ static unsigned char g_program_b12[9216];
 #ifndef Tama_H
 #define Tama_H
 
-#define tamalib_set_button(btn, state)		hw_set_button(btn, state)
-#define tamalib_set_speed(speed)		    	cpu_set_speed(speed)
-#define tamalib_refresh_hw()			      	cpu_refresh_hw()
-#define tamalib_reset()						        cpu_reset()
+#define tamalib_set_button(btn, state)    hw_set_button(btn, state)
+#define tamalib_set_speed(speed)          cpu_set_speed(speed)
+#define tamalib_refresh_hw()              cpu_refresh_hw()
+#define tamalib_reset()                   cpu_reset()
 
-#define LCD_WIDTH	     32
+#define LCD_WIDTH       32
 #define LCD_HEIGHT     16
-#define ICON_NUM		    8
+#define ICON_NUM        8
 #define ROM_SIZE     9216
 #define BUTTON_NUM      3
 
@@ -53,41 +52,41 @@ typedef uint32_t u32_t;
 typedef uint32_t timestamp_t; // WARNING: Must be an unsigned type to properly handle wrapping (u32 wraps in around 1h11m when expressed in us)
 
 typedef enum {
-	LOG_ERROR	= 0x1,
-	LOG_INFO	= (0x1 << 1),
-	LOG_MEMORY	= (0x1 << 2),
-	LOG_CPU		= (0x1 << 3),
+  LOG_ERROR  = 0x1,
+  LOG_INFO  = (0x1 << 1),
+  LOG_MEMORY  = (0x1 << 2),
+  LOG_CPU    = (0x1 << 3),
 } log_level_t;
 
 typedef struct {
-	void (*log)(log_level_t level, char *buff, ...);
-	void (*sleep_until)(timestamp_t ts);
-	timestamp_t (*get_timestamp)(void);
-	void (*set_lcd_matrix)(u8_t x, u8_t y, bool_t val);
-	void (*set_lcd_icon)(u8_t icon, bool_t val);
-	void (*set_frequency)(u32_t freq);
-	void (*play_frequency)(bool_t en);
-	int (*handler)(void);
+  void (*log)(log_level_t level, char *buff, ...);
+  void (*sleep_until)(timestamp_t ts);
+  timestamp_t (*get_timestamp)(void);
+  void (*set_lcd_matrix)(u8_t x, u8_t y, bool_t val);
+  void (*set_lcd_icon)(u8_t icon, bool_t val);
+  void (*set_frequency)(u32_t freq);
+  void (*play_frequency)(bool_t en);
+  int (*handler)(void);
 } hal_t;
 
 typedef enum {
-	BTN_STATE_RELEASED = 0,
-	BTN_STATE_PRESSED,
+  BTN_STATE_RELEASED = 0,
+  BTN_STATE_PRESSED,
 } btn_state_t;
 
 typedef enum {
-	BTN_LEFT = 0,
-	BTN_MIDDLE,
-	BTN_RIGHT,
+  BTN_LEFT = 0,
+  BTN_MIDDLE,
+  BTN_RIGHT,
 } button_t;
 
 typedef enum {
-	EXEC_MODE_PAUSE,
-	EXEC_MODE_RUN,
-	EXEC_MODE_STEP,
-	EXEC_MODE_NEXT,
-	EXEC_MODE_TO_CALL,
-	EXEC_MODE_TO_RET,
+  EXEC_MODE_PAUSE,
+  EXEC_MODE_RUN,
+  EXEC_MODE_STEP,
+  EXEC_MODE_NEXT,
+  EXEC_MODE_TO_CALL,
+  EXEC_MODE_TO_RET,
 } exec_mode_t;
 
 typedef struct breakpoint {
@@ -2088,20 +2087,20 @@ static hal_t hal = {
 bool_t tamalib_init(u32_t freq)
 //bool_t tamalib_init(breakpoint_t *breakpoints, u32_t freq)
 {
-	bool_t res = 0;
+  bool_t res = 0;
   res |= cpu_init( freq);
 
-//	res |= cpu_init(program, breakpoints, freq);
-	res |= hw_init();
+//  res |= cpu_init(program, breakpoints, freq);
+  res |= hw_init();
 
-	ts_freq = freq;
+  ts_freq = freq;
 
-	return res;
+  return res;
 }
 
 void tamalib_register_hal(hal_t *hal)
 {
-	g_hal = hal;
+  g_hal = hal;
 }
 
 void tamalib_mainloop_step_by_step(void)
@@ -2127,43 +2126,43 @@ void* tamalib_mainloop(void* nada){
 
 bool_t hw_init(void)
 {
-	/* Buttons are active LOW */
-	cpu_set_input_pin(PIN_K00, PIN_STATE_HIGH);
-	cpu_set_input_pin(PIN_K01, PIN_STATE_HIGH);
-	cpu_set_input_pin(PIN_K02, PIN_STATE_HIGH);
-	return 0;
+  /* Buttons are active LOW */
+  cpu_set_input_pin(PIN_K00, PIN_STATE_HIGH);
+  cpu_set_input_pin(PIN_K01, PIN_STATE_HIGH);
+  cpu_set_input_pin(PIN_K02, PIN_STATE_HIGH);
+  return 0;
 }
 
 void hw_set_lcd_pin(u8_t seg, u8_t com, u8_t val)
 {
-	if (seg_pos[seg] < LCD_WIDTH) {
-		g_hal->set_lcd_matrix(seg_pos[seg], com, val);
-	} else {
-		if (seg == 8 && com < 4) {
-			g_hal->set_lcd_icon(com, val);
-		} else if (seg == 28 && com >= 12) {
-			g_hal->set_lcd_icon(com - 8, val);
-		}
-	}
+  if (seg_pos[seg] < LCD_WIDTH) {
+    g_hal->set_lcd_matrix(seg_pos[seg], com, val);
+  } else {
+    if (seg == 8 && com < 4) {
+      g_hal->set_lcd_icon(com, val);
+    } else if (seg == 28 && com >= 12) {
+      g_hal->set_lcd_icon(com - 8, val);
+    }
+  }
 }
 
 void hw_set_button(button_t btn, btn_state_t state)
 {
-	pin_state_t pin_state = (state == BTN_STATE_PRESSED) ? PIN_STATE_LOW : PIN_STATE_HIGH;
+  pin_state_t pin_state = (state == BTN_STATE_PRESSED) ? PIN_STATE_LOW : PIN_STATE_HIGH;
 
-	switch (btn) {
-		case BTN_LEFT:
-			cpu_set_input_pin(PIN_K02, pin_state);
-			break;
+  switch (btn) {
+    case BTN_LEFT:
+      cpu_set_input_pin(PIN_K02, pin_state);
+      break;
 
-		case BTN_MIDDLE:
-			cpu_set_input_pin(PIN_K01, pin_state);
-			break;
+    case BTN_MIDDLE:
+      cpu_set_input_pin(PIN_K01, pin_state);
+      break;
 
-		case BTN_RIGHT:
-			cpu_set_input_pin(PIN_K00, pin_state);
-			break;
-	}
+    case BTN_RIGHT:
+      cpu_set_input_pin(PIN_K00, pin_state);
+      break;
+  }
 }
 
 const static uint16_t snd_freq[]= {4096,3279,2731,2341,2048,1638,1365,1170};
@@ -2175,7 +2174,7 @@ void hw_set_buzzer_freq(u4_t freq)
 
 void hw_enable_buzzer(bool_t en)
 {
-	g_hal->play_frequency(en);
+  g_hal->play_frequency(en);
 }
 
 // Constructor
@@ -2259,7 +2258,7 @@ std::vector<int> Tama::GetCPU(){
     }
 
     for(i = 0; i < sizeof(cpu); i++){
-	      res[i] = cpu[i];
+        res[i] = cpu[i];
     }
     return res;
 }
