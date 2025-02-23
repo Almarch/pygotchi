@@ -228,10 +228,19 @@ private:
 
 /* =======   tamalib.cpp  ======= */
 
-#define CPU_SPEED_RATIO           1
+#define CPU_SPEED_RATIO       1
 #define TICK_FREQUENCY        32768 // Hz
-#define TIMER_1HZ_PERIOD      32768 // in ticks
-#define TIMER_256HZ_PERIOD      128 // in ticks
+#define OSC1_FREQUENCY        TICK_FREQUENCY // Hz
+#define OSC3_FREQUENCY        1000000 // Hz
+
+#define TIMER_2HZ_PERIOD      (TICK_FREQUENCY/2) // in ticks
+#define TIMER_4HZ_PERIOD      (TICK_FREQUENCY/4) // in ticks
+#define TIMER_8HZ_PERIOD      (TICK_FREQUENCY/8) // in ticks
+#define TIMER_16HZ_PERIOD     (TICK_FREQUENCY/16) // in ticks
+#define TIMER_32HZ_PERIOD     (TICK_FREQUENCY/32) // in ticks
+#define TIMER_64HZ_PERIOD     (TICK_FREQUENCY/64) // in ticks
+#define TIMER_128HZ_PERIOD    (TICK_FREQUENCY/128) // in ticks
+#define TIMER_256HZ_PERIOD    (TICK_FREQUENCY/256) // in ticks
 
 #define MASK_4B         0xF00
 #define MASK_6B         0xFC0
@@ -284,29 +293,49 @@ private:
 #define REG_SERIAL_INT_FACTOR_FLAGS     0xF03
 #define REG_K00_K03_INT_FACTOR_FLAGS    0xF04
 #define REG_K10_K13_INT_FACTOR_FLAGS    0xF05
-#define REG_CLOCK_INT_MASKS       0xF10
-#define REG_SW_INT_MASKS          0xF11
-#define REG_PROG_INT_MASKS        0xF12
-#define REG_SERIAL_INT_MASKS      0xF13
-#define REG_K00_K03_INT_MASKS     0xF14
-#define REG_K10_K13_INT_MASKS     0xF15
-#define REG_PROG_TIMER_DATA_L     0xF24
-#define REG_PROG_TIMER_DATA_H     0xF25
+#define REG_CLOCK_INT_MASKS             0xF10
+#define REG_SW_INT_MASKS                0xF11
+#define REG_PROG_INT_MASKS              0xF12
+#define REG_SERIAL_INT_MASKS            0xF13
+#define REG_K00_K03_INT_MASKS           0xF14
+#define REG_K10_K13_INT_MASKS           0xF15
+#define REG_CLOCK_TIMER_DATA_1          0xF20
+#define REG_CLOCK_TIMER_DATA_2          0xF21
+#define REG_SW_TIMER_DATA_L             0xF22
+#define REG_SW_TIMER_DATA_H             0xF23
+#define REG_PROG_TIMER_DATA_L           0xF24
+#define REG_PROG_TIMER_DATA_H           0xF25
 #define REG_PROG_TIMER_RELOAD_DATA_L    0xF26
 #define REG_PROG_TIMER_RELOAD_DATA_H    0xF27
+#define REG_SERIAL_IF_DATA_L            0xF30
+#define REG_SERIAL_IF_DATA_H            0xF31
 #define REG_K00_K03_INPUT_PORT          0xF40
+#define REG_K00_K03_INPUT_RELATION      0xF41
 #define REG_K10_K13_INPUT_PORT          0xF42
-#define REG_K40_K43_BZ_OUTPUT_PORT      0xF54
-#define REG_CPU_OSC3_CTRL      0xF70
-#define REG_LCD_CTRL           0xF71
-#define REG_LCD_CONTRAST       0xF72
-#define REG_SVD_CTRL           0xF73
-#define REG_BUZZER_CTRL1       0xF74
-#define REG_BUZZER_CTRL2       0xF75
-#define REG_CLK_WD_TIMER_CTRL  0xF76
-#define REG_SW_TIMER_CTRL      0xF77
-#define REG_PROG_TIMER_CTRL    0xF78
-#define REG_PROG_TIMER_CLK_SEL 0xF79
+#define REG_R00_R03_OUTPUT_PORT         0xF50
+#define REG_R10_R13_OUTPUT_PORT         0xF51
+#define REG_R20_R23_OUTPUT_PORT         0xF52
+#define REG_R30_R33_OUTPUT_PORT         0xF53
+#define REG_R40_R43_BZ_OUTPUT_PORT      0xF54
+#define REG_P00_P03_IO_PORT             0xF60
+#define REG_P10_P13_IO_PORT             0xF61
+#define REG_P20_P23_IO_PORT             0xF62
+#define REG_P30_P33_IO_PORT             0xF63
+#define REG_CPU_OSC3_CTRL               0xF70
+#define REG_LCD_CTRL                    0xF71
+#define REG_LCD_CONTRAST                0xF72
+#define REG_SVD_CTRL                    0xF73
+#define REG_BUZZER_CTRL1                0xF74
+#define REG_BUZZER_CTRL2                0xF75
+#define REG_CLK_WD_TIMER_CTRL           0xF76
+#define REG_SW_TIMER_CTRL               0xF77
+#define REG_PROG_TIMER_CTRL             0xF78
+#define REG_PROG_TIMER_CLK_SEL          0xF79
+#define REG_SERIAL_IF_CLK_SEL           0xF7A
+#define REG_HIGH_IMPEDANCE_OUTPUT_CTRL  0xF7B
+#define REG_IO_CTRL                     0xF7D
+#define REG_IO_PULLUP_CFG               0xF7E
+
 #define INPUT_PORT_NUM        2
 
 static exec_mode_t exec_mode = EXEC_MODE_RUN;
@@ -336,6 +365,7 @@ static u5_t np;
 static u8_t sp;
 static u4_t flags;
 static u4_t memory[MEMORY_SIZE];
+
 static interrupt_t interrupts[INT_SLOT_NUM] = {
   {0x0, 0x0, 0, 0x0C}, // Prog timer
   {0x0, 0x0, 0, 0x0A}, // Serial interface
@@ -344,8 +374,25 @@ static interrupt_t interrupts[INT_SLOT_NUM] = {
   {0x0, 0x0, 0, 0x04}, // Stopwatch timer
   {0x0, 0x0, 0, 0x02}, // Clock timer
 };
+
+static char *interrupt_names[] = {
+  [INT_PROG_TIMER_SLOT] =  "INT_PROG_TIMER_SLOT",
+  [INT_SERIAL_SLOT] =      "INT_SERIAL_SLOT",
+  [INT_K10_K13_SLOT] =     "INT_K10_K13_SLOT",
+  [INT_K00_K03_SLOT] =     "INT_K00_K03_SLOT",
+  [INT_STOPWATCH_SLOT] =   "INT_STOPWATCH_SLOT",
+  [INT_CLOCK_TIMER_SLOT] = "INT_CLOCK_TIMER_SLOT",
+};
+
 static u32_t call_depth = 0;
-static u32_t clk_timer_timestamp = 0; // in ticks
+static u32_t clk_timer_2hz_timestamp = 0; // in ticks
+static u32_t clk_timer_4hz_timestamp = 0; // in ticks
+static u32_t clk_timer_8hz_timestamp = 0; // in ticks
+static u32_t clk_timer_16hz_timestamp = 0; // in ticks
+static u32_t clk_timer_32hz_timestamp = 0; // in ticks
+static u32_t clk_timer_64hz_timestamp = 0; // in ticks
+static u32_t clk_timer_128hz_timestamp = 0; // in ticks
+static u32_t clk_timer_256hz_timestamp = 0; // in ticks
 static u32_t prog_timer_timestamp = 0; // in ticks
 static bool_t prog_timer_enabled = 0;
 static u8_t prog_timer_data = 0;
@@ -353,6 +400,10 @@ static u8_t prog_timer_rld = 0;
 static u32_t tick_counter = 0;
 static timestamp_t ref_ts;
 static const auto epochTime = std::chrono::high_resolution_clock::from_time_t(0);
+
+static bool_t cpu_halted = 0;
+static u32_t cpu_frequency = OSC1_FREQUENCY; // in hz
+static u32_t scaled_cycle_accumulator = 0;
 
 typedef struct {
   u12_t code;
@@ -382,12 +433,20 @@ void cpu_get_state(cpu_state_t *cpustate)
 
   cpustate->flags = flags;
   cpustate->tick_counter = tick_counter;
-  cpustate->clk_timer_timestamp = clk_timer_timestamp;
+  cpustate->clk_timer_2hz_timestamp = clk_timer_2hz_timestamp;
+  cpustate->clk_timer_4hz_timestamp = clk_timer_4hz_timestamp;
+  cpustate->clk_timer_8hz_timestamp = clk_timer_8hz_timestamp;
+  cpustate->clk_timer_16hz_timestamp = clk_timer_16hz_timestamp;
+  cpustate->clk_timer_32hz_timestamp = clk_timer_32hz_timestamp;
+  cpustate->clk_timer_64hz_timestamp = clk_timer_64hz_timestamp;
+  cpustate->clk_timer_128hz_timestamp = clk_timer_128hz_timestamp;
+  cpustate->clk_timer_256hz_timestamp = clk_timer_256hz_timestamp;
   cpustate->prog_timer_timestamp = prog_timer_timestamp;
   cpustate->prog_timer_enabled = prog_timer_enabled;
   cpustate->prog_timer_data = prog_timer_data;
   cpustate->prog_timer_rld = prog_timer_rld;
   cpustate->call_depth = call_depth;
+  cpustate->cpu_halted = cpu_halted;
   cpustate->memory = (u4_t *)memory;
   uint8_t i;
   for(i=0;i<6;i++) {
@@ -409,12 +468,20 @@ void cpu_set_state(cpu_state_t *cpustate)
   sp = cpustate->sp;
   flags = cpustate->flags;
   tick_counter = cpustate->tick_counter;
-  clk_timer_timestamp = cpustate->clk_timer_timestamp;
+  clk_timer_2hz_timestamp = cpustate->clk_timer_2hz_timestamp;
+  clk_timer_4hz_timestamp = cpustate->clk_timer_4hz_timestamp;
+  clk_timer_8hz_timestamp = cpustate->clk_timer_8hz_timestamp;
+  clk_timer_16hz_timestamp = cpustate->clk_timer_16hz_timestamp;
+  clk_timer_32hz_timestamp = cpustate->clk_timer_32hz_timestamp;
+  clk_timer_64hz_timestamp = cpustate->clk_timer_64hz_timestamp;
+  clk_timer_128hz_timestamp = cpustate->clk_timer_128hz_timestamp;
+  clk_timer_256hz_timestamp = cpustate->clk_timer_256hz_timestamp;
   prog_timer_timestamp = cpustate->prog_timer_timestamp;
   prog_timer_enabled = cpustate->prog_timer_enabled;
   prog_timer_data = cpustate->prog_timer_data;
   prog_timer_rld = cpustate->prog_timer_rld;
   call_depth = cpustate->call_depth;
+  cpu_halted = cpustate->cpu_halted;
   //memory = (u4_t *)cpustate->memory;
   uint8_t i;
   for(i=0;i<6;i++) {
