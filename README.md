@@ -171,7 +171,7 @@ More recently, new first-generation ROMs have been released and TamaLIB has been
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL).
 
-Adaptation to the new first-generation ROM collection is still on the backlog.
+Adaptation to the new first-generation ROM collection is [being developed](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
 
 ## 5. License
 
