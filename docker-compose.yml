@@ -1,0 +1,20 @@
+
+services:
+  tamagotchi:
+    build: ./
+
+  webserver:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8000:80"
+    depends_on:
+      - tamagotchi
+    networks:
+      - internal_network
+      
+networks:
+  internal_network:
+      driver: bridge

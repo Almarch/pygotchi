@@ -1,11 +1,11 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this Python package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service.
+The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service.
 
 The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
-- Ubiquity: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
-- Real-time consistency: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
+- **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
+- **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
 A web app is readily available and dockerized for ease of deployment.
 
@@ -23,7 +23,7 @@ git clone https://github.com/almarch/pygotchi.git
 
 ### 1.1. Run with Docker
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Docker_%28container_engine%29_logo_%28cropped%29.png" width="120px" align="right"/>
+Build and run the app with [docker](https://www.docker.com/):
 
 ```sh
 cd pygotchi
@@ -53,7 +53,7 @@ The app is now available at http://localhost:8000.
 
 ### 1.3. Swagger
 
-FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
+[FastAPI](https://fastapi.tiangolo.com/) apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
 
 ## 2. How to use
 
@@ -80,84 +80,55 @@ The buzzer may be controlled at 2 levels:
 - Using the 🔊 icon: controls the sound on the client side.
 - Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
 
-## 2. Deploy the app
+## 2. Deploy the app online
 
-Now that the app is available at port 8000, it may be deployed online. The server will be assumed to be a linux computer behind a router with a fixed public IP. It may just as well be a VPS.
+### 2.1. Deploy with docker-compose
 
-First of all, you need the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many benevolent website, for instance [this one](https://myip.com). The private IP can be accessed with the command:
+Deploy the app with docker-compose. From `/pygotchi`:
 
-```bash
-hostname -I
+```sh
+docker compose build
+docker compose up -d
 ```
 
-### 2.1. Router
+The app is now available at http://localhost:8000. The docker-compose cluster includes [nginx](https://github.com/nginx/nginx) and [keycloak](https://github.com/keycloak/keycloak).
 
-The router configuration depends on the internet supplier. The router configuration page may for instance be reached from within the network at http://`<public ip>`:80. Because port 80 might be in competition with other resources, for instance the internet supplier configuration page, we will set up the application to listen to port 8000, which is less commonly used.
-
-The router should be parameterized as such:
-
-- port 8000 should be open to TCP ;
-
-- port 8000 should redirect to your linux server, identified with its private IP.
-
-### 2.2. Firewall
-
-Using a firewall is a first security step for a web server. For instance, [ufw](https://fr.wikipedia.org/wiki/Uncomplicated_Firewall) is free, open-source and easy to use.
+The firewall should be managed outside the docker-compose cluster. For instance, using [ufw](https://fr.wikipedia.org/wiki/Uncomplicated_Firewall) on linux:
 
 ```bash
 sudo apt install ufw
 sudo ufw enable
 sudo systemctl enable ufw
-```
-
-Port 8000 should be open to TCP. After configuring the router it may be checked and it has to be restarted.
-
-```bash
 sudo ufw allow 8000/tcp
 sudo ufw status
 sudo systemctl restart ufw
 ```
-### 2.3. Web server
 
-A web server software is required to deploy the shiny app with its functionalities. For instance, [nginx](https://nginx.com) is a free, open-source popular solution.
+### 2.2. From a personal computer
 
-```bash
-sudo apt install nginx
-sudo systemctl enable nginx
-```
+If you have a personal linux computer that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
 
-A configuration file should be provided for the app. Place the following configuration in an app file in the /etc/nginx/sites-available/ folder:
-
-```
-server {
-        listen 8000;
-        server_name _;
-
-        location / {
-                proxy_pass http://localhost:8000;
-                proxy_redirect http://localhost:8000/ $scheme://$http_host/;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_read_timeout 20d;
-                proxy_buffering off;
-        }
-}
-```
-
-Create a symlink in the /etc/nginx/sites-enabled/ folder, and restart nginx:
+You need to know the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many dedicated website, for instance [this one](https://www.mon-ip.com/). The private IP can be accessed with the command:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled/app
-sudo systemctl restart nginx
+hostname -I
 ```
 
-### 2.4. Connection
+The router configuration depends on the internet supplier. The router configuration page may for instance be reached from within the network at http://`<public ip>`:80.
+
+The router should be parameterized as such:
+- port 8000 should be open to TCP ;
+- port 8000 should redirect to your linux server, identified with its private IP.
 
 The app is now available world-wide at http://`<public ip>`:8000
 
-It can be played from a smartphone. A shortcut to the webpage may be added to the home screen. 
+### 2.3. From a virtual private server
 
-The Tamagotchi runs backend, so it remains alive when the user disconnects.
+If you don't have a PC that can be used as a server, or you don't have a fixed, personal IP ; then you may opt for a VPS. A "bare-metal" VPS does the job and is relatively cheap. The public IP is provided by the cloud provider. Very little configuration, if any, is required.
+
+Connect to the VPS with SSH, install the cluster with docker compose and configure the firewall.
+
+The app is now available world-wide at http://`<public ip>`:8000
 
 ## 3. Background
 
