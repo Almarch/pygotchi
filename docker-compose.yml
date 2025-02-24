@@ -13,7 +13,7 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
     volumes:
-      - ./keycloak/:/var/lib/postgresql/data
+      - ./keycloak/data/:/var/lib/postgresql/data
     networks:
       - internal_network
 
