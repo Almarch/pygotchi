@@ -19,7 +19,7 @@ The web server-client logic makes a special sense for Tamagotchis as it unlocks 
 
 A web app is readily available and dockerized for ease of deployment.
 
-<div style="text-align: center;">
+<div align="center">
     <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
 </div>
 
@@ -71,7 +71,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 
 A menu (☰) allows administration over the game.
 
-<div style="text-align: center;">
+<div align="center">
     <img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="300px" />
 </div>
 
