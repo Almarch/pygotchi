@@ -1,7 +1,7 @@
 # Feature/keycloak : to-do list
 
 - structure the deployment with docker-compose ✅
-- encrypt the connection (https) ❌
+- encrypt the connection (https) ✅
 - add keycloak to the stack ❌
 
 <br>
@@ -19,8 +19,8 @@ The web server-client logic makes a special sense for Tamagotchis as it unlocks 
 
 A web app is readily available and dockerized for ease of deployment.
 
-<div align="center">
-        <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
+<div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
 </div>
 
 ## 1. Run the app
@@ -71,8 +71,8 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 
 A menu (☰) allows administration over the game.
 
-<div align="center">
-<img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="300px" />
+<div style="text-align: center;">
+    <img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="300px" />
 </div>
 
 ### 2.1. Load a ROM
@@ -94,7 +94,7 @@ The buzzer may be controlled at 2 levels:
 
 ### 3.1. Identify the server
 
-If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
+If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
 You need to know the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many dedicated website, for instance [this one](https://www.mon-ip.com/). The private IP can be accessed with the command:
 
@@ -102,7 +102,7 @@ You need to know the public IP of your network and the private IP of your server
 hostname -I
 ```
 
-The router configuration depends on the internet supplier. The router configuration page may for instance be reached from within the network at http://`<public ip>`:80.
+The router configuration depends on the internet supplier. The router configuration page may for instance be reached from within the network at http://`<your public ip>`:80.
 
 The router should be parameterized as such:
 - port 443 should be open to TCP ;
@@ -135,20 +135,22 @@ This key will have to be renewed after one year.
 
 ### 3.4. Deploy with docker-compose
 
-Deploy the app with docker-compose. From `/pygotchi`:
+Deploy the app with docker-compose. The docker-compose cluster also includes [nginx](https://github.com/nginx/nginx) and [keycloak](https://github.com/keycloak/keycloak).
+
+From `/pygotchi`:
 
 ```sh
 docker compose build
 docker compose up -d
 ```
 
-The app is now available world-wide at <u>https://`<your public ip>`</u>.
-
-The docker-compose cluster also includes [nginx](https://github.com/nginx/nginx) and [keycloak](https://github.com/keycloak/keycloak).
+The app is now available world-wide at https://`<your public ip>`. Note that we self-signed our certificate, so the browser should present a warning. This is normal, accept the "risk".
 
 ### 3.5. To go further: use a domain name
 
 You may go a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
+
+Be careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`.
 
 ## 4. Background
 
