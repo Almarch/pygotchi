@@ -1,3 +1,13 @@
+# Feature/keycloak : to-do list
+
+- structure the deployment with docker-compose ✅
+- encrypt the connection (https) ❌
+- add keycloak to the stack ❌
+
+<br>
+<br>
+<br>
+
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
 The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service.
@@ -106,7 +116,7 @@ sudo systemctl restart ufw
 
 ### 2.2. From a personal computer
 
-If you have a personal computer that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
+If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
 
 You need to know the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many dedicated website, for instance [this one](https://www.mon-ip.com/). The private IP can be accessed with the command:
 
