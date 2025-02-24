@@ -2,6 +2,8 @@
 services:
   tamagotchi:
     build: ./
+    networks:
+      - internal_network
 
   webserver:
     image: nginx:latest
