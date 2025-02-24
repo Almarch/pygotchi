@@ -106,7 +106,7 @@ sudo systemctl restart ufw
 
 ### 2.2. From a personal computer
 
-If you have a personal linux computer that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
+If you have a personal computer that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
 
 You need to know the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many dedicated website, for instance [this one](https://www.mon-ip.com/). The private IP can be accessed with the command:
 
@@ -121,6 +121,8 @@ The router should be parameterized as such:
 - port 8000 should redirect to your linux server, identified with its private IP.
 
 The app is now available world-wide at http://`<public ip>`:8000
+
+You may go a step further, purchase a domain name and use an trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster and to parameterize nginx accordingly.
 
 ### 2.3. From a virtual private server
 
