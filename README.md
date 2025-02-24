@@ -137,15 +137,16 @@ This key will have to be renewed after one year.
 
 ### 3.4. Keycloak
 
-The web app is secured with keycloak, relying on a SQLite data base. Start by generating a strong admin password.
+The web app is secured with keycloak, relying on a PostgreSQL data base. Start by generating a strong admin password and a strong password for the data base. They will be stored into an environment file `.env`.
 
 From `/pygotchi`:
 
 ```sh
 echo "KEYCLOAK_ADMIN_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 64 | head -n 1)" > .env
+echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 64 | head -n 1)" >> .env
 ```
 
-Once the web app will be launched, use this password to access keycloak administration board and define user(s) credentials.
+Once the web app will be launched, use the first of these passwords to access keycloak administration board and define user(s) credentials.
 
 ### 3.5. Launch with docker-compose
 
