@@ -80,31 +80,9 @@ The buzzer may be controlled at 2 levels:
 - Using the 🔊 icon: controls the sound on the client side.
 - Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
 
-## 2. Deploy the app online
+## 3. Deploy the app online
 
-### 2.1. Deploy with docker-compose
-
-Deploy the app with docker-compose. From `/pygotchi`:
-
-```sh
-docker compose build
-docker compose up -d
-```
-
-The app is now available at http://localhost:8000. The docker-compose cluster includes [nginx](https://github.com/nginx/nginx) and [keycloak](https://github.com/keycloak/keycloak).
-
-The firewall should be managed outside the docker-compose cluster. For instance, using [ufw](https://fr.wikipedia.org/wiki/Uncomplicated_Firewall) on linux:
-
-```bash
-sudo apt install ufw
-sudo ufw enable
-sudo systemctl enable ufw
-sudo ufw allow 8000/tcp
-sudo ufw status
-sudo systemctl restart ufw
-```
-
-### 2.2. From a personal computer
+### 3.1. Identify the server
 
 If you have a personal computer that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server. Computational power is not required, the emulator is rather light.
 
@@ -117,22 +95,52 @@ hostname -I
 The router configuration depends on the internet supplier. The router configuration page may for instance be reached from within the network at http://`<public ip>`:80.
 
 The router should be parameterized as such:
-- port 8000 should be open to TCP ;
-- port 8000 should redirect to your linux server, identified with its private IP.
+- port 443 should be open to TCP ;
+- port 443 should redirect to your linux server, identified with its private IP.
 
-The app is now available world-wide at http://`<public ip>`:8000
+If you don't have a PC that can be used as a server, or you don't have a fixed, personal IP ; then you may opt for a VPS. A "bare-metal" VPS does the job and is relatively cheap. The public IP is provided by the cloud provider. Very little configuration is required.
 
-You may go a step further, purchase a domain name and use an trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster and to parameterize nginx accordingly.
+### 3.2. Firewall
 
-### 2.3. From a virtual private server
+A firewall is needed to ensure you open the relevant port and this port only. For instance using [ufw](https://fr.wikipedia.org/wiki/Uncomplicated_Firewall):
 
-If you don't have a PC that can be used as a server, or you don't have a fixed, personal IP ; then you may opt for a VPS. A "bare-metal" VPS does the job and is relatively cheap. The public IP is provided by the cloud provider. Very little configuration, if any, is required.
+```sh
+sudo apt install ufw
+sudo ufw enable
+sudo systemctl enable ufw
+sudo ufw allow 443/tcp
+sudo ufw status
+sudo systemctl restart ufw
+```
 
-Connect to the VPS with SSH, install the cluster with docker compose and configure the firewall.
+### 3.3. Encryption
 
-The app is now available world-wide at http://`<public ip>`:8000
+The connection has to be encrypted using a SSL key. From `/pygotchi`:
 
-## 3. Background
+```sh
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/nginx.key -out ssl/nginx.crt -subj "/CN=localhost"
+```
+
+This key will have to be renewed after one year.
+
+### 3.4. Deploy with docker-compose
+
+Deploy the app with docker-compose. From `/pygotchi`:
+
+```sh
+docker compose build
+docker compose up -d
+```
+
+The app is now available world-wide at <u>https://`<your public ip>`</u>.
+
+The docker-compose cluster also includes [nginx](https://github.com/nginx/nginx) and [keycloak](https://github.com/keycloak/keycloak).
+
+### 3.5. To go further: use a domain name
+
+You may go a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
+
+## 4. Background
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 

@@ -2,3 +2,4 @@ dist
 pygotchi.egg-info
 build
 *.pyc
+ssl/*
