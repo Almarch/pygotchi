@@ -1,6 +1,22 @@
 services:
+
   tamagotchi:
     build: ./
+    networks:
+      - internal_network
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    restart: always
+    environment:
+      KC_DB: dev-file
+      KC_DB_URL: jdbc:sqlite:/opt/keycloak/data/keycloak.db
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    command: ["start-dev"]
+    volumes:
+      - ./keycloak/:/opt/keycloak/data
     networks:
       - internal_network
 
@@ -13,6 +29,7 @@ services:
     ports:
       - "443:443"
     depends_on:
+      - keycloak
       - tamagotchi
     networks:
       - internal_network

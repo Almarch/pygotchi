@@ -125,7 +125,9 @@ sudo systemctl restart ufw
 
 ### 3.3. Encryption
 
-The connection has to be encrypted using a SSL key. From `/pygotchi`:
+The connection has to be encrypted using a SSL key.
+
+From `/pygotchi`:
 
 ```sh
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/nginx.key -out ssl/nginx.crt -subj "/CN=localhost"
@@ -133,9 +135,21 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/nginx.key -out s
 
 This key will have to be renewed after one year.
 
-### 3.4. Deploy with docker-compose
+### 3.4. Keycloak
 
-Deploy the app with docker-compose. The docker-compose cluster also includes [nginx](https://github.com/nginx/nginx) and [keycloak](https://github.com/keycloak/keycloak).
+The web app is secured with keycloak, relying on a SQLite data base. Start by generating a strong admin password.
+
+From `/pygotchi`:
+
+```sh
+echo "KEYCLOAK_ADMIN_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 64 | head -n 1)" > .env
+```
+
+Once the web app will be launched, use this password to access keycloak administration board and define user(s) credentials.
+
+### 3.5. Launch with docker-compose
+
+Launch the web app with nginx and keycloak using docker-compose.
 
 From `/pygotchi`:
 
@@ -146,7 +160,7 @@ docker compose up -d
 
 The app is now available world-wide at https://`<your public ip>`. Note that we self-signed our certificate, so the browser should present a warning. This is normal, accept the "risk".
 
-### 3.5. To go further: use a domain name
+### 3.6. To go further: use a domain name
 
 You may go a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
 
