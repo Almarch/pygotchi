@@ -3,6 +3,7 @@
 - structure the deployment with docker-compose ✅
 - encrypt the connection (https) ✅
 - add keycloak to the stack ❌
+    - stuck at https://localhost/auth/admin/master/console/ => Loading the administration console
 
 <br>
 <br>
