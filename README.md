@@ -131,7 +131,7 @@ The connection has to be encrypted using a SSL key.
 From `/pygotchi`:
 
 ```sh
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/nginx.key -out ssl/nginx.crt -subj "/CN=localhost"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/ssl.key -out ssl/ssl.crt -subj "/CN=localhost"
 ```
 
 This key will have to be renewed after one year.

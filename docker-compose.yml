@@ -32,7 +32,11 @@ services:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_URL: "https://localhost/auth"
       KC_HOSTNAME_ADMIN_URL: "https://localhost/auth/admin"
+      KC_HTTPS_CERTIFICATE_FILE: /etc/x509/https/ssl.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /etc/x509/https/ssl.key
     command: ["start"]
+    volumes:
+      - ./ssl/:/etc/x509/https/:ro
     depends_on:
       - keycloak-db
     networks:
