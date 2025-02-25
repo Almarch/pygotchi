@@ -150,22 +150,27 @@ Once the web app will be launched, use the first of these passwords to access ke
 
 ### 3.5. Launch with docker-compose
 
-Launch the web app with nginx and keycloak using docker-compose.
+Launch the web app with its dependency services using docker-compose.
 
 From `/pygotchi`:
 
 ```sh
 docker compose build
-docker compose up -d
+docker compose pull
+docker compose up
 ```
 
-The app is now available world-wide at https://`<your public ip>`. Note that we self-signed our certificate, so the browser should present a warning. This is normal, accept the "risk".
+The app is now available world-wide at https://`<your public ip>`.
 
-### 3.6. To go further: use a domain name
+The first launch takes a bit of time as keycloak and its database need to auto-configure.
 
-You may go a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
+Note that we self-signed our certificate, so the browser should present a warning. This is normal, accept the "risk".
 
-Be careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`.
+### 3.6. Next step: use a domain name
+
+You may move a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
+
+Be extra careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`.
 
 ## 4. Background
 
