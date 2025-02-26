@@ -28,10 +28,7 @@ services:
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-      KC_PROXY: edge
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_URL: "https://localhost/auth"
-      KC_HOSTNAME_ADMIN_URL: "https://localhost/auth/admin"
+      KC_HOSTNAME_STRICT: false
       KC_HTTPS_CERTIFICATE_FILE: /etc/x509/https/ssl.crt
       KC_HTTPS_CERTIFICATE_KEY_FILE: /etc/x509/https/ssl.key
     command: ["start"]
