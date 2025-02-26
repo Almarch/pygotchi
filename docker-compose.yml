@@ -36,8 +36,6 @@ services:
       - ./ssl/:/etc/x509/https/:ro
     depends_on:
       - keycloak-db
-    ports:
-      - 8443:8443
     networks:
       - internal_network
 
