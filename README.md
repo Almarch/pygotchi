@@ -4,7 +4,9 @@
 - encrypt the connection (https) ✅
 - add keycloak to the stack :
     - keycloak works as standalone ✅
-    - but needs appropriate nginx config ❌
+    - keycloak admin console can be reached ✅
+    - the user is redirected to the authentification console ✅
+    - the app can be reached behind keycloak ❌
 
 <br>
 <br>
@@ -146,9 +148,14 @@ From `/pygotchi`:
 ```sh
 echo "KEYCLOAK_ADMIN_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 64 | head -n 1)" > .env
 echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 64 | head -n 1)" >> .env
+cat .env
 ```
 
-Once the web app will be launched, use the first of these passwords to access keycloak administration board and define user(s) credentials.
+Once the web app will be launched, use the first of these passwords to access keycloak administration board at https://`<your public ip>`/keycloak. From there:
+
+- a new realm: **game** ;
+- into the realm **game**, a new client : **game_client** ;
+- into the realm **game**, one or more new users with custom credentials.
 
 ### 3.5. Launch with docker-compose
 
