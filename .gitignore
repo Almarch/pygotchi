@@ -2,3 +2,6 @@ dist
 pygotchi.egg-info
 build
 *.pyc
+ssl/*
+keycloak/*
+.env
