@@ -10,9 +10,6 @@
 - bind the poke feature ❌
 - test with new roms ❌
 
-NB:
-- clk_timer_timestamp must disappear
-
 <br>
 <br>
 <br>

@@ -511,28 +511,20 @@ static void generate_interrupt(int_slot_t slot, u8_t bit)
 void cpu_set_input_pin(pin_t pin, pin_state_t state)
 {
   /* Set the I/O */
-  u4_t old_state = (inputs[pin & 0x4].states >> (pin & 0x3)) & 0x1;
+  inputs[pin & 0x4].states = (inputs[pin & 0x4].states & ~(0x1 << (pin & 0x3))) | (state << (pin & 0x3));
 
-  /* Trigger the interrupt if the state changed */
-  if (state != old_state) {
+  /* Trigger the interrupt (TODO: handle relation register) */
+  if (state == PIN_STATE_LOW) {
     switch ((pin & 0x4) >> 2) {
       case 0:
-        /* Active HIGH/LOW depending on the relation register */
-        if (state != ((GET_IO_MEMORY(memory, REG_K00_K03_INPUT_RELATION) >> (pin & 0x3)) & 0x1)) {
-          generate_interrupt(INT_K00_K03_SLOT, pin & 0x3);
-        }
+        generate_interrupt(INT_K00_K03_SLOT, pin & 0x3);
         break;
 
       case 1:
-        /* Active LOW */
-        if (state == PIN_STATE_LOW) {
-          generate_interrupt(INT_K10_K13_SLOT, pin & 0x3);
-        }
+        generate_interrupt(INT_K10_K13_SLOT, pin & 0x3);
         break;
     }
   }
-  /* Set the I/O */
-  inputs[pin & 0x4].states = (inputs[pin & 0x4].states & ~(0x1 << (pin & 0x3))) | (state << (pin & 0x3));
 }
 
 void cpu_sync_ref_timestamp(void)
@@ -607,11 +599,11 @@ static u4_t get_io(u12_t n)
 
     case REG_CLOCK_TIMER_DATA_1:
       /* Clock timer data (16-128Hz) */
-      return GET_IO_MEMORY(memory, n);
+      break;
 
     case REG_CLOCK_TIMER_DATA_2:
       /* Clock timer data (1-8Hz) */
-      return GET_IO_MEMORY(memory, n);
+      break;
 
     case REG_PROG_TIMER_DATA_L:
       /* Prog timer data (low) */
@@ -635,7 +627,7 @@ static u4_t get_io(u12_t n)
 
     case REG_K00_K03_INPUT_RELATION:
       /* Input relation register (K00-K03) */
-      return GET_IO_MEMORY(memory, n);
+      return 0xF;
 
     case REG_K10_K13_INPUT_PORT:
       /* Input port (K10-K13) */
@@ -644,15 +636,18 @@ static u4_t get_io(u12_t n)
     case REG_R40_R43_BZ_OUTPUT_PORT:
       /* Output port (R40-R43) */
       //return io_memory[n - MEM_IO_ADDR_OFS];
-      return 0xf;
+      return 0xF;
+      
     case REG_CPU_OSC3_CTRL:
       /* CPU/OSC3 clocks switch, CPU voltage switch */
       //return io_memory[n - MEM_IO_ADDR_OFS];
       return 0;
+
     case REG_LCD_CTRL:
       /* LCD control */
       //return io_memory[n - MEM_IO_ADDR_OFS];
       return 0x8;
+
     case REG_LCD_CONTRAST:
       /* LCD contrast */
       break;
@@ -661,14 +656,17 @@ static u4_t get_io(u12_t n)
       /* SVD */
       //return io_memory[n - MEM_IO_ADDR_OFS] & 0x7; // Voltage always OK
       return 0;
+
     case REG_BUZZER_CTRL1:
       /* Buzzer config 1 */
       //return memory[n - MEM_IO_ADDR_OFS];
       return 0;
+
     case REG_BUZZER_CTRL2:
       /* Buzzer config 2 */
       //return io_memory[n - MEM_IO_ADDR_OFS] & 0x3; // Buzzer ready
       return 0;
+
     case REG_CLK_WD_TIMER_CTRL:
       /* Clock/Watchdog timer reset */
       break;
@@ -1015,8 +1013,8 @@ static void op_ret_cb(u8_t arg0, u8_t arg1)
   next_pc = M(sp) | (M((sp + 1) & 0xFF) << 4) | (M((sp + 2) & 0xFF) << 8) | (PCB << 12);
   sp = (sp + 3) & 0xFF;
   if (call_depth > 0) {
-		call_depth--;
-	}
+    call_depth--;
+  }
 }
 
 static void op_rets_cb(u8_t arg0, u8_t arg1)
@@ -1025,8 +1023,8 @@ static void op_rets_cb(u8_t arg0, u8_t arg1)
   sp = (sp + 3) & 0xFF;
   next_pc = (next_pc + 1) & 0x1FFF;
   if (call_depth > 0) {
-		call_depth--;
-	}
+    call_depth--;
+  }
 }
 
 static void op_retd_cb(u8_t arg0, u8_t arg1)
@@ -1036,9 +1034,9 @@ static void op_retd_cb(u8_t arg0, u8_t arg1)
   SET_M(x, arg0 & 0xF);
   SET_M(((x + 1) & 0xFF) | (XP << 8), (arg0 >> 4) & 0xF);
   x = ((x + 2) & 0xFF) | (XP << 8);
-	if (call_depth > 0) {
-		call_depth--;
-	}
+  if (call_depth > 0) {
+    call_depth--;
+  }
 }
 
 static void op_nop5_cb(u8_t arg0, u8_t arg1)
@@ -1997,16 +1995,16 @@ static timestamp_t wait_for_cycles(timestamp_t since, u8_t cycles) {
   timestamp_t deadline;
   u32_t ticks_pending;
 
-	/* The tick counter always works at TICK_FREQUENCY,
-	 * while the CPU runs at cpu_frequency
-	 */
-	scaled_cycle_accumulator += cycles * TICK_FREQUENCY;
-	ticks_pending = scaled_cycle_accumulator/cpu_frequency;
+  /* The tick counter always works at TICK_FREQUENCY,
+   * while the CPU runs at cpu_frequency
+   */
+  scaled_cycle_accumulator += cycles * TICK_FREQUENCY;
+  ticks_pending = scaled_cycle_accumulator/cpu_frequency;
 
-	if (ticks_pending > 0) {
-		tick_counter += ticks_pending;
-		scaled_cycle_accumulator -= ticks_pending * cpu_frequency;
-	}
+  if (ticks_pending > 0) {
+    tick_counter += ticks_pending;
+    scaled_cycle_accumulator -= ticks_pending * cpu_frequency;
+  }
 
   if (CPU_SPEED_RATIO == 0) {
     /* Emulation will be as fast as possible */
@@ -2027,21 +2025,21 @@ static void process_interrupts(void)
   for (i = 0; i < INT_SLOT_NUM; i++) {
     if (interrupts[i].triggered) {
 
-			// g_hal->log(LOG_INT, "Interrupt %s (%u) triggered\n", interrupt_names[i], i);
-			SET_M((sp - 1) & 0xFF, PCP);
-			SET_M((sp - 2) & 0xFF, PCSH);
-			SET_M((sp - 3) & 0xFF, PCSL);
+      // g_hal->log(LOG_INT, "Interrupt %s (%u) triggered\n", interrupt_names[i], i);
+      SET_M((sp - 1) & 0xFF, PCP);
+      SET_M((sp - 2) & 0xFF, PCSH);
+      SET_M((sp - 3) & 0xFF, PCSL);
 
       sp = (sp - 3) & 0xFF;
       CLEAR_I();
       np = TO_NP(NBP, 1);
       pc = TO_PC(PCB, 1, interrupts[i].vector);
       call_depth++;
-			cpu_halted = 0;
+      cpu_halted = 0;
 
       ref_ts = wait_for_cycles(ref_ts, 12);
       interrupts[i].triggered = 0;
-			return;
+      return;
     }
   }
 }
@@ -2065,6 +2063,7 @@ void cpu_reset(void)
     memory[i] = 0;
   }
 
+  cpu_frequency = OSC1_FREQUENCY;
   cpu_sync_ref_timestamp();
 }
 
@@ -2083,6 +2082,78 @@ u12_t getProgramOpCode(u12_t pc) {
     return (g_program_b12[i+i+i] << 4) | ((g_program_b12[i+i+i+1] >> 4) & 0xF);
   } 
   return (g_program_b12[i+i+i+1] << 8) | g_program_b12[i+i+i+2];
+}
+
+static void handle_timers(void)
+{
+  /* Handle timers using the internal tick counter */
+  if (tick_counter - clk_timer_2hz_timestamp >= TIMER_2HZ_PERIOD) {
+    do {
+      clk_timer_2hz_timestamp += TIMER_2HZ_PERIOD;
+    } while (tick_counter - clk_timer_2hz_timestamp >= TIMER_2HZ_PERIOD);
+
+    generate_interrupt(INT_CLOCK_TIMER_SLOT, 3);
+  }
+
+  if (tick_counter - clk_timer_4hz_timestamp >= TIMER_4HZ_PERIOD) {
+    do {
+      clk_timer_4hz_timestamp += TIMER_4HZ_PERIOD;
+    } while (tick_counter - clk_timer_4hz_timestamp >= TIMER_4HZ_PERIOD);
+
+    generate_interrupt(INT_CLOCK_TIMER_SLOT, 2);
+  }
+
+  if (tick_counter - clk_timer_8hz_timestamp >= TIMER_8HZ_PERIOD) {
+    do {
+      clk_timer_8hz_timestamp += TIMER_8HZ_PERIOD;
+    } while (tick_counter - clk_timer_8hz_timestamp >= TIMER_8HZ_PERIOD);
+  }
+
+  if (tick_counter - clk_timer_16hz_timestamp >= TIMER_16HZ_PERIOD) {
+    do {
+      clk_timer_16hz_timestamp += TIMER_16HZ_PERIOD;
+    } while (tick_counter - clk_timer_16hz_timestamp >= TIMER_16HZ_PERIOD);
+
+    generate_interrupt(INT_CLOCK_TIMER_SLOT, 1);
+  }
+
+  if (tick_counter - clk_timer_32hz_timestamp >= TIMER_32HZ_PERIOD) {
+    do {
+      clk_timer_32hz_timestamp += TIMER_32HZ_PERIOD;
+    } while (tick_counter - clk_timer_32hz_timestamp >= TIMER_32HZ_PERIOD);
+  }
+
+  if (tick_counter - clk_timer_64hz_timestamp >= TIMER_64HZ_PERIOD) {
+    do {
+      clk_timer_64hz_timestamp += TIMER_64HZ_PERIOD;
+    } while (tick_counter - clk_timer_64hz_timestamp >= TIMER_64HZ_PERIOD);
+    
+    generate_interrupt(INT_CLOCK_TIMER_SLOT, 0);
+  }
+
+  if (tick_counter - clk_timer_128hz_timestamp >= TIMER_128HZ_PERIOD) {
+    do {
+      clk_timer_128hz_timestamp += TIMER_128HZ_PERIOD;
+    } while (tick_counter - clk_timer_128hz_timestamp >= TIMER_128HZ_PERIOD);
+  }
+
+  if (tick_counter - clk_timer_256hz_timestamp >= TIMER_256HZ_PERIOD) {
+    do {
+      clk_timer_256hz_timestamp += TIMER_256HZ_PERIOD;
+    } while (tick_counter - clk_timer_256hz_timestamp >= TIMER_256HZ_PERIOD);
+  }
+
+  if (prog_timer_enabled && tick_counter - prog_timer_timestamp >= TIMER_256HZ_PERIOD) {
+    do {
+      prog_timer_timestamp += TIMER_256HZ_PERIOD;
+      prog_timer_data--;
+
+      if (prog_timer_data == 0) {
+        prog_timer_data = prog_timer_rld;
+        generate_interrupt(INT_PROG_TIMER_SLOT, 0);
+      }
+    } while (tick_counter - prog_timer_timestamp >= TIMER_256HZ_PERIOD);
+  }
 }
 
 int cpu_step(void)
@@ -2144,31 +2215,19 @@ int cpu_step(void)
   if (i > 0) {
     /* OP code is not PSET, reset NP */
     np = (pc >> 8) & 0x1F;
+  } else {
+    /* Wait at least once for the duration of a HALT and as long as required
+     * (to increment the tick counter), but make sure there will be no wait once
+     * the CPU is restarted
+     */
+    ref_ts = wait_for_cycles(ref_ts, 5);
+    previous_cycles = 0;
   }
 
-  /* Handle timers using the internal tick counter */
-  if (tick_counter - clk_timer_timestamp >= TIMER_1HZ_PERIOD) {
-    do {
-      clk_timer_timestamp += TIMER_1HZ_PERIOD;
-    } while (tick_counter - clk_timer_timestamp >= TIMER_1HZ_PERIOD);
-
-    generate_interrupt(INT_CLOCK_TIMER_SLOT, 3);
-  }
-
-  if (prog_timer_enabled && tick_counter - prog_timer_timestamp >= TIMER_256HZ_PERIOD) {
-    do {
-      prog_timer_timestamp += TIMER_256HZ_PERIOD;
-      prog_timer_data--;
-
-      if (prog_timer_data == 0) {
-        prog_timer_data = prog_timer_rld;
-        generate_interrupt(INT_PROG_TIMER_SLOT, 0);
-      }
-    } while (tick_counter - prog_timer_timestamp >= TIMER_256HZ_PERIOD);
-  }
+  handle_timers();
 
   /* Check if there is any pending interrupt */
-  if (I && i > 0) { // Do not process interrupts after a PSET operation
+  if (I && i != 0 && i != 58) { // Do not process interrupts after a PSET or EI operation
     process_interrupts();
   }
 
