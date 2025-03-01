@@ -13,7 +13,7 @@ A web app is readily available and dockerized for ease of deployment.
         <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
 </div>
 
-## 1. Run the app
+## 🚀 Run the app
 
 Start by cloning the repo:
 
@@ -21,9 +21,7 @@ Start by cloning the repo:
 git clone https://github.com/almarch/pygotchi.git
 ```
 
-### 1.1. Run with Docker
-
-<img src="https://upload.wikimedia.org/wikipedia/commons/e/ea/Docker_%28container_engine%29_logo_%28cropped%29.png" width="120px" align="right"/>
+### 🐋 Run with Docker
 
 ```sh
 cd pygotchi
@@ -33,7 +31,7 @@ docker run -d -p 8000:80 tama
 
 The app is now available at http://localhost:8000.
 
-### 1.2. Run with Python
+### 🐍 Run with Python
 
 Build the package with `build` and install it with `pip`:
 
@@ -51,11 +49,11 @@ python -m pygotchi
 
 The app is now available at http://localhost:8000.
 
-### 1.3. Swagger
+### 🌐 Swagger
 
 FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
 
-## 2. How to use
+## 🎮 How to use
 
 The game is controlled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to "poke" the toy.
 
@@ -65,26 +63,26 @@ A menu (☰) allows administration over the game.
 <img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="300px" />
 </div>
 
-### 2.1. Load a ROM
+### 🧬 Load a ROM
 
 From the administration menu, flash a ROM. It should be a 12ko .bin file. Use the switch button to get the emulation started. The ROM is loaded on the server, and the emulation runs server-side.
 
-### 2.2. Save the game
+### 💾 Save the game
 
 The game may be saved any time using the Save CPU button from the administration menu. The save.bin file may then be loaded again. Ensure consistency between the loaded CPU and the ROM.
 
-### 2.3. Control the sound
+### 🔊 Control the sound
 
 The buzzer may be controlled at 2 levels:
 
 - Using the 🔊 icon: controls the sound on the client side.
 - Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
 
-## 2. Deploy the app
+## ☁︎ Deploy the app
 
 This section is being re-written in a [dedicated feature](https://github.com/Almarch/pygotchi/tree/feature/keycloak?tab=readme-ov-file#2-deploy-the-app-online) in order to add a security layer.
 
-## 3. Background
+## ☕ Background
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 
@@ -98,7 +96,13 @@ On the technical side, all C++ code has been merged into a monolithic `tamalib.c
 
 Adaptation to the new first-generation ROM collection is [being developed](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
 
-## 5. License
+## 🚧 Ongoing
+
+As already mentionned, 2 features are being developed:
+- The web deployment is being secured with a HTTPS and an indentity and access manager. Check out [here](https://github.com/Almarch/pygotchi/tree/feature/keycloak).
+- The C++ core is being updated following recent evolutions of TamaLIB main repo. This evolution aims at integration the new ROMs. Check out [here](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
+
+## ⚖️ License
 
 This work is licensed under Attribution-NonCommercial 4.0 International.
 
