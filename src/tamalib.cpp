@@ -375,15 +375,6 @@ static interrupt_t interrupts[INT_SLOT_NUM] = {
   {0x0, 0x0, 0, 0x02}, // Clock timer
 };
 
-static char *interrupt_names[] = {
-  [INT_PROG_TIMER_SLOT] =  "INT_PROG_TIMER_SLOT",
-  [INT_SERIAL_SLOT] =      "INT_SERIAL_SLOT",
-  [INT_K10_K13_SLOT] =     "INT_K10_K13_SLOT",
-  [INT_K00_K03_SLOT] =     "INT_K00_K03_SLOT",
-  [INT_STOPWATCH_SLOT] =   "INT_STOPWATCH_SLOT",
-  [INT_CLOCK_TIMER_SLOT] = "INT_CLOCK_TIMER_SLOT",
-};
-
 static u32_t call_depth = 0;
 static u32_t clk_timer_2hz_timestamp = 0; // in ticks
 static u32_t clk_timer_4hz_timestamp = 0; // in ticks

@@ -1,14 +1,12 @@
 # Feature/new-roms : to-do list
 
+To do:
 - transfer [tamaLIB updates](https://github.com/jcrona/tamalib/compare/1f6f51f8a64dbf5822f9b1fd7e34f945688a1ef0...c1e3ecb1ed24647a2683b802549e2c1d278f04bd)
-    - hal.h ✅
-    - hw.h ✅
-    - cpu.c ❌
-    - cpu.h ✅
-    - hw.c ✅
-- test with p1 ❌
+    - It compiles but does not work (with P1 ROM) yet.
+    - Likely due to [this commit](https://github.com/Almarch/pygotchi/compare/2b1791346b12d37e949f78808e19be65c9b68936...72c63a33c934122727a78735ac618727baa15d69)
+
 - bind the poke feature ❌
-- test with new roms ❌
+- test with the new roms ❌
 
 <br>
 <br>
