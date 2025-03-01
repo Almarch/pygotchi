@@ -12,7 +12,6 @@
 
 NB:
 - clk_timer_timestamp must disappear
-- REG_R40_R43_BZ_OUTPUT_PORT ?
 
 <br>
 <br>

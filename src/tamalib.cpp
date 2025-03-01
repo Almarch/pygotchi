@@ -1995,15 +1995,25 @@ u12_t getMaskArg0(u12_t shiftArg, u12_t mask) {
 
 static timestamp_t wait_for_cycles(timestamp_t since, u8_t cycles) {
   timestamp_t deadline;
+  u32_t ticks_pending;
 
-  tick_counter += cycles;
+	/* The tick counter always works at TICK_FREQUENCY,
+	 * while the CPU runs at cpu_frequency
+	 */
+	scaled_cycle_accumulator += cycles * TICK_FREQUENCY;
+	ticks_pending = scaled_cycle_accumulator/cpu_frequency;
+
+	if (ticks_pending > 0) {
+		tick_counter += ticks_pending;
+		scaled_cycle_accumulator -= ticks_pending * cpu_frequency;
+	}
 
   if (CPU_SPEED_RATIO == 0) {
     /* Emulation will be as fast as possible */
     return g_hal->get_timestamp();
   }
 
-  deadline = since + (cycles * ts_freq)/(TICK_FREQUENCY * CPU_SPEED_RATIO);
+  deadline = since + (cycles * ts_freq)/(cpu_frequency * CPU_SPEED_RATIO);
   g_hal->sleep_until(deadline);
 
   return deadline;
@@ -2016,18 +2026,22 @@ static void process_interrupts(void)
   /* Process interrupts in priority order */
   for (i = 0; i < INT_SLOT_NUM; i++) {
     if (interrupts[i].triggered) {
-      //printf("IT %u !\n", i);
-      SET_M(sp - 1, PCP);
-      SET_M(sp - 2, PCSH);
-      SET_M(sp - 3, PCSL);
+
+			// g_hal->log(LOG_INT, "Interrupt %s (%u) triggered\n", interrupt_names[i], i);
+			SET_M((sp - 1) & 0xFF, PCP);
+			SET_M((sp - 2) & 0xFF, PCSH);
+			SET_M((sp - 3) & 0xFF, PCSL);
+
       sp = (sp - 3) & 0xFF;
       CLEAR_I();
       np = TO_NP(NBP, 1);
       pc = TO_PC(PCB, 1, interrupts[i].vector);
       call_depth++;
+			cpu_halted = 0;
 
       ref_ts = wait_for_cycles(ref_ts, 12);
       interrupts[i].triggered = 0;
+			return;
     }
   }
 }
