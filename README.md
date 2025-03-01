@@ -78,7 +78,7 @@ The buzzer may be controlled at 2 levels:
 - Using the 🔊 icon: controls the sound on the client side.
 - Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
 
-## ☁︎ Deploy the app
+## ☁️ Deploy the app
 
 This section is being re-written in a [dedicated feature](https://github.com/Almarch/pygotchi/tree/feature/keycloak?tab=readme-ov-file#2-deploy-the-app-online) in order to add a security layer.
 
