@@ -2,7 +2,10 @@
 
 
 [tamaLIB updates](https://github.com/jcrona/tamalib/compare/1f6f51f8a64dbf5822f9b1fd7e34f945688a1ef0...c1e3ecb1ed24647a2683b802549e2c1d278f04bd) have been transfered to `src/tamalib.cpp`
-- It compiles but does not work (with P1) yet. Likely due to an error with [this commit](https://github.com/Almarch/pygotchi/compare/2b1791346b12d37e949f78808e19be65c9b68936...72c63a33c934122727a78735ac618727baa15d69) especially `src/tamalib.cpp` l. 600-606
+- It compiles but does not work (with P1) yet. Likely due to an error with [this commit](https://github.com/Almarch/pygotchi/compare/2b1791346b12d37e949f78808e19be65c9b68936...72c63a33c934122727a78735ac618727baa15d69), especially:
+    - `src/tamalib.cpp`, function `void cpu_set_input_pin` l. 511-530
+    - `src/tamalib.cpp`, function `get_io` l. 600-606
+    - `src/tamalib.cpp`, function `handle_timers` l. 2087-2158
 - See also all that changed from the version [that used to work](https://github.com/Almarch/pygotchi/compare/a173f923f8c9182ae946c9dd00bd0eb737ba842f..d4592894c0ea47c12916295f7dc560cebf217586).
 - It has to be tested with E0C6S48-based ROMs.
 - The "tap" feature has to be tested too (Angel / Umino / Morino)
