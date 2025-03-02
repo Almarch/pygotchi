@@ -1,12 +1,10 @@
 # Feature/new-roms : to-do list
 
-To do:
-- transfer [tamaLIB updates](https://github.com/jcrona/tamalib/compare/1f6f51f8a64dbf5822f9b1fd7e34f945688a1ef0...c1e3ecb1ed24647a2683b802549e2c1d278f04bd)
-    - It compiles but does not work (with P1 ROM) yet.
-    - Likely due to [this commit](https://github.com/Almarch/pygotchi/compare/2b1791346b12d37e949f78808e19be65c9b68936...72c63a33c934122727a78735ac618727baa15d69)
 
-- bind the poke feature ❌
-- test with the new roms ❌
+[tamaLIB updates](https://github.com/jcrona/tamalib/compare/1f6f51f8a64dbf5822f9b1fd7e34f945688a1ef0...c1e3ecb1ed24647a2683b802549e2c1d278f04bd) have been transfered to `src/tamalib.cpp`
+- It compiles but does not work (with P1) yet. Likely due to an error with [this commit](https://github.com/Almarch/pygotchi/compare/2b1791346b12d37e949f78808e19be65c9b68936...72c63a33c934122727a78735ac618727baa15d69) especially `src/tamalib.cpp` l. 600-606
+- It has to be tested with E0C6S48-based ROMs.
+- The "tap" feature has to be tested too (Angel / Umino / Morino)
 
 <br>
 <br>
@@ -71,7 +69,7 @@ FastAPI apps come with a swagger. Once the app is launched, have a look at: http
 
 ## 2. How to use
 
-The game is controlled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to "poke" the toy.
+The game is controlled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to tap the toy.
 
 A menu (☰) allows administration over the game.
 

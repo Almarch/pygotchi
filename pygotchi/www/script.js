@@ -6,12 +6,22 @@ function toggleMenu() {
     sidebar.classList.toggle("open"); // Toggle sidebar visibility
     menuIcon.classList.toggle("hidden"); // Hide/Show menu icon
 }
+
 // Shake Animation on Image Click
 document.getElementById("to-shake").addEventListener("click", function() {
     this.classList.add("shake");
     setTimeout(() => {
         this.classList.remove("shake");
     }, 500);
+    fetch("/click?button=TAP", {
+        method: "POST",
+        headers: {
+            "accept": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Success:", data))
+    .catch(error => console.error("Error:", error));
 });
 
 // Websockets relative path

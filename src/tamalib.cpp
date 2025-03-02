@@ -27,7 +27,7 @@ static unsigned char g_program_b12[9216];
 #define LCD_HEIGHT        16
 #define ICON_NUM           8
 #define ROM_SIZE        9216
-#define BUTTON_NUM         3
+#define BUTTON_NUM         4
 
 #define MEMORY_SIZE    0x140
 
@@ -2263,6 +2263,11 @@ static int hal_handler(void) {
     hw_set_button(BTN_RIGHT, BTN_STATE_PRESSED );
   } else {
     hw_set_button(BTN_RIGHT, BTN_STATE_RELEASED );
+  }
+  if (button_buffer[3] != 0) {
+    hw_set_button(BTN_TAP, BTN_STATE_PRESSED );
+  } else {
+    hw_set_button(BTN_TAP, BTN_STATE_RELEASED );
   }
   return 0;
 }

@@ -60,11 +60,11 @@ class Tama():
     def __click__(self, button, delay):
         with self.__lock__:
             for b in button:
-                self.__tamalib__.SetButton({"A": 0, "B": 1, "C": 2}[b], True)
+                self.__tamalib__.SetButton({"A": 0, "B": 1, "C": 2, "TAP": 3}[b], True)
         time.sleep(delay)
         with self.__lock__:
-            for b in [0, 1, 2]:
-                self.__tamalib__.SetButton(b, False)
+            for b in button:
+                self.__tamalib__.SetButton({"A": 0, "B": 1, "C": 2, "TAP": 3}[b], False)
 
     def click(self, button, delay=0.1):
         
