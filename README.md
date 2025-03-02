@@ -104,6 +104,6 @@ As already mentionned, 2 features are being developed:
 
 ## ⚖️ License
 
-This work is licensed under GPL-2.0 license.
+This work is licensed under GPL-2.0.
 
 All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).
