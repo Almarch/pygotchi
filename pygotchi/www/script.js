@@ -83,7 +83,7 @@ function drawMatrix(matrix) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x]) {
                 ctx.fillRect(
-                    y,
+                    x,
                     y,
                     1,
                     1);
