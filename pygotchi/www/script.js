@@ -79,10 +79,10 @@ function drawMatrix(matrix) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
 
     let pixelSize = 1; // Base pixel size
-    let shrinkFactor = 0.9; // 90% of original size to leave space for the grid
+    let shrinkFactor = 0.8; // 90% of original size to leave space for the grid
     let gridOffset = (1 - shrinkFactor) / 2; // Center pixels in their squares
 
-    ctx.fillStyle = "rgba(55,55,55,0.9)";
+    ctx.fillStyle = "rgba(0,0,0,0.9)";
 
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
@@ -201,6 +201,10 @@ document.getElementById("B").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+
+    if(navigator.vibrate) {
+        navigator.vibrate(10);
+    }
 });
 
 document.getElementById("C").addEventListener("click", function() {
@@ -213,6 +217,10 @@ document.getElementById("C").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+    
+    if(navigator.vibrate) {
+        navigator.vibrate(10);
+    }
 });
 
 document.getElementById("AC").addEventListener("click", function() {
@@ -225,6 +233,10 @@ document.getElementById("AC").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+    
+    if(navigator.vibrate) {
+        navigator.vibrate(50);
+    }
 });
 
 document.getElementById("cpu-reset").addEventListener("click", function() {
