@@ -77,16 +77,16 @@ function updateBackground(background) {
 // Function to draw pixels
 function drawMatrix(matrix) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "rgba(0,0,0,.98)";
 
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x]) {
                 ctx.fillRect(
-                    100 * x + 2,
-                    100 * y + 2,
-                    96,
-                    96);
+                    100 * x + 3,
+                    100 * y + 3,
+                    94,
+                    94);
             }
         }
     }
