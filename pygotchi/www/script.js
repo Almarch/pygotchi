@@ -9,6 +9,11 @@ function toggleMenu() {
 // Shake Animation on Image Click
 document.getElementById("to-shake").addEventListener("click", function() {
     this.classList.add("shake");
+
+    if (navigator.vibrate) {
+        navigator.vibrate(500);
+    }
+
     setTimeout(() => {
         this.classList.remove("shake");
     }, 500);
@@ -72,12 +77,22 @@ function updateBackground(background) {
 // Function to draw pixels
 function drawMatrix(matrix) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
-    ctx.fillStyle = "black";
+
+    let pixelSize = 1; // Base pixel size
+    let shrinkFactor = 0.9; // 90% of original size to leave space for the grid
+    let gridOffset = (1 - shrinkFactor) / 2; // Center pixels in their squares
+
+    ctx.fillStyle = "rgba(55,55,55,0.9)";
 
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x]) {
-                ctx.fillRect(x, y, 1, 1);
+                ctx.fillRect(
+                    x + gridOffset,
+                    y + gridOffset,
+                    pixelSize * shrinkFactor,
+                    pixelSize * shrinkFactor
+                );
             }
         }
     }
@@ -170,6 +185,10 @@ document.getElementById("A").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+
+    if(navigator.vibrate) {
+        navigator.vibrate(10);
+    }
 });
 
 document.getElementById("B").addEventListener("click", function() {
