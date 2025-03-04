@@ -27,8 +27,8 @@ const wsPort = window.location.port ? `:${window.location.port}` : ""; // Keep s
 // Web Video API setup
 const canvas = document.createElement("canvas");
 canvas.id = "canvas-pixels";
-canvas.width = 32 * 100;
-canvas.height = 16 * 100;
+canvas.width = 32;
+canvas.height = 16;
 const ctx = canvas.getContext("2d");
 document.getElementById("canvas-pixels").appendChild(canvas);
 
@@ -77,16 +77,16 @@ function updateBackground(background) {
 // Function to draw pixels
 function drawMatrix(matrix) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
-    ctx.fillStyle = "rgba(31, 31, 31, 0.95)";
+    ctx.fillStyle = "black";
 
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x]) {
                 ctx.fillRect(
-                    100 * x + 8,
-                    100 * y + 8,
-                    84,
-                    84);
+                    y,
+                    y,
+                    1,
+                    1);
             }
         }
     }
