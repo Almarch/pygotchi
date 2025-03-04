@@ -1,0 +1,58 @@
+services:
+
+  tamagotchi:
+    build: ./
+    networks:
+      - internal_network
+
+  keycloak-db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - ./keycloak/data/:/var/lib/postgresql/data
+    networks:
+      - internal_network
+
+  keycloak:
+    image: keycloak/keycloak:latest
+    restart: always
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: true
+      KC_HTTPS_CERTIFICATE_FILE: /etc/x509/https/ssl.crt
+      KC_HTTPS_CERTIFICATE_KEY_FILE: /etc/x509/https/ssl.key
+    command: ["start"]
+    volumes:
+      - ./ssl/:/etc/x509/https/:ro
+    depends_on:
+      - keycloak-db
+    networks:
+      - internal_network
+
+  webserver:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl/:/etc/nginx/ssl/:ro
+    ports:
+      - "443:443"
+    depends_on:
+      - keycloak
+      - tamagotchi
+    networks:
+      - internal_network
+      
+networks:
+  internal_network:
+      driver: bridge
