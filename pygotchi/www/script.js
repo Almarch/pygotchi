@@ -77,21 +77,15 @@ function updateBackground(background) {
 // Function to draw pixels
 function drawMatrix(matrix) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
-
-    let pixelSize = 1; // Base pixel size
-    let shrinkFactor = 0.8; // 90% of original size to leave space for the grid
-    let gridOffset = (1 - shrinkFactor) / 2; // Center pixels in their squares
-
-    ctx.fillStyle = "rgba(0,0,0,0.9)";
-
+    ctx.fillStyle = "black";
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x]) {
                 ctx.fillRect(
-                    x + gridOffset,
-                    y + gridOffset,
-                    pixelSize * shrinkFactor,
-                    pixelSize * shrinkFactor
+                    x + 0.05,
+                    y + 0.05,
+                    0.9,
+                    0.9
                 );
             }
         }
