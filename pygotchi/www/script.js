@@ -9,6 +9,11 @@ function toggleMenu() {
 // Shake Animation on Image Click
 document.getElementById("to-shake").addEventListener("click", function() {
     this.classList.add("shake");
+
+    if (navigator.vibrate) {
+        navigator.vibrate(500);
+    }
+
     setTimeout(() => {
         this.classList.remove("shake");
     }, 500);
@@ -77,7 +82,11 @@ function drawMatrix(matrix) {
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x]) {
-                ctx.fillRect(x, y, 1, 1);
+                ctx.fillRect(
+                    y,
+                    y,
+                    1,
+                    1);
             }
         }
     }
@@ -170,6 +179,10 @@ document.getElementById("A").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+
+    if(navigator.vibrate) {
+        navigator.vibrate(10);
+    }
 });
 
 document.getElementById("B").addEventListener("click", function() {
@@ -182,6 +195,10 @@ document.getElementById("B").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+
+    if(navigator.vibrate) {
+        navigator.vibrate(10);
+    }
 });
 
 document.getElementById("C").addEventListener("click", function() {
@@ -194,6 +211,10 @@ document.getElementById("C").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+    
+    if(navigator.vibrate) {
+        navigator.vibrate(10);
+    }
 });
 
 document.getElementById("AC").addEventListener("click", function() {
@@ -206,6 +227,10 @@ document.getElementById("AC").addEventListener("click", function() {
     .then(response => response.json())
     .then(data => console.log("Success:", data))
     .catch(error => console.error("Error:", error));
+    
+    if(navigator.vibrate) {
+        navigator.vibrate(50);
+    }
 });
 
 document.getElementById("cpu-reset").addEventListener("click", function() {
