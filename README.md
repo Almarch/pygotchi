@@ -168,7 +168,6 @@ Once the web app will be launched, use `KEYCLOAK_ADMIN_PASSWORD` to access keycl
     - Enable client authentication.
     - Enable the standard authentication flow and the direct access grants (this are default). Keep all other authentication flows disabled.
     - Configure the valid redirect URI & Web origin: `https://<your public ip>/*` .
-    - Copy the client secret and paste it into `oauth2-proxy.cfg`.
 - Still into the realm **game**, create one or more new users with custom credentials.
 
 ### 🗺️ Next step: use a domain name
