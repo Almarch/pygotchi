@@ -33,18 +33,18 @@ services:
       KC_HTTPS_CERTIFICATE_KEY_FILE: /etc/x509/https/ssl.key
     command: ["start"]
     volumes:
-      - ./ssl/:/etc/x509/https/:ro
+      - ./nginx/ssl/:/etc/x509/https/:ro
     depends_on:
       - keycloak-db
     networks:
       - internal_network
 
   webserver:
-    image: nginx:latest
+    image: openresty/openresty
     restart: always
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./ssl/:/etc/nginx/ssl/:ro
+      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - ./nginx/ssl/:/etc/nginx/ssl/:ro
     ports:
       - "443:443"
     depends_on:

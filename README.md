@@ -92,7 +92,7 @@ The buzzer may be controlled at 2 levels:
 - Using the 🔊 icon: controls the sound on the client side.
 - Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
 
-## ☁️ Deploy the app online
+## ☁️ Deploy a Tamagotchi server
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
@@ -130,7 +130,7 @@ The connection has to be encrypted using a SSL key.
 From `/pygotchi`:
 
 ```sh
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/ssl.key -out ssl/ssl.crt -subj "/CN=localhost"
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/ssl.key -out nginx/ssl/ssl.crt -subj "/CN=localhost"
 ```
 
 This key will have to be renewed after one year.
@@ -159,7 +159,7 @@ The app is now available world-wide at `https://<your public ip>`.
 
 Note that we self-signed our certificate, so the browser will present a warning.
 
-### 🛡️ Keycloak
+### 🧙‍♂️ Keycloak
 
 Once the web app will be launched, use `KEYCLOAK_ADMIN_PASSWORD` to access keycloak administration board at `https://<your public ip>/keycloak`. From there:
 
