@@ -6,6 +6,8 @@
     - keycloak works as standalone ✅
     - keycloak admin console can be reached ✅
     - the user is redirected to the authentification console ✅
+    - a token is well delivered ✅ using:
+curl -X POST "https://localhost/realms/game/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=game_client" -d "client_secret=..." -d "grant_type=password" -d "username=..." -d "password=..." --insecure
     - the app can be reached behind keycloak ❌
 
 <br>
