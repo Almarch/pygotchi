@@ -49,7 +49,7 @@ python -m pygotchi
 
 The app is now available at http://localhost:8000.
 
-### 🌐 Swagger
+### 🛠️ Swagger
 
 FastAPI apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
 
@@ -71,7 +71,7 @@ From the administration menu, flash a ROM. It should be a 12ko .bin file. Use th
 
 The game may be saved any time using the Save CPU button from the administration menu. The save.bin file may then be loaded again. Ensure consistency between the loaded CPU and the ROM.
 
-### 🔊 Control the sound
+### 🎵 Control the sound
 
 The buzzer may be controlled at 2 levels:
 
@@ -80,7 +80,7 @@ The buzzer may be controlled at 2 levels:
 
 ## ☁️ Deploy the app
 
-This section is being re-written in a [dedicated feature](https://github.com/Almarch/pygotchi/tree/feature/keycloak?tab=readme-ov-file#2-deploy-the-app-online) in order to add a security layer.
+This section is being re-written in a dedicated feature in order to add a security layer.
 
 ## ☕ Background
 
@@ -94,13 +94,17 @@ More recently, new first-generation ROMs have been released and TamaLIB has been
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL).
 
-Adaptation to the new first-generation ROM collection is [being developed](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
-
 ## 🚧 Ongoing
 
-As already mentionned, 2 features are being developed:
-- The web deployment is being secured with a HTTPS and an indentity and access manager. Check out [here](https://github.com/Almarch/pygotchi/tree/feature/keycloak).
-- The C++ core is being updated following recent evolutions of TamaLIB main repo. This evolution aims at integration the new ROMs. Check out [here](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
+Two major improvements are on the backlog:
+
+- The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
+    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I tried to reflect the changes into the monolithic C++ but it is sketchy.
+    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/src-tamalib) I am trying to use the official tamaLIB repository with a minimal C++ binding to Python. I think at the end of the day this is the best approach.
+
+- The web deployment is being secured with a HTTPS and an indentity and access manager.
+    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/keycloak) I am exploring the option to use an OAuth proxy.
+    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/keycloak-JWT) I am considering using JWT instead, which seems less complicated.
 
 ## ⚖️ License
 
