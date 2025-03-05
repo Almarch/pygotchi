@@ -40,11 +40,8 @@ services:
       - internal_network
 
   webserver:
-    image: openresty/openresty
+    build: ./nginx/
     restart: always
-    volumes:
-      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
-      - ./nginx/ssl/:/etc/nginx/ssl/:ro
     ports:
       - "443:443"
     depends_on:
