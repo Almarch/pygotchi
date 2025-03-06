@@ -158,9 +158,10 @@ From there:
     - Configure the valid redirect URI & Web origin: `https://<your public ip>/*` .
     - Collect the **game_client** secret and keep it in your clipboard.
 - Still into the realm **game**, create one or more new users with custom credentials.
-- Update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
-    - replace `your_client_secret` by your actual game **game_client** secret.
-    - replace `127.0.0.1` by `<your public ip>`.
+
+Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
+- replace `your_client_secret` by your actual game **game_client** secret.
+- replace `127.0.0.1` by `<your public ip>`.
 
 Finally, re-launch the docker-compose cluster :
 
@@ -175,7 +176,7 @@ The app is now secured & available world-wide at `https://<your public ip>`.
 
 You may move a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize keycloak and `nginx.conf` accordingly.
 
-Be extra careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`.
+Be extra careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`. This may not be intuitive.
 
 ## ☕ Background
 
