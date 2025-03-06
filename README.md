@@ -161,7 +161,8 @@ From there:
 - Update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
     - replace `your_client_secret` by your actual game **game_client** secret.
     - replace `127.0.0.1` by `<your public ip>`.
-    - re-launch the docker-compose cluster :
+
+Finally, re-launch the docker-compose cluster :
 
 ```sh
 docker compose down
