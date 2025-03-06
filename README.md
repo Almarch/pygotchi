@@ -1,19 +1,3 @@
-# Feature/keycloak : to-do list
-
-- structure the deployment with docker-compose ✅
-- encrypt the connection (https) ✅
-- add keycloak to the stack :
-    - keycloak works as standalone ✅
-    - keycloak admin console can be reached ✅
-    - the user is redirected to the authentification console ✅
-    - a token is well delivered ✅ using:
-curl -X POST "https://localhost/realms/game/protocol/openid-connect/token" -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=game_client" -d "client_secret=..." -d "grant_type=password" -d "username=..." -d "password=..." --insecure
-    - the app can be reached behind keycloak ❌
-
-<br>
-<br>
-<br>
-
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
 The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service.
@@ -65,7 +49,7 @@ python -m pygotchi
 
 The app is now available at http://localhost:8000.
 
-### 🌐 Swagger
+### 🛠️ Swagger
 
 [FastAPI](https://fastapi.tiangolo.com/) apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
 
@@ -87,7 +71,7 @@ From the administration menu, flash a ROM. It should be a 12ko .bin file. Use th
 
 The game may be saved any time using the Save CPU button from the administration menu. The save.bin file may then be loaded again. Ensure consistency between the loaded CPU and the ROM.
 
-### 🔊 Control the sound
+### 🎵 Control the sound
 
 The buzzer may be controlled at 2 levels:
 
@@ -182,6 +166,7 @@ Once the web app will be launched, use `KEYCLOAK_ADMIN_PASSWORD` to access keycl
 You may move a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
 
 Be extra careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`.
+>>>>>>> 3468e279b5a2296c987b6db567f1dce6a3079970
 
 ## ☕ Background
 
@@ -195,16 +180,13 @@ More recently, new first-generation ROMs have been released and TamaLIB has been
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL).
 
-Adaptation to the new first-generation ROM collection is [being developed](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
 
-## 🚧 Ongoing
-
-As already mentionned, 2 features are being developed:
-- The web deployment is being secured with a HTTPS and an indentity and access manager. Check out [here](https://github.com/Almarch/pygotchi/tree/feature/keycloak).
-- The C++ core is being updated following recent evolutions of TamaLIB main repo. This evolution aims at integration the new ROMs. Check out [here](https://github.com/Almarch/pygotchi/tree/feature/new-roms).
+- The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
+    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I tried to reflect the changes into the monolithic C++ but it is sketchy.
+    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/src-tamalib) I am trying to use the official tamaLIB repository with a minimal C++ binding to Python. I think at the end of the day this is the best approach.
 
 ## ⚖️ License
 
-This work is licensed under GPL-2.0 license.
+This work is licensed under GPL-2.0.
 
 All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).
