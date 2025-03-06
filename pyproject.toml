@@ -12,7 +12,6 @@ version = "0.0.0"
 requires-python = ">=3.10"
 dependencies = [
     "pybind11",
-    "matplotlib",
     "thread6",
     "fastapi",
     "uvicorn",

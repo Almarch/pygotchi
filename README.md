@@ -166,7 +166,6 @@ Once the web app will be launched, use `KEYCLOAK_ADMIN_PASSWORD` to access keycl
 You may move a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize `nginx.conf` accordingly.
 
 Be extra careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`.
->>>>>>> 3468e279b5a2296c987b6db567f1dce6a3079970
 
 ## ☕ Background
 
@@ -179,7 +178,6 @@ The [R](https://github.com/almarch/tamaR) project was developed aiming the sole 
 More recently, new first-generation ROMs have been released and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R. The goal of this new version is to deliver an improved version of TamaLIB as a web service.
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL).
-
 
 - The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
     - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I tried to reflect the changes into the monolithic C++ but it is sketchy.
