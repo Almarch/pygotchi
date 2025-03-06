@@ -152,16 +152,16 @@ The first launch is very long as all services have to be set-up. Once the web ap
 From there:
 
 - Create a new realm: **game**.
-- into the realm **game**, create a new client : **game_client**. For this client:
+- From the realm **game**, create a new client : **game_client**. For this client:
     - Enable client authentication.
     - Enable the standard authentication flow and the direct access grants (this are default). Keep all other authentication flows disabled.
     - Configure the valid redirect URI & Web origin: `https://<your public ip>/*` .
     - Collect the **game_client** secret and keep it in your clipboard.
-- Still into the realm **game**, create one or more new users with custom credentials.
+- Still from the realm **game**, create one or more new users with custom credentials.
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
-- replace `your_client_secret` by your actual game **game_client** secret.
-- replace `127.0.0.1` by `<your public ip>`.
+- Replace `your_client_secret` by your actual game **game_client** secret.
+- Replace `127.0.0.1` by `<your public ip>`.
 
 Finally, re-launch the docker-compose cluster :
 
