@@ -55,7 +55,7 @@ The app is now available at http://localhost:8000.
 
 ## 🎮 How to use
 
-The game is controlled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to "poke" the toy.
+The game is controlled with 3 buttons (A, B, C) with respect to the original toy. Click the screen to tap the toy.
 
 A menu (☰) allows administration over the game.
 

@@ -136,6 +136,9 @@ async def click(button: str):
         case "AC":
             tama.click(["A","C"], .5)
             return {"clicked": "A+C"}
+        case "TAP":
+            tama.click(["TAP"], 1)
+            return {"clicked": "TAP"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
         

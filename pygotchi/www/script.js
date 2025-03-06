@@ -17,6 +17,16 @@ document.getElementById("to-shake").addEventListener("click", function() {
     setTimeout(() => {
         this.classList.remove("shake");
     }, 500);
+
+    fetch("/click?button=TAP", {
+        method: "POST",
+        headers: {
+            "accept": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Success:", data))
+    .catch(error => console.error("Error:", error));
 });
 
 // Websockets relative path
