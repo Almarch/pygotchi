@@ -170,7 +170,12 @@ Once the web app will be launched, use `KEYCLOAK_ADMIN_PASSWORD` to access keycl
     - Enable client authentication.
     - Enable the standard authentication flow and the direct access grants (this are default). Keep all other authentication flows disabled.
     - Configure the valid redirect URI & Web origin: `https://<your public ip>/*` .
+    - Collect the **game_client** secret.
 - Still into the realm **game**, create one or more new users with custom credentials.
+- Update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
+    - replace `your_client_secret` by your actual game **game_client** secret.
+    - replace `127.0.0.1` by `<your public ip>`.
+    - re-launch the docker-compose cluster.
 
 ### 🗺️ Next step: use a domain name
 

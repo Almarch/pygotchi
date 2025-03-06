@@ -47,6 +47,9 @@ services:
     depends_on:
       - keycloak
       - tamagotchi
+    volumes:
+      - ./nginx/ssl/:/etc/nginx/ssl/:ro
+      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
     networks:
       - internal_network
       

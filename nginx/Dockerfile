@@ -8,11 +8,8 @@ RUN wget https://luarocks.org/releases/luarocks-3.9.2.tar.gz \
     && make && make install \
     && cd .. && rm -rf luarocks-3.9.2 luarocks-3.9.2.tar.gz
 
-COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
-COPY ssl/ /etc/nginx/ssl/
 COPY lua/ /usr/local/openresty/lualib/
 
-RUN luarocks install lua-resty-openidc \
-    && luarocks install lua-resty-http
+RUN luarocks install lua-resty-openidc
 
 CMD ["openresty", "-g", "daemon off;"]
