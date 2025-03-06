@@ -129,6 +129,8 @@ echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 
 cat .env
 ```
 
+Keep the `KEYCLOAK_ADMIN_PASSWORD` in your clipboard.
+
 ### 🐙 Launch with docker-compose
 
 Launch the web app with its dependency services using docker-compose.
@@ -141,25 +143,32 @@ docker compose pull
 docker compose up
 ```
 
-The app is now available world-wide at `https://<your public ip>`.
-
-Note that we self-signed our certificate, so the browser will present a warning.
+The certificates are self-signed so the browser will present a warning.
 
 ### 🧙‍♂️ Keycloak
 
-Once the web app will be launched, use `KEYCLOAK_ADMIN_PASSWORD` to access keycloak administration board at `https://<your public ip>/keycloak`. From there:
+The first launch is very long as all services have to be set-up. Once the web app is launched, use the `KEYCLOAK_ADMIN_PASSWORD` to access keycloak administration board at `https://<your public ip>/keycloak`.
+
+From there:
 
 - Create a new realm: **game**.
 - into the realm **game**, create a new client : **game_client**. For this client:
     - Enable client authentication.
     - Enable the standard authentication flow and the direct access grants (this are default). Keep all other authentication flows disabled.
     - Configure the valid redirect URI & Web origin: `https://<your public ip>/*` .
-    - Collect the **game_client** secret.
+    - Collect the **game_client** secret and keep it in your clipboard.
 - Still into the realm **game**, create one or more new users with custom credentials.
 - Update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
     - replace `your_client_secret` by your actual game **game_client** secret.
     - replace `127.0.0.1` by `<your public ip>`.
-    - re-launch the docker-compose cluster.
+    - re-launch the docker-compose cluster :
+
+```sh
+docker compose down
+docker compose up -d
+```
+
+The app is now secured & available world-wide at `https://<your public ip>`.
 
 ### 🗺️ Next step: use a domain name
 
