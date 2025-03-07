@@ -4,7 +4,7 @@
 #include <cstring> // memcpy
 #include <stdlib.h> // exit
 
-#include "hal_type.h"
+#include "hal_types.h"
 #include "lib/hal.h"
 #include "lib/hw.h"
 #include "lib/cpu.h"

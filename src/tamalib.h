@@ -8,7 +8,7 @@
 #include <pybind11/numpy.h>
 #include <vector>
 
-#include "hal_type.h"
+#include "hal_types.h"
 #include "lib/hal.h"
 #include "lib/hw.h"
 #include "lib/cpu.h"
