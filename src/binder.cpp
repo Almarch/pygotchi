@@ -4,6 +4,9 @@
 #include <cstring> // memcpy
 #include <stdlib.h> // exit
 
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/numpy.h>
 #include <vector>
 
 #include "hal_types.h"
@@ -11,9 +14,35 @@
 #include "lib/hw.h"
 #include "lib/cpu.h"
 #include "lib/tamalib.h"
-#include "binder.h"
 
-bool keep_going
+static bool keep_going = false;
+
+class Tama {
+  public:
+  
+    // Constructor
+    Tama();
+  
+    // Getters
+    std::vector<bool> GetIcons();
+    std::vector<std::vector<bool>> GetMatrix();
+    int GetFreq();
+    std::vector<bool> GetButton();
+    std::vector<int> GetCPU();
+    std::vector<int> GetROM();
+  
+    // Setters
+    void SetButton(int n, bool state);
+    void SetCPU(const std::vector<int> res);
+    void SetROM(const std::vector<int> rom);
+  
+    // public methods
+    bool Runs();
+    void Start();
+    void Stop();
+  
+  private: 
+};
 
 Tama::Tama() {
     tamalib_register_hal(&hal);

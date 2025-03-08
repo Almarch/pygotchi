@@ -4,7 +4,7 @@ import pybind11
 ext_modules = [
     Extension(
         "pygotchi._tamalib",
-        sources=["src/tamalib.cpp"],
+        sources=["src/binder.cpp"],
         include_dirs=[
             pybind11.get_include(),
             'src/',
