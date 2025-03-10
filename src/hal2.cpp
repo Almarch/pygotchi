@@ -1,16 +1,11 @@
 #include <chrono> // high resolution clock
+#include <thread> // sleep_for
 #include "hal_types.h"
 #include "lib/hw.h"
 #include "lib/hal.h"
 #include "hal2.h"
 
-static const auto epochTime = std::chrono::high_resolution_clock::from_time_t(0);
-
-static uint16_t current_freq = 0;
-static uint16_t play_freq = 0; 
-static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH/8] = {{0}};
-static bool_t icon_buffer[ICON_NUM] = {0};
-static bool_t button_buffer[4];
+static const auto epochTime = std::chrono::system_clock::from_time_t(0);
 
 static void hal_malloc(u32_t size) {
 }

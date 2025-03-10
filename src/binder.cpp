@@ -1,5 +1,4 @@
 #include <pthread.h>
-#include <thread> // sleep_for
 #include <vector>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
