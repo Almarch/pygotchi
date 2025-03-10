@@ -3,4 +3,6 @@
 
 #include "lib/hal.h"
 
+static hal_t hal;
+
 #endif

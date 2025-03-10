@@ -11,10 +11,26 @@ static uint16_t play_freq = 0;
 static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH/8] = {{0}};
 static bool_t icon_buffer[ICON_NUM] = {0};
 static bool_t button_buffer[4];
-static bool_t keep_going = false;
+
+static void hal_malloc(u32_t size) {
+}
+
+static void hal_free(void *ptr) {
+}
+
+static void hal_halt(void) {
+}
+
+static bool_t hal_is_log_enabled(){
+  return 0;
+}
 
 static void hal_log(log_level_t level, char *buff, ...) {
 }
+
+static void hal_update_screen(void) {
+}
+
 
 static timestamp_t hal_get_timestamp(void) {
   auto currentTime = std::chrono::system_clock::now();
@@ -78,8 +94,6 @@ static int hal_handler(void) {
   }
   return 0;
 }
-
-static bool_t hal_is_log_enabled(){ return 0;}
 
 static hal_t hal = {
 	.malloc = &hal_malloc,

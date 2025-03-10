@@ -12,6 +12,15 @@
 #include "hal2.h"
 #include "binder.h"
 
+static bool_t keep_going = false;
+
+void* mainloop(void* arg){
+  while(keep_going){
+    tamalib_step();
+  };
+  return arg;
+}
+
 Tama::Tama() {
     tamalib_register_hal(&hal);
     tamalib_init(1000000);
@@ -20,7 +29,7 @@ Tama::Tama() {
 void Tama::Start(){
     pthread_t thread;
     keep_going = true;
-    pthread_create(&thread, 0, tamalib_mainloop, 0);
+    pthread_create(&thread, 0, mainloop, 0);
 }
 
 void Tama::Stop(){
@@ -33,29 +42,26 @@ bool Tama::Runs() {
 
 std::vector<bool> Tama::GetIcons()
 {
-
-    std::vector<bool> icon (ICON_NUM) ;
-
-    int i;
-    for (i = 0 ; i < ICON_NUM ; i++) {
-        icon[i] = icon_buffer[(u8_t)i] != 0;
-    }
-    
-    return icon;
+  std::vector<bool> icon (ICON_NUM) ;
+  int i;
+  for (i = 0 ; i < ICON_NUM ; i++) {
+      icon[i] = icon_buffer[(u8_t)i] != 0;
+  }
+  return icon;
 }
 
-  std::vector<std::vector<bool>> Tama::GetMatrix() {
-    std::vector<std::vector<bool>> matrix(LCD_HEIGHT, std::vector<bool>(LCD_WIDTH, false));
-    int i, j, k;
-    for (i = 0 ; i < LCD_HEIGHT ; i++) {
-        for (j = 0 ; j < LCD_WIDTH/8 ; j++) {
-          for (k = 0; k < 8; k++) {
-            matrix[i][8 * j + 7 - k] = (int)(matrix_buffer[(u8_t)i][(u8_t)j] >> k) & 1;
-          }
+std::vector<std::vector<bool>> Tama::GetMatrix() {
+  std::vector<std::vector<bool>> matrix(LCD_HEIGHT, std::vector<bool>(LCD_WIDTH, false));
+  int i, j, k;
+  for (i = 0 ; i < LCD_HEIGHT ; i++) {
+      for (j = 0 ; j < LCD_WIDTH/8 ; j++) {
+        for (k = 0; k < 8; k++) {
+          matrix[i][8 * j + 7 - k] = (int)(matrix_buffer[(u8_t)i][(u8_t)j] >> k) & 1;
         }
-    }
-    return matrix;
+      }
   }
+  return matrix;
+}
 
 int Tama::GetFreq() {
   return current_freq;
@@ -70,23 +76,19 @@ void Tama::SetButton(int n, bool state){
 }
 
 std::vector<int> Tama::GetCPU(){
-    uint32_t i = 0;
-    unsigned char cpu[sizeof(cpu_state_t) + MEMORY_SIZE];
-    std::vector<int> res(sizeof(cpu));
-
-    cpu_get_state(&cpuState);
-
-    memcpy(&cpu, &cpuState, sizeof(cpu_state_t));
-
-    for (i = 0; i < MEMORY_SIZE; i++)
-    {
-        cpu[sizeof(cpu_state_t) + i] = cpuState.memory[i];
-    }
-
-    for(i = 0; i < sizeof(cpu); i++){
-        res[i] = cpu[i];
-    }
-    return res;
+  uint32_t i = 0;
+  unsigned char cpu[sizeof(cpu_state_t) + MEMORY_SIZE];
+  std::vector<int> res(sizeof(cpu));
+  cpu_get_state(&cpuState);
+  memcpy(&cpu, &cpuState, sizeof(cpu_state_t));
+  for (i = 0; i < MEMORY_SIZE; i++)
+  {
+      cpu[sizeof(cpu_state_t) + i] = cpuState.memory[i];
+  }
+  for(i = 0; i < sizeof(cpu); i++){
+      res[i] = cpu[i];
+  }
+  return res;
 }
 
 void Tama::SetCPU(const std::vector<int> res){
