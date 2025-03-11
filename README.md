@@ -119,7 +119,7 @@ From `/pygotchi`:
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/ssl.key -out nginx/ssl/ssl.crt -subj "/CN=localhost"
 ```
 
-This key will have to be renewed after one year.
+This key will have to be renewed after one year. The certificates are self-signed so the browser will present a warning.
 
 Then set up the secrets. Still from `/pygotchi`:
 
@@ -143,11 +143,12 @@ docker compose pull
 docker compose up
 ```
 
-The certificates are self-signed so the browser will present a warning.
-
 ### 🧙‍♂️ Keycloak
 
-The first launch is very long as all services have to be set-up. Once the web app is launched, use the `KEYCLOAK_ADMIN_PASSWORD` to access keycloak administration board at `https://<your public ip>/keycloak`.
+Access keycloak administration board at `https://<your public ip>/keycloak`. The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
+
+- user: `admin`
+- password: `KEYCLOAK_ADMIN_PASSWORD`
 
 From there:
 
