@@ -1,6 +1,6 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service.
+The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a secured web service.
 
 The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
@@ -175,9 +175,11 @@ The app is now secured & available world-wide at `https://<your public ip>`.
 
 ### 🏰 Next step: use a domain name
 
-You may move a step further, purchase a domain name and use a trusted connection. In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose cluster, and to parameterize keycloak and `nginx.conf` accordingly.
+For further security, you may purchase a domain name and use a trusted connection.
 
-Be extra careful as the certbot can (and will) directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`. This may not be intuitive.
+In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
+
+Be extra careful as the certbot can and will directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`. This may not be intuitive.
 
 ## ☕ Background
 
