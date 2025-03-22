@@ -106,7 +106,7 @@ sudo ufw enable
 sudo systemctl enable ufw
 sudo ufw allow 443/tcp
 sudo ufw status
-sudo systemctl restart ufw
+sudo ufw reload
 ```
 
 ### 🔑 Keys & secrets
