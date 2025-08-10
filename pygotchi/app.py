@@ -69,6 +69,7 @@ async def Load_ROM(file: UploadFile = File()):
         content = await file.read()
         tama.load("ROM", content)
         carebot.stop()
+        carebot.reset()
         return {"posted": "rom"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -177,6 +178,9 @@ async def Care(do: str):
         case "stop":
             carebot.stop()
             return {"carebot": "stopped"}
+        case "reset":
+            carebot.reset()
+            return {"carebot": "reset"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid carebot action")
         

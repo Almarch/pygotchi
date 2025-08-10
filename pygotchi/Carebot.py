@@ -1,5 +1,7 @@
 from .care_p1p2 import carestep as carestep_p1p2, state0 as state0_p1p2
 import asyncio
+from threading import Lock
+import copy
 
 class Carebot:
     def __init__(self, tama):
@@ -9,13 +11,19 @@ class Carebot:
             "disc": True,
             "check_every": 5*60
         }
+        self.__lock__ = Lock() 
 
     async def run(self):
         while True:
             if self.active:
                 match self.tama.__version__:
                     case "p1" | "p2":
-                        self.state = carestep_p1p2(self.tama, self.state, self.param)
+                        with self.__lock__:
+                            self.state = carestep_p1p2(
+                                self.tama,
+                                self.state,
+                                self.param
+                            )
                         await asyncio.sleep(.1)
                     case _:
                         await asyncio.sleep(1)
@@ -25,14 +33,23 @@ class Carebot:
     def start(self):
         match self.tama.__version__:
             case "p1" | "p2":
-                self.active = True
-                self.state = state0_p1p2
+                with self.__lock__:
+                    self.active = True
             case _:
-                self.active = False
+                with self.__lock__:
+                    self.active = False
 
     def stop(self):
-        self.active = False
+        with self.__lock__:
+            self.active = False
+
+    def reset(self):
+        with self.__lock__:
+            match self.tama.__version__:
+                case "p1" | "p2":
+                    self.state = copy.deepcopy(state0_p1p2)
 
     def parameterize(self, disc, check_every):
-        self.param["disc"] = disc
-        self.param["check_every"] = check_every
+        with self.__lock__:
+            self.param["disc"] = disc
+            self.param["check_every"] = check_every

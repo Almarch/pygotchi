@@ -315,9 +315,16 @@ document.querySelector("#on-off-switch input").addEventListener("change", functi
     }
 });
 
-document.querySelector("#carebot").addEventListener("change", function() {
+const carebotCheckbox = document.querySelector("#carebot");
+let resetTimer = null;
+
+carebotCheckbox.addEventListener("change", function() {
     if (this.checked) {
-        // When switch is ON
+        // Annule timer reset si actif
+        if (resetTimer) {
+            clearTimeout(resetTimer);
+            resetTimer = null;
+        }
         fetch("/carebot?do=start", {
             method: "POST",
             headers: { "accept": "application/json" }
@@ -326,7 +333,18 @@ document.querySelector("#carebot").addEventListener("change", function() {
         .then(data => console.log("Carebot started:", data))
         .catch(error => console.error("Error:", error));
     } else {
-        // When switch is OFF
+        // reset after 1 sec
+        resetTimer = setTimeout(() => {
+            fetch("/carebot?do=reset", {
+                method: "POST",
+                headers: { "accept": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => console.log("Carebot reset:", data))
+            .catch(error => console.error("Error:", error));
+        }, 1000);
+
+        // Send stop otherwise
         fetch("/carebot?do=stop", {
             method: "POST",
             headers: { "accept": "application/json" }
