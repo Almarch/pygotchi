@@ -339,7 +339,7 @@ def play_game(times=1):
             interleaved.append(8)
         todo["actions"].extend(
             [5] +           # intro
-            interleaved +     # chaque match + résultat
+            interleaved +   # chaque match + résultat
             [8]             # score final + résultat
         )
     todo["actions"].extend(out)
@@ -361,12 +361,12 @@ def check_status(step=1):
         todo["actions"] = ["A"] * 6 + [
             "B", 2, # age & weight
             "B", 2, # discipline
-            "B", 1  # hunger
+            "B", 2  # hunger
         ]
     elif step == 2:
-        todo["actions"] = ["B", 1] # happiness
+        todo["actions"] = ["B", 2] # happiness
     elif step == 3:
-        todo["actions"] = out
+        todo["actions"] = out.copy()
     return todo
 
 def scold():
