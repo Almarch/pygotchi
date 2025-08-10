@@ -179,6 +179,13 @@ async def Care(do: str):
             return {"carebot": "stopped"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid carebot action")
+        
+@app.post("/param_carebot")
+async def Param_Carebot(disc: bool = True, check_every: float = 5*60):
+    carebot.parameterize(
+        disc = disc, 
+        check_every = check_every
+    )
 
 @app.post("/p2")
 async def Switch_to_P2():
