@@ -2,10 +2,12 @@ from ._tamalib import Tama as Tamalib
 from .conversion import int2bin, bin2int
 import time
 from threading import Lock, Thread
+import hashlib
 
 class Tama():
     def __init__(self):
         self.theme = "p1"
+        self.__version__ = None
         self.__tamalib__ = Tamalib()
         self.__lock__ = Lock() 
         self.__0ROM__ = [0 for i in range(9216)]
@@ -109,8 +111,19 @@ class Tama():
             elif what == "ROM":
                 self.__tamalib__.SetROM(obj)
             self.__wait__()
+
         if what=="CPU" and running:
             self.start()
+
         elif what == "ROM":
             self.reset("CPU")
+            
+            digest = hashlib.sha256(bin).hexdigest()
+            print(digest)
+
+            match digest:
+                case '67b6388f26e2e3f15674932baf2fc2fb1c6f388cc0f16ea1aa0f441db1a4f43c':
+                    self.__version__ = "p1"
+                case _:
+                    self.__version__ = None
 

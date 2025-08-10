@@ -56,6 +56,14 @@ wsScreen.onmessage = function(event) {
             switchElement.dispatchEvent(new Event("change")); // Trigger the change event
         }
     }
+
+    if (data.care !== undefined) {
+        let carebotCheckbox = document.querySelector("#carebot");
+        if (carebotCheckbox.checked !== data.care) {
+            carebotCheckbox.checked = data.care;
+            carebotCheckbox.dispatchEvent(new Event("change"));
+        }
+    }
 };
 
 // Function to update the UI with the correct background
@@ -303,6 +311,28 @@ document.querySelector("#on-off-switch input").addEventListener("change", functi
         })
         .then(response => response.json())
         .then(data => console.log("Turned OFF:", data))
+        .catch(error => console.error("Error:", error));
+    }
+});
+
+document.querySelector("#carebot").addEventListener("change", function() {
+    if (this.checked) {
+        // When switch is ON
+        fetch("/carebot?do=start", {
+            method: "POST",
+            headers: { "accept": "application/json" }
+        })
+        .then(response => response.json())
+        .then(data => console.log("Carebot started:", data))
+        .catch(error => console.error("Error:", error));
+    } else {
+        // When switch is OFF
+        fetch("/carebot?do=stop", {
+            method: "POST",
+            headers: { "accept": "application/json" }
+        })
+        .then(response => response.json())
+        .then(data => console.log("Carebot stopped:", data))
         .catch(error => console.error("Error:", error));
     }
 });

@@ -345,3 +345,29 @@ select:focus {
     font-size: 14px;
     color: #3498db;
 }
+
+/* Automatic care checkbox */
+
+input#carebot {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+label[for="carebot"]::before {
+  /* hear icon */
+  content: "\f08a";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  margin-right: 0.3em;
+  color: #ffbdd1;
+  font-size: 20px;
+}
+
+input#carebot:checked + label[for="carebot"]::before {
+  content: "\f004";
+  font-weight: 900;
+}

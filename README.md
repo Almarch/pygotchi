@@ -51,7 +51,7 @@ The app is now available at http://localhost:8000.
 
 ### 🛠️ Swagger
 
-[FastAPI](https://fastapi.tiangolo.com/) apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/docs. Not all API are implemented on the UI.
+[FastAPI](https://fastapi.tiangolo.com/) apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/swagger. Not all API are implemented on the UI.
 
 ## 🎮 How to use
 
