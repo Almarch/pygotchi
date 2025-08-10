@@ -182,8 +182,17 @@ async def Care(do: str):
 
 @app.post("/p2")
 async def Switch_to_P2():
-    p2(tama)
+    try:
+        p2(tama)
+        return {"P2": "Conversion succesful"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/secret")
 async def Secret_character():
-    secret(tama)
+    try:
+        secret(tama)
+        return {"secret": "Conversion succesful"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

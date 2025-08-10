@@ -1,4 +1,4 @@
-
+import asyncio
 
 async def carestep(tama):
-    pass
+    await asyncio.sleep(1)

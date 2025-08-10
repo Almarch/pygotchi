@@ -123,7 +123,14 @@ class Tama():
 
             match digest:
                 case '67b6388f26e2e3f15674932baf2fc2fb1c6f388cc0f16ea1aa0f441db1a4f43c':
+                    ''' Original P1 '''
                     self.__version__ = "p1"
+                case 'eaa515606427eae26d0bf5c14ac437c12b96935238280d944b0b4b1d98ce701b':
+                    ''' P1 with alternative secret character '''
+                    self.__version__ = "p1"
+                case '6c7af647b3f10e4da83c46a75ea6a62da29d26315677fbfd270d15c278a24b39':
+                    ''' Pseudo-P2: P1 with P2 sprites '''
+                    self.__version__ = "p2"
                 case _:
                     self.__version__ = None
 
