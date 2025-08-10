@@ -15,7 +15,8 @@ class Carebot:
             if self.active:
                 match self.tama.__version__:
                     case "p1" | "p2":
-                        await self.state = carestep_p1p2(self.tama, self.state, self.param)
+                        self.state = carestep_p1p2(self.tama, self.state, self.param)
+                        await asyncio.sleep(.1)
                     case _:
                         await asyncio.sleep(1)
             else:

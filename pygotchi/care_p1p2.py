@@ -1,4 +1,3 @@
-import asyncio
 import numpy as np
 import time
 import random
@@ -6,13 +5,13 @@ import random
 ### Utilities
 
 def top_right(tama):
-    return tama.matrix()[0:8, 24:32]
+    return tama.Matrix()[0:8, 24:32]
 
 def bottom_right(tama):
-    return tama.matrix()[8:16, 24:32]
+    return tama.Matrix()[8:16, 24:32]
 
 def bottom_left(tama):
-    return tama.matrix()[8:16, 0:8]
+    return tama.Matrix()[8:16, 0:8]
 
 ### Images
 
@@ -228,19 +227,19 @@ def is_asleep(tama, x="on"):
         to_check = top_right(tama)
         return np.all(to_check == Z) or np.all(to_check == zzz)
     elif x == "off":
-        to_check = tama.matrix()[0:8, 16:24]
+        to_check = tama.Matrix()[0:8, 16:24]
         return np.all(to_check == (1 - Z)) or np.all(to_check == (1 - zzz))
     else:
         raise ValueError("x must be 'on' or 'off'")
 
 def is_dark(tama):
-    return np.all(tama.matrix() == 1)
+    return np.all(tama.Matrix() == 1)
 
 def is_clock(tama):
-    return np.all(tama.matrix()[12:16, 2:10] == M)
+    return np.all(tama.Matrix()[12:16, 2:10] == M)
 
 def is_burger(tama):
-    return np.all(tama.matrix()[0:8, 0:8] == arrow)
+    return np.all(tama.Matrix()[0:8, 0:8] == arrow)
 
 def is_dead(tama):
     to_check = bottom_right(tama)
@@ -251,17 +250,17 @@ def is_dead(tama):
     )
 
 def nb_hearts(tama):
-    to_check = tama.matrix()[8:16, :]
+    to_check = tama.Matrix()[8:16, :]
     h1 = np.all(to_check[:, 0:8] == heart)
     h2 = np.all(to_check[:, 8:16] == heart)
     h3 = np.all(to_check[:, 16:24] == heart)
     h4 = np.all(to_check[:, 24:32] == heart)
     return 4 - h1 - h2 - h3 - h4
 
-async def is_egg(tama, egg1 = egg1, egg2 = egg2):
-    pic1 = tama.matrix()[0:16,8:24]
-    await asyncio.sleep(.25)
-    pic2 = tama.matrix()[0:16,8:24]
+def is_egg(tama, egg1 = egg1, egg2 = egg2):
+    pic1 = tama.Matrix()[0:16,8:24]
+    time.sleep(.25)
+    pic2 = tama.Matrix()[0:16,8:24]
     return (
 
         # p1
@@ -293,8 +292,8 @@ def set_clock():
     }
 
     now = time.localtime()
-    hr = time.strftime("%H", now)
-    mn = time.strftime("%M", now)
+    hr = int(time.strftime("%H", now))
+    mn = int(time.strftime("%M", now))
     print(f"initialization at {hr}:{mn}")
 
     if hr > 0:
@@ -398,7 +397,7 @@ state0 = {
 
 ### Care step & global algorithmics
 
-async def carestep(tama, state, param):
+def carestep(tama, state, param):
 
     t1 = time.time()
     elapsed = t1 - state["t0"]
@@ -522,7 +521,7 @@ async def carestep(tama, state, param):
 
             act = state["todo"]["actions"][0]
 
-            if act in c("A","B","C"):
+            if act in ["A","B","C"]:
                 tama.click(act, .1)
                 state["todo"]["wait"] =  .4
             else:

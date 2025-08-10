@@ -3,6 +3,7 @@ from .conversion import int2bin, bin2int
 import time
 from threading import Lock, Thread
 import hashlib
+import numpy as np
 
 class Tama():
     def __init__(self):
@@ -48,6 +49,10 @@ class Tama():
         with self.__lock__:
             res = self.__tamalib__.GetMatrix()
         return res
+    
+    def Matrix(self):
+        mat = self.matrix()
+        return np.array(mat).reshape((16, 32))
     
     def freq(self):
         with self.__lock__:
