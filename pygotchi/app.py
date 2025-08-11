@@ -40,7 +40,7 @@ async def websocket_video(websocket: WebSocket):
                     "icons": tama.icons(),
                     "runs": tama.runs(),
                     "care": carebot.active,
-                    "background": tama.theme,
+                    "background": tama.__version__ if tama.__version__ is not None else "p1"
                 }
             )
             await asyncio.sleep(1 / 5)
@@ -157,17 +157,17 @@ async def click(button: str):
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
         
-@app.post("/background")
-async def Change_background(theme: str):
-    match theme:
+@app.post("/force_version")
+async def Force_specific_version(version: str = "p1"):
+    match version:
         case "p1":
-            tama.theme = "p1"
+            tama.__version__ = "p1"
             return {"background": "p1 theme"}
         case "p2":
-            tama.theme = "p2"
+            tama.__version__ = "p2"
             return {"background": "p2 theme"}
         case _:
-            raise HTTPException(status_code=400, detail = "Invalid background")
+            raise HTTPException(status_code=400, detail = "Invalid version")
 
 @app.post("/carebot")
 async def Care(do: str):

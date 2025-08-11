@@ -7,7 +7,6 @@ import numpy as np
 
 class Tama():
     def __init__(self):
-        self.theme = "p1"
         self.__version__ = None
         self.__tamalib__ = Tamalib()
         self.__lock__ = Lock() 

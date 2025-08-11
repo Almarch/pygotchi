@@ -77,9 +77,6 @@ function updateBackground(background) {
             icon.src = `www/img/${background}/icon${i}.png`;
         }
     }
-
-    // Ensure the select reflects the current background
-    selectElement.value = background;
 }
 
 // Function to draw pixels
@@ -117,7 +114,6 @@ const oscillator = audioCtx.createOscillator();
 oscillator.type = "square"; // Simulating a buzzer
 oscillator.start();
 oscillator.connected = false; // Custom flag to track connection
-let isMuted = false; // Track mute state
 
 // Ensure audio starts only after user interaction
 document.addEventListener("click", function startAudio() {
@@ -145,14 +141,12 @@ wsAudio.onclose = function() {
 wsAudio.onmessage = function(event) {
     console.log("Received:", event.data);
     const data = JSON.parse(event.data);
-    if (!isMuted) {
-        setFrequency(data.freq);
-    }
+    setFrequency(data.freq);
 };
 
 // Function to update buzzer frequency
 function setFrequency(freq) {
-    if (freq > 0 && !isMuted) {
+    if (freq > 0) {
         oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
         if (!oscillator.connected) {
             oscillator.connect(audioCtx.destination);
@@ -163,19 +157,6 @@ function setFrequency(freq) {
         oscillator.connected = false;
     }
 }
-
-// Microphone Toggle (🔊 to 🔇)
-document.getElementById("mic-btn").addEventListener("click", function() {
-    if (this.textContent === "🔊") {
-        this.textContent = "🔇"; // Muted
-        isMuted = true;
-        oscillator.disconnect(); // Ensure buzzer is silent
-    } else {
-        this.textContent = "🔊"; // Unmuted
-        isMuted = false;
-        setFrequency(oscillator.frequency.value); // Restore last frequency
-    }
-});
 
 document.getElementById("A").addEventListener("click", function() {
     fetch("/click?button=A", {
@@ -359,13 +340,3 @@ document.getElementById("cpu-download").addEventListener("click", function() {
     window.location.href = "/cpu";
 });
 
-// Event listener for the select dropdown
-const selectElement = document.querySelector(".custom-select select");
-selectElement.addEventListener("change", function() {
-    fetch("/background?theme=" + selectElement.value, {
-        method: "POST",
-        headers: {
-            "accept": "application/json"
-        }
-    }).catch(error => console.error("Error sending background update:", error));
-});
