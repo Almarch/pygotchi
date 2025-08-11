@@ -1,13 +1,11 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a secured web service.
-
-The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
+The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a secured web service. The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
 
 - **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
 - **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
-A web app is readily available and dockerized for ease of deployment.
+However, unlike the original toy, the project also encompasses a bot that can care for the pet when the user is busy.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
