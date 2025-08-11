@@ -45,13 +45,10 @@ It may then be launched using Python:
 
 ```sh
 python -m pygotchi
+
 ```
 
 The app is now available at http://localhost:8000.
-
-### 🛠️ Swagger
-
-[FastAPI](https://fastapi.tiangolo.com/) apps come with a swagger. Once the app is launched, have a look at: http://localhost:8000/swagger. Not all API are implemented on the UI.
 
 ## 🎮 How to use
 
@@ -65,23 +62,26 @@ A menu (☰) allows administration over the game.
 
 ### 🧬 Load a ROM
 
-From the administration menu, flash a ROM. It should be a 12ko .bin file. Use the switch button to get the emulation started. The ROM is loaded on the server, and the emulation runs server-side.
+From the administration menu, flash a ROM. It should be a 12ko `.bin` file. Use the switch button to get the emulation started. The ROM is loaded on the server, and the emulation runs server-side. The ROM version is automatically detected and the graphical theme (background, icons) is adapted accordindingly.
 
 ### 💾 Save the game
 
-The game may be saved any time using the Save CPU button from the administration menu. The save.bin file may then be loaded again. Ensure consistency between the loaded CPU and the ROM.
-
-### 🎵 Control the sound
-
-The sound is controlled using the native Tamagotchi functionnality, with the **A+C** button. The sound is disabled / enabled on the server side.
+The game may be saved any time using the Save CPU button from the administration menu. The `save.bin` file may then be loaded again. Ensure consistency between the loaded CPU and the ROM.
 
 ### 💞 Automatic care
 
 The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997) for diverting people from their professional duties. But don’t worry, it is not a fatality: check this option and a friendly bot will care for your pet, freeing you up for more important (though probably less fun) stuff.
 
+The automatic care works on the server side, so the bot keeps caring for the pet when the user session is closed. It is automatically adapted to the ROM version. Currently, only P1 and P2 are supported.
+
 This feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix)).
 
-The Tamagotchi version is automatically detected so that the appropriate care algorithm will be used. Currently, it is only implemented for P1 and P2. It works on the server side, so the bot will keep caring for the pet when the user session is closed.
+### 🎵 Control the sound
+
+The sound is controlled using the native Tamagotchi functionnality, with the **A+C** button. This feature works on the server side.
+
+### 🛠️ Swagger
+Not all APIs are implemented on the UI, and a swagger allows for a few more functionalities.
 
 ## ☁️ Deploy a Tamagotchi server
 
@@ -190,17 +190,11 @@ Be extra careful as the certbot can and will directly access the linux `iptables
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: R and Python.
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. New first-generation ROMs have been released and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R.
 
-The [R](https://github.com/almarch/tamaR) project was developed aiming the sole P1 ROM that was available at this time. The app encompassed a function to switch the sprites to the P2 ones, and an algorithm to automatically care for the pet. Nevertheless, the core functionnality of the R project had been to deploy TamaLIB as a web app, in a server-client logic.
-
-More recently, new first-generation ROMs have been released and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R. The goal of this new version is to deliver an improved version of TamaLIB as a web service.
-
-On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL).
-
-- The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
-    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I tried to reflect the changes into the monolithic C++ but it is sketchy.
-    - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/src-tamalib) I am trying to use the official tamaLIB repository with a minimal C++ binding to Python. I think at the end of the day this is the best approach.
+On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
+- In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I am trying to reflect the changes into the monolithic C++ but it is sketchy.
+- In [this feature](https://github.com/Almarch/pygotchi/tree/feature/src-tamalib) I am trying to use the official tamaLIB repository with a minimal C++ binding to Python. I think at the end of the day this is the best approach.
 
 ## ⚖️ License
 
