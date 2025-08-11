@@ -41,17 +41,28 @@ body {
 
 /* Sidebar (Initially Hidden Completely Off-Screen) */
 .sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px; /* Move it further out of the viewport */
-    width: 250px;
-    height: 100%;
-    background-color: #333;
-    color: white;
-    transition: right 0.4s ease-in-out;
-    padding: 20px;
-    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 4;
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 275px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  transition: right 0.4s ease-in-out;
+  padding: 20px;
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* When Sidebar is Open */
@@ -272,16 +283,6 @@ body {
     border-radius: 50%;
   }
 
-  #mic-btn {
-    font-size: 40px; /* Makes it big */
-    display: block; /* Ensures it's a block element */
-    text-align: center; /* Centers it */
-    border: none;
-    background: none;
-    cursor: pointer;
-    width: 100%; /* Ensures full width for centering */
-}
-
 /* upload / download */
 .file-controls {
     display: flex;
@@ -312,36 +313,64 @@ body {
     background: deepskyblue;
 }
 
-/* Select list style */
-.custom-select {
-    position: relative;
-    display: inline-block;
+/* Automatic care checkbox */
+
+input#carebot {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-select {
-    appearance: none;
-    background-color: #fff;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-    color: #333;
-    width: 200px;
-    cursor: pointer;
-    outline: none;
+label[for="carebot"] {
+  display: inline-flex;
+  align-items: center; 
+  font-size: 22px;
 }
 
-select:focus {
-    border-color: #2980b9;
+label[for="carebot"]::before {
+  content: "\f08a";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 400;
+  margin-right: 0.3em;
+  color: #ffbdd1;
+  font-size: 32px;
 }
 
-.custom-select::after {
-    content: '\25BC';
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none;
-    font-size: 14px;
-    color: #3498db;
+input#carebot:checked + label[for="carebot"]::before {
+  content: "\f004";
+  font-weight: 900;
+}
+
+/* Swagger and GitHub Links */
+
+.bottom-right-links {
+  position: absolute;
+  bottom: 20px;
+  right: 5px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+
+.swagger-link {
+  position: absolute;
+  right: 50px;
+  font-size: 18px;
+}
+
+.github-link {
+  position: absolute;
+  right: 10px;
+  font-size: 22px;
+}
+
+.swagger-link, .github-link {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.swagger-link:hover, .github-link:hover {
+  color: #fff;
 }
