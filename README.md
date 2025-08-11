@@ -60,7 +60,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/c8a2d21a-9858-4273-b648-29c2455fc771" width="300px" />
+    <img src="https://github.com/user-attachments/assets/eb8ed074-ed9d-47f1-a861-f574fe64841e" width="300px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -73,10 +73,15 @@ The game may be saved any time using the Save CPU button from the administration
 
 ### 🎵 Control the sound
 
-The buzzer may be controlled at 2 levels:
+The sound is controlled using the native Tamagotchi functionnality, with the **A+C** button. The sound is disabled / enabled on the server side.
 
-- Using the 🔊 icon: controls the sound on the client side.
-- Using the **A+C** button: controls the sound on the server side, using the native Tamagotchi functionnality.
+### 💞 Automatic care
+
+The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997) for diverting people from their professional duties. But don’t worry, it is not a fatality: check this option and a friendly bot will care for your pet, freeing you up for more important (though probably less fun) stuff.
+
+This feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix)).
+
+The Tamagotchi version is automatically detected so that the appropriate care algorithm will be used. Currently, it is only implemented for P1 and P2. It works on the server side, so the bot will keep caring for the pet when the user session is closed.
 
 ## ☁️ Deploy a Tamagotchi server
 
