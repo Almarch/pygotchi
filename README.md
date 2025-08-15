@@ -104,7 +104,7 @@ If you don't have a PC that can be used as a server, or you don't have a fixed, 
 
 A firewall is needed to ensure you open the relevant port and this port only. Uncomplicated firewall (ufw) is a fair option.
 
-**Warning**: If you are connected to a VPS with SSH, open port 22 before enabling ufw or you would be locked out.
+**Warning**: if you are connected to a VPS with SSH, open port 22 before enabling ufw or you would be locked out.
 
 **Warning**: ufw applies to the whole system. If you already have a firewall, configure your existing firewall instead.
 
@@ -146,7 +146,7 @@ Keep the `KEYCLOAK_ADMIN_PASSWORD` at hand.
 
 Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6.
 
-**Warning**: this will overwrite `/etc/docker/daemon.json`. If you already have custom parameters, edit the file instead of overwriting it.
+**Warning**: this overwrites `/etc/docker/daemon.json`. If you already have custom parameters, edit the file instead of overwriting it.
 
 ```sh
 echo '{
@@ -200,9 +200,7 @@ The app is now secured & available world-wide at `https://<your public IP>`.
 
 ### 🏰 Domain name
 
-For further security, purchase a domain name and use a trusted connection.
-
-To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
+For further security, purchase a domain name and use a trusted connection. To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
 
 ## 📐 Technical aspects
 
