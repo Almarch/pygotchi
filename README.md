@@ -15,7 +15,7 @@ The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-
 
 ## 🚀 Run the app locally
 
-Start by cloning the repo:
+Clone the repo:
 
 ```sh
 git clone https://github.com/almarch/pygotchi.git
@@ -106,6 +106,8 @@ A firewall is needed to ensure you open the relevant port and this port only. Un
 
 If you are connected to a VPS with SSH, open port 22 before enabling ufw or you would be locked out.
 
+**Warning**: ufw applies to the whole system. If you already have a firewall, configure your existing firewall instead.
+
 ```sh
 sudo apt install ufw
 sudo ufw default deny incoming
@@ -142,16 +144,17 @@ Keep the `KEYCLOAK_ADMIN_PASSWORD` in your clipboard.
 
 ### 🐙 Run with docker-compose
 
-Update `/etc/docker/daemon.json`:
+Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6.
 
-```json
-{
+**Warning**: this will overwrite `/etc/docker/daemon.json`. If you already have custom parameters, edit the file instead of overwriting it.
+
+```sh
+echo '{
   "iptables": false,
   "ipv6": true
-}
+}' | sudo tee /etc/docker/daemon.json
+sudo systemctl restart docker
 ```
-
-This forbids docker to directly access iptables, and allows access from IPv6.
 
 Launch the web app with its dependency services using docker-compose.
 
@@ -195,9 +198,9 @@ The app is now secured & available world-wide at `https://<your public ip>`.
 
 ### 🏰 Domain name
 
-For further security, you may purchase a domain name and use a trusted connection.
+For further security, purchase a domain name and use a trusted connection.
 
-To achieve this, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
+To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
 
 ## 📐 Technical aspects
 
