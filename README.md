@@ -104,7 +104,7 @@ If you don't have a PC that can be used as a server, or you don't have a fixed, 
 
 A firewall is needed to ensure you open the relevant port and this port only. Uncomplicated firewall (ufw) is a fair option.
 
-If you are connected to a VPS with SSH, open port 22 before enabling ufw or you would be locked out.
+**Warning**: If you are connected to a VPS with SSH, open port 22 before enabling ufw or you would be locked out.
 
 **Warning**: ufw applies to the whole system. If you already have a firewall, configure your existing firewall instead.
 
@@ -140,7 +140,7 @@ echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 
 cat .env
 ```
 
-Keep the `KEYCLOAK_ADMIN_PASSWORD` in your clipboard.
+Keep the `KEYCLOAK_ADMIN_PASSWORD` at hand.
 
 ### 🐙 Run with docker-compose
 
@@ -168,7 +168,9 @@ docker compose up
 
 ### 🧙‍♂️ Keycloak
 
-Access keycloak administration board at `https://<your public ip>/keycloak`. The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
+Access keycloak administration board at `https://<your public>/keycloak`.
+
+The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
 
 - user: `admin`
 - password: `KEYCLOAK_ADMIN_PASSWORD`
@@ -178,14 +180,14 @@ From there:
 - Create a new realm: **game**.
 - From the realm **game**, create a new client : **game_client**. For this client:
     - Enable client authentication.
-    - Enable the standard authentication flow and the direct access grants (this are default). Keep all other authentication flows disabled.
-    - Configure the valid redirect URI & Web origin: `https://<your public ip>/*` .
+    - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
+    - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
     - Collect the **game_client** secret and keep it in your clipboard.
 - Still from the realm **game**, create one or more new users with custom credentials.
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
 - Replace `your_client_secret` by your actual game **game_client** secret.
-- Replace `127.0.0.1` by `<your public ip>`.
+- Replace `127.0.0.1` by either `<your public IPv4>` or `[<your public IPv6>]`.
 
 Finally, re-launch the docker-compose cluster :
 
@@ -194,7 +196,7 @@ docker compose down
 docker compose up -d
 ```
 
-The app is now secured & available world-wide at `https://<your public ip>`.
+The app is now secured & available world-wide at `https://<your public IP>`.
 
 ### 🏰 Domain name
 
