@@ -5,9 +5,9 @@ The goal of this [Python](https://www.python.org/) package is to deliver [TamaLI
 - **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
 - **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
-Unlike the original toy, the project also encompasses [a bot](#💞-Automatic-care) that can care for the pet when the user is busy.
+Unlike the original toy, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
 
-The project encompasses a [Python core API](#🥚-Python-core-API) that may readily be ported to further development projects.
+The project encompasses a [Python core API](#-Python-core-API) that may readily be ported to further development projects.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
