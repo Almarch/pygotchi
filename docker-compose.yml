@@ -43,6 +43,7 @@ services:
     build: ./nginx/
     restart: always
     ports:
+      - "80:80"
       - "443:443"
     depends_on:
       - keycloak
@@ -55,4 +56,5 @@ services:
       
 networks:
   internal_network:
-      driver: bridge
+    driver: bridge
+    enable_ipv6: true

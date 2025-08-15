@@ -102,15 +102,20 @@ If you don't have a PC that can be used as a server, or you don't have a fixed, 
 
 ### 🧱 Firewall
 
-A firewall is needed to ensure you open the relevant port and this port only. For instance using [ufw](https://fr.wikipedia.org/wiki/Uncomplicated_Firewall):
+A firewall is needed to ensure you open the relevant port and this port only. Uncomplicated firewall (ufw) is a fair option.
+
+If you are connected to a VPS with SSH, open port 22 before enabling ufw or you would be locked out.
 
 ```sh
 sudo apt install ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp   # If using a VPS
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
 sudo ufw enable
 sudo systemctl enable ufw
-sudo ufw allow 443/tcp
 sudo ufw status
-sudo ufw reload
 ```
 
 ### 🔑 Keys & secrets
@@ -136,6 +141,17 @@ cat .env
 Keep the `KEYCLOAK_ADMIN_PASSWORD` in your clipboard.
 
 ### 🐙 Run with docker-compose
+
+Update `/etc/docker/daemon.json`:
+
+```json
+{
+  "iptables": false,
+  "ipv6": true
+}
+```
+
+This forbids docker to directly access iptables, and allows access from IPv6.
 
 Launch the web app with its dependency services using docker-compose.
 
@@ -181,9 +197,7 @@ The app is now secured & available world-wide at `https://<your public ip>`.
 
 For further security, you may purchase a domain name and use a trusted connection.
 
-In this case, it will be necessary to include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
-
-Be extra careful as the certbot can and will directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`. This may not be intuitive.
+To achieve this, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
 
 ## 📐 Technical aspects
 
