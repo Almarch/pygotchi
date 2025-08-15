@@ -1,19 +1,19 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a secured web service. The web server-client logic makes a special sense for Tamagotchis as it unlocks two key functionnalities of the original game:
+The goal of this [Python](https://www.python.org/) package is to deliver [TamaLIB](https://github.com/jcrona/tamalib) as a web service. The web server-client logic unlocks two key functionnalities of the original game:
 
-- **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
+- **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed anytime, anywhere using a smartphone.
 - **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
-Unlike the original toy, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
+Unlike the original toy though, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
 
-The project encompasses a [Python core API](#-Python-core-API) that may readily be ported to further development projects.
+The project encompasses an [out-of-the-box, secured web application](#-Deploy-a-Tamagotchi-server); and a [Python core API](#-Python-core-API) that may be ported to further development projects.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
 </div>
 
-## 🚀 Run the app
+## 🚀 Run the app locally
 
 Start by cloning the repo:
 
@@ -185,7 +185,15 @@ In this case, it will be necessary to include [certbot](https://hub.docker.com/r
 
 Be extra careful as the certbot can and will directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`. This may not be intuitive.
 
-## 🥚 Python core API
+## 📐 Technical aspects
+
+### ☕ Background
+
+<img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
+
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R.
+
+### 🥚 Python core API
 
 The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the Carebot that both operate on `Tama()`.
 
@@ -202,13 +210,11 @@ for row in tama.Matrix():
 tama.click("B")
 ```
 
-## ☕ Background
+### 🚧 Work on progress
 
-<img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
+Currently, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL).
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R.
-
-On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
+The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
 
 - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I am trying to reflect the changes into the monolithic C++ but it is sketchy.
 - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/src-tamalib) I am trying to use the official tamaLIB repository with a minimal C++ binding to Python. I think at the end of the day this is the best approach.
