@@ -200,7 +200,7 @@ The app is now secured & available world-wide at `https://<your public IP>`.
 
 ### 🏰 Domain name
 
-For further security, purchase a domain name and use a trusted connection. To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and to parameterize keycloak and `nginx.conf` accordingly.
+For further security, purchase a domain name and use a trusted connection. To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and parameterize keycloak and `nginx.conf` accordingly.
 
 ## 📐 Technical aspects
 
