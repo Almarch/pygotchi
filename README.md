@@ -135,7 +135,7 @@ cat .env
 
 Keep the `KEYCLOAK_ADMIN_PASSWORD` in your clipboard.
 
-### 🐙 Launch with docker-compose
+### 🐙 Run with docker-compose
 
 Launch the web app with its dependency services using docker-compose.
 
@@ -177,7 +177,7 @@ docker compose up -d
 
 The app is now secured & available world-wide at `https://<your public ip>`.
 
-### 🏰 Next step: use a domain name
+### 🏰 Domain name
 
 For further security, you may purchase a domain name and use a trusted connection.
 
