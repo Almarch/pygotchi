@@ -5,10 +5,12 @@ The goal of this [Python](https://www.python.org/) package is to deliver [TamaLI
 - **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed from anywhere using a smartphone.
 - **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
-However, unlike the original toy, the project also encompasses a bot that can care for the pet when the user is busy.
+Unlike the original toy, the project also encompasses [a bot](#💞-Automatic-care) that can care for the pet when the user is busy.
+
+The project encompasses a [Python core API](#🥚-Python-core-API) that may readily be ported to further development projects.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/98100f88-279b-4cb2-84cf-29b0c25926db" width="300px"/>
+    <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
 </div>
 
 ## 🚀 Run the app
@@ -31,7 +33,7 @@ The app is now available at http://localhost:8000.
 
 ### 🐍 Run with Python
 
-Build the package with `build` and install it with `pip`:
+Pygotchi can only be built and installed on linux (or the WSL). Build the package with `build` and install it with `pip`:
 
 ```sh
 pip install build
@@ -39,11 +41,10 @@ python -m build ./pygotchi
 pip install ./pygotchi
 ```
 
-It may then be launched using Python:
+The app may then be launched using Python:
 
 ```sh
 python -m pygotchi
-
 ```
 
 The app is now available at http://localhost:8000.
@@ -68,7 +69,7 @@ The game may be saved any time using the Save CPU button from the administration
 
 ### 💞 Automatic care
 
-The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997) for diverting people from their professional duties. But don’t worry, it is not a fatality: check this option and a friendly bot will care for your pet, freeing you up for more important (though probably less fun) stuff.
+The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997) for diverting millions of people from their professional duties. It is not a fatality: check this option and a friendly bot will care for your pet, freeing you up for more important (though probably less fun) stuff.
 
 The automatic care works on the server side, so the bot keeps caring for the pet when the user session is closed. It is automatically adapted to the ROM version. Currently, only P1 and P2 are supported.
 
@@ -184,15 +185,35 @@ In this case, it will be necessary to include [certbot](https://hub.docker.com/r
 
 Be extra careful as the certbot can and will directly access the linux `iptables` \(docker daemon has admin privileges\), opening ports and by-passing `ufw`. This may not be intuitive.
 
+## 🥚 Python core API
+
+The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the Carebot that both operate on `Tama()`.
+
+The Python core API may directly be interacted with:
+
+```python
+from pygotchi import Tama
+tama = Tama()
+with open("rom.bin", "rb") as file:
+    tama.load("ROM", file.read())
+tama.start()
+for row in tama.Matrix():
+    print("".join("██" if val else "  " for val in row))
+tama.click("B")
+```
+
 ## ☕ Background
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. New first-generation ROMs have been released and TamaLIB has been adapted to allow the emulation for all first-gen Tamagotchis. In this view, I recycled the R project into a Python framework. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and far better performances than R.
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, I ported tamaLIB on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R.
 
 On the technical side, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python. The same code and dependencies compiled on both windows and linux in the tamaR project, but currently pygotchi only builds on linux (or the WSL). The C++ core is being adapted following the evolution of TamaLIB aiming at emulating all first-gen ROMs:
+
 - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/new-roms) I am trying to reflect the changes into the monolithic C++ but it is sketchy.
 - In [this feature](https://github.com/Almarch/pygotchi/tree/feature/src-tamalib) I am trying to use the official tamaLIB repository with a minimal C++ binding to Python. I think at the end of the day this is the best approach.
+  
+Contributions to this part of the project, or to any other aspect, are warmly welcome.
 
 ## ⚖️ License
 
