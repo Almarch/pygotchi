@@ -182,8 +182,8 @@ From there:
     - Enable client authentication.
     - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
     - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
-    - Collect the **game_client** secret and keep it in your clipboard.
-- Still from the realm **game**, create one or more new users with custom credentials.
+    - Collect the **game_client** secret and keep it at hand.
+- Still from the realm **game**, create one or more new users with custom credentials. NB: all users access the same Tamagotchi.
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
 - Replace `your_client_secret` by your actual game **game_client** secret.
