@@ -7,7 +7,7 @@ The goal of this Python package is to deliver a Tamagotchi as a web service. The
 
 Unlike the original toy though, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
 
-The project encompasses an [out-of-the-box, secured web application](#-deploy-a-tamagotchi-server); and a [Python core API](#-Python-core-API) that may be ported to further development projects.
+The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-deploy-a-tamagotchi-server); and a [Python core API](#-Python-core-API) that may be ported to further development projects.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
