@@ -123,7 +123,7 @@ class Tama():
             self.reset("CPU")
             
             digest = hashlib.sha256(bin).hexdigest()
-            print(digest)
+            print("ROM digest: " + digest)
 
             match digest:
                 case '67b6388f26e2e3f15674932baf2fc2fb1c6f388cc0f16ea1aa0f441db1a4f43c':
@@ -137,4 +137,10 @@ class Tama():
                     self.__version__ = "p2"
                 case _:
                     self.__version__ = None
+            
+            if self.__version__ is None:
+                print("non-identified ROM")
+            
+            else:
+                print("ROM identified as: " + self.__version__)
 
