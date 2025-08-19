@@ -84,7 +84,10 @@ Not all APIs are implemented on the UI, and a swagger allows for a few more func
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
-You need to know the public IP of your network and the private IP of your server. The public IP can be accessed from one of the many dedicated website, for instance [this one](https://www.mon-ip.com/). The private IP can be accessed with the command:
+You need to know the public IP of your network and the private IP of your server.
+
+- The public IP can be accessed from [here](https://api.ipify.org) ;
+- The private IP can be accessed with the command:
 
 ```bash
 hostname -I
@@ -93,8 +96,8 @@ hostname -I
 The router configuration depends on the internet supplier. The router configuration page may for instance be reached from within the network at `http://<your public ip>:80`.
 
 The router should be parameterized as such:
-- port 443 should be open to TCP ;
-- port 443 should redirect to your linux server, identified with its private IP.
+- ports 80 and 443 should be open to TCP ;
+- ports 80 and 443 should redirect to your linux server, identified with its private IP.
 
 If you don't have a PC that can be used as a server, or you don't have a fixed, personal IP ; then you may opt for a VPS. A "bare-metal" VPS does the job and is relatively cheap. The public IP is provided by the cloud provider. Very little configuration is required.
 
