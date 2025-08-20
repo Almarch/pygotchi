@@ -1,17 +1,21 @@
 import numpy as np
 import time
 import random
+import asyncio
 
 ### Utilities
 
-def top_right(tama):
-    return tama.Matrix()[0:8, 24:32]
+async def top_right(tama):
+    to_check = await tama.Matrix()
+    return to_check[0:8, 24:32]
 
-def bottom_right(tama):
-    return tama.Matrix()[8:16, 24:32]
+async def bottom_right(tama):
+    to_check = await tama.Matrix()
+    return to_check[8:16, 24:32]
 
-def bottom_left(tama):
-    return tama.Matrix()[8:16, 0:8]
+async def bottom_left(tama):
+    to_check = await tama.Matrix()
+    return to_check[8:16, 0:8]
 
 ### Images
 
@@ -210,57 +214,66 @@ egg4 = np.array([
 
 ### Checks
 
-def is_sick(tama):
-    return np.all(top_right(tama) == skull)
+async def is_sick(tama):
+    to_check = await top_right(tama)
+    return np.all(to_check == skull)
 
-def is_dirty(tama, x="top"):
+async def is_dirty(tama, x="top"):
     if x == "top":
-        to_check = top_right(tama)
+        to_check = await top_right(tama)
     elif x == "bottom":
-        to_check = bottom_right(tama)
+        to_check = await bottom_left(tama)
     else:
         raise ValueError("x must be 'top' or 'bottom'")
     return np.all(to_check == poop1) or np.all(to_check == poop2)
 
-def is_asleep(tama, x="on"):
+async def is_asleep(tama, x="on"):
     if x == "on":
-        to_check = top_right(tama)
+        to_check = await top_right(tama)
         return np.all(to_check == Z) or np.all(to_check == zzz)
     elif x == "off":
-        to_check = tama.Matrix()[0:8, 16:24]
+        to_check = await tama.Matrix()
+        to_check = to_check[0:8, 16:24]
         return np.all(to_check == (1 - Z)) or np.all(to_check == (1 - zzz))
     else:
         raise ValueError("x must be 'on' or 'off'")
 
-def is_dark(tama):
-    return np.all(tama.Matrix() == 1)
+async def is_dark(tama):
+    to_check = await tama.Matrix()
+    return np.all(to_check == 1)
 
-def is_clock(tama):
-    return np.all(tama.Matrix()[12:16, 2:10] == M)
+async def is_clock(tama):
+    to_check = await tama.Matrix()
+    return np.all(to_check[12:16, 2:10] == M)
 
-def is_burger(tama):
-    return np.all(tama.Matrix()[0:8, 0:8] == arrow)
+async def is_burger(tama):
+    to_check = await tama.Matrix()
+    return np.all(to_check[0:8, 0:8] == arrow)
 
-def is_dead(tama):
-    to_check = bottom_right(tama)
+async def is_dead(tama):
+    to_check = await bottom_right(tama)
     return (
         np.all(to_check == dead1) or
         np.all(to_check == dead2) or
         np.all(to_check == yr)
     )
 
-def nb_hearts(tama):
-    to_check = tama.Matrix()[8:16, :]
+async def nb_hearts(tama):
+    to_check = await tama.Matrix()
+    to_check = to_check[8:16, :]
     h1 = np.all(to_check[:, 0:8] == heart)
     h2 = np.all(to_check[:, 8:16] == heart)
     h3 = np.all(to_check[:, 16:24] == heart)
     h4 = np.all(to_check[:, 24:32] == heart)
     return 4 - h1 - h2 - h3 - h4
 
-def is_egg(tama, egg1 = egg1, egg2 = egg2):
-    pic1 = tama.Matrix()[0:16,8:24]
-    time.sleep(.25)
-    pic2 = tama.Matrix()[0:16,8:24]
+async def is_egg(tama, egg1 = egg1, egg2 = egg2):
+    to_check = await tama.Matrix()
+    pic1 = to_check[0:16,8:24]
+    await asyncio.sleep(.25)
+    to_check = await tama.Matrix()
+    pic2 = to_check[0:16,8:24]
+
     return (
 
         # p1
@@ -397,7 +410,7 @@ state0 = {
 
 ### Care step & global algorithmics
 
-def carestep(tama, state, param):
+async def carestep(tama, state, param):
 
     t1 = time.time()
     elapsed = t1 - state["t0"]
@@ -405,82 +418,87 @@ def carestep(tama, state, param):
 
     ### if it's an egg, set the clock
     if state["egg"]:
-        if is_egg(tama):
+        if await is_egg(tama):
             state["todo"] = set_clock()
         state["egg"] = False
 
     ### if dead, that's over
-    if is_dead(tama):
+    if await is_dead(tama):
         state["dead"] = True
         state["todo"]["wait"] = float('inf')
 
     ### stop the need to scold if it doesn't cry anymore
-    if not tama.icons()[7]:
+    icons = await tama.icons()
+    if not icons[7]:
         state["scold"] = False
     
     ### otherwise, plan an action
-    if is_asleep(tama, "off"):
+    if await is_asleep(tama, "off"):
         state["stats"] = {
             "hunger": 4,
             "happiness": 4
         }
     elif state["todo"]["wait"] <= 0 and len(state["todo"]["actions"]) == 0:
 
+        icons = await tama.icons()
+
         # end what has been started
         if state["doing"] != "":
             if state["doing"] == "try_to_clean":
-                if is_dirty(tama, "top"):
+                if await is_dirty(tama, "top"):
                     # still dirty => asleep, turn the light off
                     state["todo"] = light()
                     state["doing"] = ""
 
             elif state["doing"] == "check_arrow":
                 # now that the arrow is checked, feed
-                side = "top" if is_burger(tama) else "bottom"
+                side = "top" if await is_burger(tama) else "bottom"
                 state["todo"] = feed(side, times=4 - state["stats"]["hunger"])
                 state["stats"]["hunger"] = 4
                 state["doing"] = ""
 
             elif state["doing"] == "check_status_1":
                 # check hunger
-                state["stats"]["hunger"] = nb_hearts(tama)
+                state["stats"]["hunger"] = await nb_hearts(tama)
                 state["todo"] = check_status(step = 2)
                 state["doing"] = "check_status_2"
 
             elif state["doing"] == "check_status_2":
                 # check happiness
-                state["stats"]["happiness"] = nb_hearts(tama)
+                state["stats"]["happiness"] = await nb_hearts(tama)
                 state["todo"] = check_status(step = 3)
                 state["doing"] = ""
 
+                icons = await tama.icons()
+
                 if (
-                    tama.icons()[7] and
-                    not is_asleep(tama, "on") and
+                    icons[7] and
+                    not await is_asleep(tama, "on") and
                     state["stats"]["hunger"] > 0 and
                     state["stats"]["happiness"] > 0
                 ):
                     state["scold"] = True
 
         # check bad screens (clock, light off when not asleep)
-        elif is_clock(tama):
+        elif await is_clock(tama):
             state["todo"] = unclock()
 
-        elif is_dark(tama):
+        elif await is_dark(tama):
             state["todo"] = light()
 
         # cares
-        elif is_asleep(tama,"on"):
+        elif await is_asleep(tama,"on"):
             state["todo"] = light()
 
-        elif is_dirty(tama, "top"):
+        elif await is_dirty(tama, "top"):
             # double poop: try to clean - or is it asleep ?
             state["todo"] = clean()
             state["doing"] = "try_to_clean"
 
-        elif is_dirty(tama, "bottom"):
+        elif await is_dirty(tama, "bottom"):
             state["todo"] = clean()
 
-        elif is_sick(tama):
+        elif await is_sick(tama):
             # heal after double poop that may hide it
             state["todo"] = heal()
 
@@ -504,8 +522,8 @@ def carestep(tama, state, param):
         elif (
             state["t0"] > state["next_check"] or
             (
-                tama.icons()[7] and
-                not is_asleep(tama, "on")
+                icons[7] and
+                not await is_asleep(tama, "on")
             )
         ):
             state["next_check"] = state["t0"] + param["check_every"]
@@ -522,7 +540,7 @@ def carestep(tama, state, param):
             act = state["todo"]["actions"][0]
 
             if act in ["A","B","C"]:
-                tama.click(act, .1)
+                await tama.click(act, .1)
                 state["todo"]["wait"] =  .4
             else:
                 state["todo"]["wait"] = act
