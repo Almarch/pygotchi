@@ -38,11 +38,11 @@ async def websocket_video(websocket: WebSocket):
         while True:
             await websocket.send_json(
                 {
-                    "matrix": tama.matrix(),
-                    "icons": tama.icons(),
-                    "runs": tama.runs(),
+                    "matrix": await tama.matrix(),
+                    "icons": await tama.icons(),
+                    "runs": await tama.runs(),
                     "care": carebot.active,
-                    "background": tama.__version__ if tama.__version__ is not None else "p1"
+                    "background": tama.version if tama.version is not None else "p1"
                 }
             )
             await asyncio.sleep(1 / 5)
@@ -57,7 +57,7 @@ async def websocket_audio(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
-            await websocket.send_json({"freq": tama.freq()})
+            await websocket.send_json({"freq": await tama.freq()})
             await asyncio.sleep(1 / 20)
     except WebSocketDisconnect:
         print("Client disconnected")
@@ -69,7 +69,7 @@ async def websocket_audio(websocket: WebSocket):
 async def Load_ROM(file: UploadFile = File()):
     try:
         content = await file.read()
-        tama.load("ROM", content)
+        await tama.load("ROM", content)
         carebot.stop()
         carebot.reset()
         return {"posted": "rom"}
@@ -79,7 +79,7 @@ async def Load_ROM(file: UploadFile = File()):
 @app.get("/rom")
 async def Dump_ROM():
     try:
-        data = tama.dump("ROM")
+        data = await tama.dump("ROM")
         return Response(
             content=data,
             media_type="application/octet-stream",
@@ -91,7 +91,7 @@ async def Dump_ROM():
 @app.delete("/rom")
 async def Delete_ROM():
     try:
-        tama.reset("ROM")
+        await tama.reset("ROM")
         carebot.stop()
         return {"deleted": "rom"}
     except Exception as e:
@@ -101,16 +101,16 @@ async def Delete_ROM():
 async def Load_CPU(file: UploadFile = File()):
     try:
         content = await file.read()
-        tama.load("CPU", content)
+        await tama.load("CPU", content)
         carebot.stop()
-        return {"posted": "rom"}
+        return {"posted": "cpu"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/cpu")
 async def Dump_CPU():
     try:
-        data = tama.dump("CPU")
+        data = await tama.dump("CPU")
         return Response(
             content=data,
             media_type="application/octet-stream",
@@ -122,7 +122,7 @@ async def Dump_CPU():
 @app.delete("/cpu")
 async def Delete_CPU():
     try:
-        tama.reset("CPU")
+        await tama.reset("CPU")
         carebot.stop()
         return {"deleted": "cpu"}
     except Exception as e:
@@ -132,10 +132,10 @@ async def Delete_CPU():
 async def Manage(do: str):
     match do:
         case "start":
-            tama.start()
+            await tama.start()
             return {"manage": "Tama started"}
         case "stop":
-            tama.stop()
+            await tama.stop()
             carebot.stop()
             return {"manage": "Tama stopped"}
         case _:
@@ -145,16 +145,16 @@ async def Manage(do: str):
 async def click(button: str):
     match button:
         case "A":
-            tama.click("A", .1)
+            await tama.click("A", .1)
             return {"clicked": "A"}
         case "B":
-            tama.click("B", .1)
+            await tama.click("B", .1)
             return {"clicked": "B"}
         case "C":
-            tama.click("C", .1)
+            await tama.click("C", .1)
             return {"clicked": "C"}
         case "AC":
-            tama.click(["A","C"], .5)
+            await tama.click(["A","C"], .5)
             return {"clicked": "A+C"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
@@ -163,10 +163,10 @@ async def click(button: str):
 async def Force_specific_version(version: str = "p1"):
     match version:
         case "p1":
-            tama.__version__ = "p1"
+            tama.version = "p1"
             return {"background": "p1 theme"}
         case "p2":
-            tama.__version__ = "p2"
+            tama.version = "p2"
             return {"background": "p2 theme"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid version")
@@ -192,11 +192,12 @@ async def Param_Carebot(disc: bool = True, check_every: float = 5*60):
         disc = disc, 
         check_every = check_every
     )
+    return {"param": carebot.param}
 
 @app.post("/p2")
 async def Switch_to_P2():
     try:
-        p2(tama)
+        await p2(tama)
         return {"P2": "Conversion succesful"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -204,7 +205,7 @@ async def Switch_to_P2():
 @app.post("/secret")
 async def Secret_character():
     try:
-        secret(tama)
+        await secret(tama)
         return {"secret": "Conversion succesful"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -217,18 +217,29 @@ The automatic care feature is inspired from [Tamatrix](https://github.com/hortin
 
 The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the Carebot that both operate on `Tama()`.
 
-The Python core API may directly be interacted with:
+The Python core API may directly be interacted with in an async framework.
+
+In CLI:
 
 ```python
 from pygotchi import Tama
-tama = Tama()
-with open("rom.bin", "rb") as file:
-    tama.load("ROM", file.read())
-tama.start()
-for row in tama.Matrix():
-    print("".join("██" if val else "  " for val in row))
-tama.click("B")
+import asyncio
+tama = asyncio.run(Tama.new("rom.bin"))
+asyncio.run(tama.print())
+asyncio.run(tama.click("B"))
 ```
+
+In a notebook:
+
+```python
+from pygotchi import Tama
+import nest_asyncio
+nest_asyncio.apply()
+tama = await Tama.new("rom.bin")
+await tama.print()
+await tama.click("B")
+```
+
 
 ## ⚖️ License
 

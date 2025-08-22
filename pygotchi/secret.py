@@ -1,14 +1,13 @@
 from .conversion import bin2int, int2bin
 
-def secret(tama):
+async def secret(tama):
 
-    assert(tama.__version__ == "p1")
-    runs = tama.runs()
+    runs = await tama.runs()
     if runs:
-        tama.stop()
-    rom = tama.dump("ROM")#      (\__/)
-    rom = bin2int(rom)#          (o^-^)
-    secret = [#                 z(_(")(")
+        await tama.stop()
+    rom = await tama.dump("ROM")#                           (\__/)
+    rom = bin2int(rom)#                                     (o^-^)
+    secret = [#                                            z(_(")(")
         57, 199, 147, 153, 194, 156, 41, 20, 152, 73, 196, 152, 73, 20,
         156, 41, 194, 147, 153, 215, 153, 49, 112, 144, 9, 163, 157, 73,
         136, 145, 41, 20, 145, 105, 16, 145, 105, 20, 145, 41, 40, 154,
@@ -26,7 +25,7 @@ def secret(tama):
         rom[j] = secret[i]
     
     rom = int2bin(rom)
-    tama.load("ROM", rom)
+    await tama.load("ROM", rom)
 
     if runs:
-        tama.start()
+        await tama.start()
