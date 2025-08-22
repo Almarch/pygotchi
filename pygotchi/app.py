@@ -27,6 +27,8 @@ async def startup_event():
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_homepage(request: Request):
+    user = request.headers.get("x-user-sub")
+    print("Authentified user: " + str(user))
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.websocket("/ws/video")
