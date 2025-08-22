@@ -3,6 +3,7 @@ import asyncio
 import hashlib
 import numpy as np
 from threading import Lock
+import time
 
 def _worker(conn):
     from ._tamalib import Tama as Tamalib
@@ -35,11 +36,12 @@ def _worker(conn):
         return tamalib.Runs()
 
     def start():
-        if not tamalib.Runs():
+        if not runs():
             tamalib.Start()
 
     def stop():
         tamalib.Stop()
+        time.sleep(0.1)
 
     def matrix():
         return tamalib.GetMatrix()
@@ -51,7 +53,7 @@ def _worker(conn):
         return tamalib.GetIcons()
 
     def reset(what):
-        tamalib.Stop()
+        stop()
         if what == "CPU":
             tamalib.SetCPU(_0CPU)
         elif what == "ROM":
@@ -60,7 +62,7 @@ def _worker(conn):
 
     def dump(what):
         running = tamalib.Runs()
-        tamalib.Stop()
+        stop()
         if what == "CPU":
             obj = tamalib.GetCPU()
         elif what == "ROM":
@@ -73,7 +75,7 @@ def _worker(conn):
 
     def load(what, binbuf):
         obj = bin2int(binbuf)
-        tamalib.Stop()
+        stop()
         if what == "CPU":
             tamalib.SetCPU(obj)
         elif what == "ROM":
@@ -81,7 +83,7 @@ def _worker(conn):
         else:
             raise ValueError("load: what must be 'CPU' or 'ROM'")
         if what == "ROM":
-            tamalib.SetCPU(_0CPU)
+            reset("CPU")
 
     while True:
         try:
@@ -166,12 +168,12 @@ class Tama:
     async def _call(self, method, *args, **kwargs):
         loop = asyncio.get_running_loop()
 
-        with self._lock:
-            def sync_call():
+        def sync_call():
+            with self._lock:
                 self._conn.send({"cmd": "call", "method": method, "args": args, "kwargs": kwargs})
                 return self._conn.recv()
 
-            res = await loop.run_in_executor(None, sync_call)
+        res = await loop.run_in_executor(None, sync_call)
 
         if not res["ok"]:
             raise RuntimeError(res["error"])
