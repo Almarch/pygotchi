@@ -7,7 +7,9 @@ The goal of this Python package is to deliver a Tamagotchi as a web service. The
 
 Unlike the original toy though, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
 
-The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-deploy-a-tamagotchi-server); and a [Python core API](#-Python-core-API) that may be ported to further development projects.
+The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-deploy-a-tamagotchi-server), hosting Tamagotchis for multiple authentified users.
+
+Its [Python core API](#-Python-core-API) may be ported to further development projects.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
@@ -184,7 +186,7 @@ From there:
     - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
     - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
     - Collect the **game_client** secret and keep it at hand.
-- Still from the realm **game**, create one or more new users with custom credentials. NB: all users access the same Tamagotchi.
+- Still from the realm **game**, create one or more new users with custom credentials. Each user access their own Tamagotchi.
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
 - Replace `your_client_secret` by your actual game **game_client** secret.
