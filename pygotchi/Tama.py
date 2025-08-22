@@ -2,16 +2,13 @@ import multiprocessing as mp
 import asyncio
 import hashlib
 import numpy as np
+from threading import Lock
 
 def _worker(conn):
-
     from ._tamalib import Tama as Tamalib
-    from threading import Lock, Thread
     from .conversion import int2bin, bin2int
-    import time
 
     tamalib = Tamalib()
-    lock = Lock()
 
     _0ROM = [0 for _ in range(9216)]
     _0CPU = [0 for _ in range(384)]
@@ -30,86 +27,61 @@ def _worker(conn):
     _0CPU[59] = 4
     _0CPU[63] = 2
 
-    def wait():
-        time.sleep(0.1)
-
-    def _click(button, delay):
-        with lock:
-            for b in button:
-                tamalib.SetButton({"A": 0, "B": 1, "C": 2}[b], True)
-        time.sleep(delay)
-        with lock:
-            for b in [0, 1, 2]:
-                tamalib.SetButton(b, False)
-
-    def click(button, delay):
-        Thread(target=_click, args=(button, delay), daemon=True).start()
+    def click(button, value: bool = True):
+        for b in button:
+            tamalib.SetButton({"A": 0, "B": 1, "C": 2}[b], value)
 
     def runs():
-        with lock:
-            return tamalib.Runs()
+        return tamalib.Runs()
 
     def start():
-        if not runs():
-            with lock:
-                tamalib.Start()
+        if not tamalib.Runs():
+            tamalib.Start()
 
     def stop():
-        with lock:
-            tamalib.Stop()
+        tamalib.Stop()
 
     def matrix():
-        with lock:
-            return tamalib.GetMatrix()
+        return tamalib.GetMatrix()
 
     def freq():
-        with lock:
-            return tamalib.GetFreq()
+        return tamalib.GetFreq()
 
     def icons():
-        with lock:
-            return tamalib.GetIcons()
+        return tamalib.GetIcons()
 
     def reset(what):
-        with lock:
-            tamalib.Stop()
-            wait()
-            if what == "CPU":
-                tamalib.SetCPU(_0CPU)
-            elif what == "ROM":
-                tamalib.SetROM(_0ROM)
-                wait()
-                tamalib.SetCPU(_0CPU)
+        tamalib.Stop()
+        if what == "CPU":
+            tamalib.SetCPU(_0CPU)
+        elif what == "ROM":
+            tamalib.SetROM(_0ROM)
+            tamalib.SetCPU(_0CPU)
 
     def dump(what):
-        with lock:
-            running = tamalib.Runs()
-            tamalib.Stop()
-            wait()
-            if what == "CPU":
-                obj = tamalib.GetCPU()
-            elif what == "ROM":
-                obj = tamalib.GetROM()
-            else:
-                raise ValueError("dump: 'what' must be 'CPU' or 'ROM'")
-            if running:
-                wait()
-                tamalib.Start()
+        running = tamalib.Runs()
+        tamalib.Stop()
+        if what == "CPU":
+            obj = tamalib.GetCPU()
+        elif what == "ROM":
+            obj = tamalib.GetROM()
+        else:
+            raise ValueError("dump: 'what' must be 'CPU' or 'ROM'")
+        if running:
+            tamalib.Start()
         return int2bin(obj)
 
     def load(what, binbuf):
         obj = bin2int(binbuf)
-        with lock:
-            tamalib.Stop()
-            wait()
-            if what == "CPU":
-                tamalib.SetCPU(obj)
-            elif what == "ROM":
-                tamalib.SetROM(obj)
-            else:
-                raise ValueError("load: what must be 'CPU' or 'ROM'")
+        tamalib.Stop()
+        if what == "CPU":
+            tamalib.SetCPU(obj)
+        elif what == "ROM":
+            tamalib.SetROM(obj)
+        else:
+            raise ValueError("load: what must be 'CPU' or 'ROM'")
         if what == "ROM":
-            reset("CPU")
+            tamalib.SetCPU(_0CPU)
 
     while True:
         try:
@@ -178,7 +150,7 @@ class Tama:
         self._conn = parent_conn
         self._proc = ctx.Process(target=_worker, args=(child_conn,), daemon=True)
         self._proc.start()
-        self._alock = asyncio.Lock()
+        self._lock = Lock()
 
     def close(self):
         if self._proc.is_alive():
@@ -194,7 +166,7 @@ class Tama:
     async def _call(self, method, *args, **kwargs):
         loop = asyncio.get_running_loop()
 
-        async with self._alock:
+        with self._lock:
             def sync_call():
                 self._conn.send({"cmd": "call", "method": method, "args": args, "kwargs": kwargs})
                 return self._conn.recv()
@@ -225,6 +197,7 @@ class Tama:
         mat = await self.Matrix()
         for row in mat:
             print("".join("██" if val else "  " for val in row))
+        return True
 
     async def freq(self):
         return await self._call("freq")
@@ -233,7 +206,9 @@ class Tama:
         return await self._call("icons")
 
     async def click(self, button, delay: float = 0.1):
-        return await self._call("click", button, delay)
+        await self._call("click", button, True)
+        await asyncio.sleep(delay)
+        return await self._call("click", button, False)
 
     async def poke(self):
         pass # not implemented yet
