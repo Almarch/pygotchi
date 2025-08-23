@@ -222,7 +222,7 @@ async def is_dirty(tama, x="top"):
     if x == "top":
         to_check = await top_right(tama)
     elif x == "bottom":
-        to_check = await bottom_left(tama)
+        to_check = await bottom_right(tama)
     else:
         raise ValueError("x must be 'top' or 'bottom'")
     return np.all(to_check == poop1) or np.all(to_check == poop2)
@@ -412,7 +412,7 @@ state0 = {
 
 async def carestep(tama, state, param):
 
-    t1 = time.time()
+    t1 = time.monotonic()
     elapsed = t1 - state["t0"]
     state["t0"] = t1
 
@@ -428,8 +428,7 @@ async def carestep(tama, state, param):
         state["todo"]["wait"] = float('inf')
 
     ### stop the need to scold if it doesn't cry anymore
-    icons = await tama.icons()
-    if not icons[7]:
+    if not (await tama.icons())[7]:
         state["scold"] = False
     
     ### otherwise, plan an action
@@ -439,8 +438,6 @@ async def carestep(tama, state, param):
             "happiness": 4
         }
     elif state["todo"]["wait"] <= 0 and len(state["todo"]["actions"]) == 0:
-
-        icons = await tama.icons()
 
         # end what has been started
         if state["doing"] != "":
@@ -469,10 +466,8 @@ async def carestep(tama, state, param):
                 state["todo"] = check_status(step = 3)
                 state["doing"] = ""
 
-                icons = await tama.icons()
-
                 if (
-                    icons[7] and
+                    (await tama.icons())[7] and
                     not await is_asleep(tama, "on") and
                     state["stats"]["hunger"] > 0 and
                     state["stats"]["happiness"] > 0
@@ -522,7 +517,7 @@ async def carestep(tama, state, param):
         elif (
             state["t0"] > state["next_check"] or
             (
-                icons[7] and
+                (await tama.icons())[7] and
                 not await is_asleep(tama, "on")
             )
         ):
