@@ -23,7 +23,7 @@ templates = Jinja2Templates(directory=www_dir)
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_homepage(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     print("Authentified user: " + str(user))
 
     if user not in game:
@@ -36,7 +36,7 @@ async def serve_homepage(request: Request):
 
 @app.websocket("/ws/video")
 async def websocket_video(websocket: WebSocket):
-    user = websocket.headers.get("x-user-sub")
+    user = websocket.headers.get("x-user-sub") or "default"
     await websocket.accept()
     try:
         while True:
@@ -58,7 +58,7 @@ async def websocket_video(websocket: WebSocket):
 
 @app.websocket("/ws/audio")
 async def websocket_audio(websocket: WebSocket):
-    user = websocket.headers.get("x-user-sub")
+    user = websocket.headers.get("x-user-sub") or "default"
     await websocket.accept()
     try:
         while True:
@@ -72,7 +72,7 @@ async def websocket_audio(websocket: WebSocket):
 
 @app.post("/rom")
 async def Load_ROM(request: Request, file: UploadFile = File()):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         content = await file.read()
         await game[user].tama.load("ROM", content)
@@ -84,7 +84,7 @@ async def Load_ROM(request: Request, file: UploadFile = File()):
 
 @app.get("/rom")
 async def Dump_ROM(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         data = await game[user].tama.dump("ROM")
         return Response(
@@ -97,7 +97,7 @@ async def Dump_ROM(request: Request):
 
 @app.delete("/rom")
 async def Delete_ROM(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         await game[user].tama.reset("ROM")
         game[user].care.stop()
@@ -107,7 +107,7 @@ async def Delete_ROM(request: Request):
 
 @app.post("/cpu")
 async def Load_CPU(request: Request, file: UploadFile = File()):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         content = await file.read()
         await game[user].tama.load("CPU", content)
@@ -118,7 +118,7 @@ async def Load_CPU(request: Request, file: UploadFile = File()):
 
 @app.get("/cpu")
 async def Dump_CPU(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         data = await game[user].tama.dump("CPU")
         return Response(
@@ -131,7 +131,7 @@ async def Dump_CPU(request: Request):
     
 @app.delete("/cpu")
 async def Delete_CPU(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         await game[user].tama.reset("CPU")
         game[user].care.stop()
@@ -141,7 +141,7 @@ async def Delete_CPU(request: Request):
 
 @app.post("/manage")
 async def Manage(request: Request, do: str):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     match do:
         case "start":
             await game[user].tama.start()
@@ -155,7 +155,7 @@ async def Manage(request: Request, do: str):
 
 @app.post("/click")
 async def click(request: Request, button: str):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     match button:
         case "A":
             await game[user].tama.click("A", .1)
@@ -174,7 +174,7 @@ async def click(request: Request, button: str):
         
 @app.post("/force_version")
 async def Force_specific_version(request: Request, version: str = "p1"):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     match version:
         case "p1":
             game[user].tama.version = "p1"
@@ -187,7 +187,7 @@ async def Force_specific_version(request: Request, version: str = "p1"):
 
 @app.post("/carebot")
 async def Care(request: Request, do: str):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     match do:
         case "start":
             game[user].care.start()
@@ -203,7 +203,7 @@ async def Care(request: Request, do: str):
         
 @app.post("/param_carebot")
 async def Param_Carebot(request: Request, disc: bool = True, check_every: float = 5*60):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     game[user].care.parameterize(
         disc = disc, 
         check_every = check_every
@@ -212,7 +212,7 @@ async def Param_Carebot(request: Request, disc: bool = True, check_every: float 
 
 @app.post("/p2")
 async def Switch_to_P2(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         await p2(game[user].tama)
         return {"P2": "Conversion succesful"}
@@ -221,7 +221,7 @@ async def Switch_to_P2(request: Request):
 
 @app.post("/secret")
 async def Secret_character(request: Request):
-    user = request.headers.get("x-user-sub")
+    user = request.headers.get("x-user-sub") or "default"
     try:
         await secret(game[user].tama)
         return {"secret": "Conversion succesful"}
