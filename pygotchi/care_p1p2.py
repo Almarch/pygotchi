@@ -395,7 +395,7 @@ def unclock():
 ### Initial state
 
 state0 = {
-    "t0": time.time(),
+    "t0": time.monotonic(),
     "todo": empty_todo,
     "dead": False,
     "doing": "",
