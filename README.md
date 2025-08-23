@@ -1,6 +1,6 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this Python package is to deliver a Tamagotchi as a web service. The web server-client logic unlocks two key functionnalities of the original game:
+The goal of this Python package is to deliver a Tamagotchi emulator as a web service. The web server-client logic unlocks two key functionnalities of the original game:
 
 - **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed anytime, anywhere using a smartphone.
 - **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
