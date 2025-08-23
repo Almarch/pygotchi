@@ -30,7 +30,7 @@ async def serve_homepage(request: Request):
         game[user] = SimpleNamespace()
         game[user].tama = Tama()
         game[user].care = Carebot(game[user].tama)
-        asyncio.create_task(game[user].care.run())
+        game[user]._caretask = asyncio.create_task(game[user].care.run())
 
     return templates.TemplateResponse("index.html", {"request": request})
 
