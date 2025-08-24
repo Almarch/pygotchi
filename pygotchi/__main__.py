@@ -14,7 +14,13 @@ def main():
             print("Error: Port must be an integer.")
             sys.exit(1)
 
-    uvicorn.run("pygotchi.app:app", host=host, port=port, reload=False)
+    uvicorn.run(
+        "pygotchi.app:app",
+        host=host,
+        port=port,
+        reload=False,
+        workers = 1
+    )
 
 if __name__ == "__main__":
     main()
