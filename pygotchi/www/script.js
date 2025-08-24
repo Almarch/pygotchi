@@ -56,6 +56,14 @@ wsScreen.onmessage = function(event) {
             switchElement.dispatchEvent(new Event("change")); // Trigger the change event
         }
     }
+
+    if (data.care !== undefined) {
+        let carebotCheckbox = document.querySelector("#carebot");
+        if (carebotCheckbox.checked !== data.care) {
+            carebotCheckbox.checked = data.care;
+            carebotCheckbox.dispatchEvent(new Event("change"));
+        }
+    }
 };
 
 // Function to update the UI with the correct background
@@ -69,9 +77,6 @@ function updateBackground(background) {
             icon.src = `www/img/${background}/icon${i}.png`;
         }
     }
-
-    // Ensure the select reflects the current background
-    selectElement.value = background;
 }
 
 // Function to draw pixels
@@ -109,7 +114,6 @@ const oscillator = audioCtx.createOscillator();
 oscillator.type = "square"; // Simulating a buzzer
 oscillator.start();
 oscillator.connected = false; // Custom flag to track connection
-let isMuted = false; // Track mute state
 
 // Ensure audio starts only after user interaction
 document.addEventListener("click", function startAudio() {
@@ -137,14 +141,12 @@ wsAudio.onclose = function() {
 wsAudio.onmessage = function(event) {
     console.log("Received:", event.data);
     const data = JSON.parse(event.data);
-    if (!isMuted) {
-        setFrequency(data.freq);
-    }
+    setFrequency(data.freq);
 };
 
 // Function to update buzzer frequency
 function setFrequency(freq) {
-    if (freq > 0 && !isMuted) {
+    if (freq > 0) {
         oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
         if (!oscillator.connected) {
             oscillator.connect(audioCtx.destination);
@@ -155,19 +157,6 @@ function setFrequency(freq) {
         oscillator.connected = false;
     }
 }
-
-// Microphone Toggle (🔊 to 🔇)
-document.getElementById("mic-btn").addEventListener("click", function() {
-    if (this.textContent === "🔊") {
-        this.textContent = "🔇"; // Muted
-        isMuted = true;
-        oscillator.disconnect(); // Ensure buzzer is silent
-    } else {
-        this.textContent = "🔊"; // Unmuted
-        isMuted = false;
-        setFrequency(oscillator.frequency.value); // Restore last frequency
-    }
-});
 
 document.getElementById("A").addEventListener("click", function() {
     fetch("/click?button=A", {
@@ -307,17 +296,47 @@ document.querySelector("#on-off-switch input").addEventListener("change", functi
     }
 });
 
+const carebotCheckbox = document.querySelector("#carebot");
+let resetTimer = null;
+
+carebotCheckbox.addEventListener("change", function() {
+    if (this.checked) {
+        // Annule timer reset si actif
+        if (resetTimer) {
+            clearTimeout(resetTimer);
+            resetTimer = null;
+        }
+        fetch("/carebot?do=start", {
+            method: "POST",
+            headers: { "accept": "application/json" }
+        })
+        .then(response => response.json())
+        .then(data => console.log("Carebot started:", data))
+        .catch(error => console.error("Error:", error));
+    } else {
+        // reset after 1 sec
+        resetTimer = setTimeout(() => {
+            fetch("/carebot?do=reset", {
+                method: "POST",
+                headers: { "accept": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => console.log("Carebot reset:", data))
+            .catch(error => console.error("Error:", error));
+        }, 1000);
+
+        // Send stop otherwise
+        fetch("/carebot?do=stop", {
+            method: "POST",
+            headers: { "accept": "application/json" }
+        })
+        .then(response => response.json())
+        .then(data => console.log("Carebot stopped:", data))
+        .catch(error => console.error("Error:", error));
+    }
+});
+
 document.getElementById("cpu-download").addEventListener("click", function() {
     window.location.href = "/cpu";
 });
 
-// Event listener for the select dropdown
-const selectElement = document.querySelector(".custom-select select");
-selectElement.addEventListener("change", function() {
-    fetch("/background?theme=" + selectElement.value, {
-        method: "POST",
-        headers: {
-            "accept": "application/json"
-        }
-    }).catch(error => console.error("Error sending background update:", error));
-});

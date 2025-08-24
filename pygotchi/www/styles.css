@@ -1,14 +1,14 @@
 
 * {
-	font-family: "Comic Neue", cursive;
-	font-weight: 400;
-	font-style: normal;
+    font-family: "Comic Neue", cursive;
+    font-weight: 400;
+    font-style: normal;
 }
 
 /* General Styling */
 body {
-	background: #1F1F1F;
-	color: white;
+    background: #1F1F1F;
+    color: white;
     margin: 0;
     padding: 0;
     display: block;
@@ -41,17 +41,28 @@ body {
 
 /* Sidebar (Initially Hidden Completely Off-Screen) */
 .sidebar {
-    position: fixed;
-    top: 0;
-    right: -300px; /* Move it further out of the viewport */
-    width: 250px;
-    height: 100%;
-    background-color: #333;
-    color: white;
-    transition: right 0.4s ease-in-out;
-    padding: 20px;
-    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 4;
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 275px;
+  height: 100%;
+  background-color: #333;
+  color: white;
+  transition: right 0.4s ease-in-out;
+  padding: 20px;
+  box-shadow: -5px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 /* When Sidebar is Open */
@@ -190,23 +201,23 @@ body {
     -webkit-tap-highlight-color: transparent;
   }
   
-  .action-btn:hover {
+.action-btn:hover {
     background: linear-gradient(180deg, #6a6a6a, #4a4a4a);
-  }
+}
   
-  .action-btn:active {
+.action-btn:active {
     box-shadow: inset -2px -2px 3px rgba(0, 0, 0, 0.3),
                 inset 2px 2px 3px rgba(255, 255, 255, 0.1);
     transform: translateY(2px); /* Very subtle press effect */
-  }
+}
 
-  #AC {
+#AC {
     position: relative;
     font-size: 20px;
     width: 70px; 
     height: 38px;
     border-radius: 25px;
-  }
+}
   
   
 /* On/Off Switch */
@@ -215,17 +226,17 @@ body {
     position: relative;
     width: 60px;
     height: 34px;
-  }
+}
   
-  /* Hide default HTML checkbox */
-  .switch input {
+/* Hide default HTML checkbox */
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
+}
   
-  /* The slider */
-  .slider {
+/* The slider */
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -235,9 +246,9 @@ body {
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
-  }
+}
   
-  .slider:before {
+.slider:before {
     position: absolute;
     content: "";
     height: 26px;
@@ -247,39 +258,29 @@ body {
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-  }
+}
   
-  input:checked + .slider {
+input:checked + .slider {
     background-color: blue;
-  }
+}
   
-  input:focus + .slider {
+input:focus + .slider {
     box-shadow: 0 0 1px blue;
-  }
+}
   
-  input:checked + .slider:before {
+input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-  }
+}
   
-  /* Rounded sliders */
-  .slider.round {
+/* Rounded sliders */
+.slider.round {
     border-radius: 34px;
-  }
+}
   
-  .slider.round:before {
+.slider.round:before {
     border-radius: 50%;
-  }
-
-  #mic-btn {
-    font-size: 40px; /* Makes it big */
-    display: block; /* Ensures it's a block element */
-    text-align: center; /* Centers it */
-    border: none;
-    background: none;
-    cursor: pointer;
-    width: 100%; /* Ensures full width for centering */
 }
 
 /* upload / download */
@@ -312,36 +313,65 @@ body {
     background: deepskyblue;
 }
 
-/* Select list style */
-.custom-select {
-    position: relative;
-    display: inline-block;
-}
+/* Automatic care checkbox */
 
-select {
-    appearance: none;
-    background-color: #fff;
-    border: 2px solid #3498db;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 16px;
-    color: #333;
-    width: 200px;
-    cursor: pointer;
-    outline: none;
-}
-
-select:focus {
-    border-color: #2980b9;
-}
-
-.custom-select::after {
-    content: '\25BC';
+input#carebot {
     position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
     pointer-events: none;
-    font-size: 14px;
-    color: #3498db;
+}
+
+label[for="carebot"] {
+    display: inline-flex;
+    align-items: center; 
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+label[for="carebot"]::before {
+    content: "\f08a";
+    font-family: "Font Awesome 7 Free";
+    font-weight: 400;
+    margin-right: 0.3em;
+    color: #ffbdd1;
+    font-size: 32px;
+}
+
+input#carebot:checked + label[for="carebot"]::before {
+    content: "\f004";
+    font-weight: 900;
+}
+
+/* Swagger and GitHub Links */
+
+.bottom-right-links {
+    position: absolute;
+    bottom: 20px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.swagger-link {
+    position: absolute;
+    right: 50px;
+    font-size: 18px;
+}
+
+.github-link {
+    position: absolute;
+    right: 10px;
+    font-size: 22px;
+}
+
+.swagger-link, .github-link {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.swagger-link:hover, .github-link:hover {
+    color: #fff;
 }
