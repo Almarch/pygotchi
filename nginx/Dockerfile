@@ -12,8 +12,6 @@ RUN wget https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
     && make && make install \
     && cd .. && rm -rf luarocks-${LUAROCKS_VERSION} luarocks-${LUAROCKS_VERSION}.tar.gz
 
-COPY lua/ /usr/local/openresty/lualib/
-
 RUN luarocks install lua-resty-http 0.17.1 \
     && luarocks install lua-resty-session 4.1.1 \
     && luarocks install lua-resty-jwt 0.2.2 \

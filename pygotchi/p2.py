@@ -1,12 +1,11 @@
 from .conversion import bin2int, int2bin
 
-def p2(tama):
+async def p2(tama):
 
-    assert(tama.__version__ == "p1")
-    runs = tama.runs()
+    runs = await tama.runs()
     if runs:
-        tama.stop()
-    rom = tama.dump("ROM")
+        await tama.stop()
+    rom = await tama.dump("ROM")
     rom = bin2int(rom)
 
     rom[6222] = 151
@@ -905,7 +904,7 @@ def p2(tama):
     rom[8783] = 128
 
     rom = int2bin(rom)
-    tama.load("ROM", rom)
+    await tama.load("ROM", rom)
 
     if runs:
-        tama.start()
+        await tama.start()

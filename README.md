@@ -1,13 +1,15 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this Python package is to deliver a Tamagotchi as a web service. The web server-client logic unlocks two key functionnalities of the original game:
+The goal of this Python package is to deliver a Tamagotchi emulator as a web service. The web server-client logic unlocks two key functionnalities of the original game:
 
 - **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed anytime, anywhere using a smartphone.
 - **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
 
 Unlike the original toy though, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
 
-The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-deploy-a-tamagotchi-server); and a [Python core API](#-Python-core-API) that may be ported to further development projects.
+The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-deploy-a-tamagotchi-server), hosting Tamagotchis for multiple authentified users.
+
+Its [Python core API](#-Python-core-API) may be ported to further development projects.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
@@ -184,7 +186,7 @@ From there:
     - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
     - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
     - Collect the **game_client** secret and keep it at hand.
-- Still from the realm **game**, create one or more new users with custom credentials. NB: all users access the same Tamagotchi.
+- Still from the realm **game**, create one or more new users with custom credentials. Each user access their own Tamagotchi.
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
 - Replace `your_client_secret` by your actual game **game_client** secret.
@@ -209,26 +211,44 @@ For further security, purchase a domain name and use a trusted connection. To do
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, TamaLIB was ported on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R.
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, TamaLIB was ported on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Currently, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python.
+
+Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R. The following features were permitted by switching the project from R to Python:
+- implementing the buzzer sound using websockets ;
+- switching the carebot server-side using the better distinction between back and front ;
+- multiplayer management using the multiprocesses & async framework.
+
+There is still work to do. Pygotchi has to be adapted to all new first generation Tamagotchis, following TamaLIB recent developments ([Issue #3](https://github.com/Almarch/pygotchi/issues/3)). From there, a specific carebot could be developed for each species.
 
 The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix)).
 
 ### 🥚 Python core API
 
-The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the Carebot that both operate on `Tama()`.
+The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the carebot that both operate on `Tama()`.
 
-The Python core API may directly be interacted with:
+The Python core API may directly be interacted with in an async framework.
+
+In CLI:
 
 ```python
 from pygotchi import Tama
-tama = Tama()
-with open("rom.bin", "rb") as file:
-    tama.load("ROM", file.read())
-tama.start()
-for row in tama.Matrix():
-    print("".join("██" if val else "  " for val in row))
-tama.click("B")
+import asyncio
+tama = asyncio.run(Tama.new("rom.bin"))
+asyncio.run(tama.print())
+asyncio.run(tama.click("B"))
 ```
+
+In a notebook:
+
+```python
+from pygotchi import Tama
+import nest_asyncio
+nest_asyncio.apply()
+tama = await Tama.new("rom.bin")
+await tama.print()
+await tama.click("B")
+```
+
 
 ## ⚖️ License
 
