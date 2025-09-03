@@ -1,15 +1,16 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The goal of this Python package is to deliver a Tamagotchi emulator as a web service. The web server-client logic unlocks two key functionnalities of the original game:
+The purpose of this Python package is to provide a Tamagotchi emulator as a web service. The client–server logic enables two core features from the original game:
 
-- **Ubiquity**: Just like the original toy could be carried everywhere in a kid's pocket, a web service can be accessed anytime, anywhere using a smartphone.
-- **Real-time consistency**: The creature has a strict schedule that the player has to deal with all along the day. The server can endorse the role to keep track of time.
+- **Ubiquity**: Just like the original toy could be carried in a kid’s pocket, the web service can be accessed anytime, anywhere from a smartphone.
 
-Unlike the original toy though, the project also encompasses [a bot](#-Automatic-care) that can care for the pet when the user is busy.
+- **Real-time consistency**: The creature follows a strict schedule that the player must handle throughout the day. The server ensures time is properly tracked.
 
-The project encompasses an [out-of-the-box, secured web application](#%EF%B8%8F-deploy-a-tamagotchi-server), hosting Tamagotchis for multiple authentified users.
+Unlike the original though, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy.
 
-Its [Python core API](#-Python-core-API) may be ported to further development projects.
+It delivers a ready-to-use, secure web [application](#%EF%B8%8F-deploy-a-tamagotchi-server) that hosts Tamagotchis for multiple authenticated users.
+
+Its [Python core API](#-Python-core-API) can also be reused for further development projects.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
