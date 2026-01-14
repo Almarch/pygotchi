@@ -87,6 +87,10 @@ Not all APIs are implemented on the UI, and a swagger allows for a few more func
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/7f513e2c-ec32-4367-9fc5-6d1005afa889" />
+
+## 🏠 IPs & router configuration
+
 You need to know the public IP of your network and the private IP of your server.
 
 - The public IP can be accessed from [here](https://api.ipify.org) ;
