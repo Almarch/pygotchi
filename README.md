@@ -89,7 +89,7 @@ If you have a PC that may stay on and a personal fixed IP, then you can turn it 
 
 <img width="800" alt="image" src="https://github.com/user-attachments/assets/7f513e2c-ec32-4367-9fc5-6d1005afa889" />
 
-## 🏠 IPs & router configuration
+### 🏠 IPs & router configuration
 
 You need to know the public IP of your network and the private IP of your server.
 
