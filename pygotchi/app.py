@@ -32,7 +32,7 @@ async def serve_homepage(request: Request):
         game[user].care = Carebot(game[user].tama)
         game[user]._caretask = asyncio.create_task(game[user].care.run())
 
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 @app.websocket("/ws/video")
 async def websocket_video(websocket: WebSocket):
