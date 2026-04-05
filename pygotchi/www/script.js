@@ -111,7 +111,10 @@ function drawIcons(icons) {
 // Web Audio API setup
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const oscillator = audioCtx.createOscillator();
+const gainNode = audioCtx.createGain();
 oscillator.type = "square"; // Simulating a buzzer
+gainNode.gain.value = 0.5; // Default volume
+oscillator.connect(gainNode);
 oscillator.start();
 oscillator.connected = false; // Custom flag to track connection
 
@@ -149,14 +152,24 @@ function setFrequency(freq) {
     if (freq > 0) {
         oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
         if (!oscillator.connected) {
-            oscillator.connect(audioCtx.destination);
+            gainNode.connect(audioCtx.destination);
             oscillator.connected = true;
         }
     } else {
-        oscillator.disconnect();
+        gainNode.disconnect();
         oscillator.connected = false;
     }
 }
+
+function setVolume(volume) {
+    // 0 is mute, 1 is max
+    gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+}
+
+// Volume slider event listener
+document.getElementById("volume-slider").addEventListener("input", function() {
+    setVolume(this.value);
+});
 
 document.getElementById("A").addEventListener("click", function() {
     fetch("/click?button=A", {
