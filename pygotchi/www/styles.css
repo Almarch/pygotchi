@@ -108,8 +108,8 @@ body {
     height: auto;
     z-index: 3; /* Places it above the image */
     pointer-events: none; /* Allows clicks to go through to buttons below */
-    image-rendering: pixelated;
-    image-rendering: crisp-edges; /* Alternative for some browsers */
+    /* image-rendering: pixelated; */
+    /* image-rendering: crisp-edges; /* Alternative for some browsers */
 }
 
 .icon {

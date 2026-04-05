@@ -25,10 +25,14 @@ const wsHost = window.location.hostname;
 const wsPort = window.location.port ? `:${window.location.port}` : ""; // Keep same port if specified
 
 // Web Video API setup
+const PIXEL_SIZE = 7;
+const GAP = 1;
+const CELL = PIXEL_SIZE + GAP;
+
 const canvas = document.createElement("canvas");
 canvas.id = "canvas-pixels";
-canvas.width = 32;
-canvas.height = 16;
+canvas.width  = 32 * CELL - GAP;
+canvas.height = 16 * CELL - GAP;
 const ctx = canvas.getContext("2d");
 document.getElementById("canvas-pixels").appendChild(canvas);
 
@@ -81,18 +85,15 @@ function updateBackground(background) {
 
 // Function to draw pixels
 function drawMatrix(matrix) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
-    ctx.fillStyle = "black";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-            if (matrix[y][x]) {
-                ctx.fillRect(
-                    x,
-                    y,
-                    1,
-                    1);
-            }
+    for (let y = 0; y < 16; y++) {
+        for (let x = 0; x < 32; x++) {
+            const lit = matrix[y]?.[x];
+            ctx.fillStyle = lit ? "#1c2a0a" : "rgba(80, 100, 20, 0.06)";
+            ctx.beginPath();
+            ctx.roundRect(x * CELL, y * CELL, PIXEL_SIZE, PIXEL_SIZE, 1.5);
+            ctx.fill();
         }
     }
 }
