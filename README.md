@@ -59,7 +59,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/eb8ed074-ed9d-47f1-a861-f574fe64841e" width="300px" />
+    <img src="https://github.com/user-attachments/assets/f213dec0-5d3a-4e62-b0da-67b6b878c016" width="300px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -78,7 +78,9 @@ The automatic care works on the server side, so the bot keeps caring for the pet
 
 ### 🎵 Control the sound
 
-The sound is controlled using the native Tamagotchi functionnality, with the **A+C** button. This feature works on the server side.
+The sound is controlled either :
+- using the native Tamagotchi functionnality, with the **A+C** button. This feature works on the server side.
+- using the volume control slider. This feature works client side.
 
 ### 🛠️ Swagger
 Not all APIs are implemented on the UI, and a swagger allows for a few more functionalities.
