@@ -54,6 +54,12 @@
             <button id="cpu-reset" class="up-down"><i class="fa-solid fa-skull"></i> Reset CPU</button>
         </div>
         <br>
+
+        <!-- Volume Control -->
+        <div class="file-controls volume-control">
+            <label for="volume-slider"><i class="fa-solid fa-volume-high"></i> Volume</label>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+        </div>
         <br>
 
         <!-- Carebot activation -->
@@ -62,12 +68,6 @@
             <label for="carebot">Automatic care</label>
         </div>
 
-        <!-- Volume Control -->
-        <div class="file-controls">
-            <label for="volume-slider"><i class="fa-solid fa-volume-high"></i> Volume</label>
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
-        </div>
-        
         <!-- Github & Swagger -->
         <div class="bottom-right-links">
             <a href="/swagger" class="swagger-link" target="_blank" title="Swagger API">

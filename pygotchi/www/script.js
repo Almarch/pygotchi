@@ -161,16 +161,32 @@ function setFrequency(freq) {
     }
 }
 
+// Volume slider UI update
+const slider = document.getElementById('volume-slider');
+const volIcon = document.querySelector('.volume-control .fa-solid');
+let lastVolume = slider.value;
+
+function updateVolume() {
+    slider.style.setProperty('--val', slider.value * 100 + '%');
+    volIcon.className = slider.value == 0 ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+    setVolume(slider.value);
+}
+
 function setVolume(volume) {
-    // 0 is mute, 1 is max
     gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
 }
 
-// Volume slider event listener
-document.getElementById("volume-slider").addEventListener("input", function() {
-    setVolume(this.value);
+slider.addEventListener('input', () => {
+    if (slider.value > 0) lastVolume = slider.value;
+    updateVolume();
 });
 
+volIcon.addEventListener('click', () => {
+    slider.value = slider.value > 0 ? 0 : lastVolume;
+    updateVolume();
+});
+
+// Action buttons
 document.getElementById("A").addEventListener("click", function() {
     fetch("/click?button=A", {
         method: "POST",
