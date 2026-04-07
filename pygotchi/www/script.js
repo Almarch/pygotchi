@@ -25,10 +25,16 @@ const wsHost = window.location.hostname;
 const wsPort = window.location.port ? `:${window.location.port}` : ""; // Keep same port if specified
 
 // Web Video API setup
+const PIXEL_SIZE = 7;
+const GAP = 1;
+const CELL = PIXEL_SIZE + GAP;
+const LCD_ON = "#1c2a0a";
+const LCD_OFF = "rgba(80, 100, 20, 0.06)";
+
 const canvas = document.createElement("canvas");
 canvas.id = "canvas-pixels";
-canvas.width = 32;
-canvas.height = 16;
+canvas.width  = 32 * CELL - GAP;
+canvas.height = 16 * CELL - GAP;
 const ctx = canvas.getContext("2d");
 document.getElementById("canvas-pixels").appendChild(canvas);
 
@@ -68,42 +74,61 @@ wsScreen.onmessage = function(event) {
 
 // Function to update the UI with the correct background
 const mainImage = document.getElementById("main-image");
-function updateBackground(background) {
+async function updateBackground(background) {
     mainImage.src = `www/img/${background}/background.png`;
-
-    for (let i = 0; i < 8; i++) {
-        let icon = document.getElementById(`icon-${i}`);
-        if (icon) {
-            icon.src = `www/img/${background}/icon${i}.png`;
-        }
-    }
+    await colorizeIcons(background);
 }
 
 // Function to draw pixels
 function drawMatrix(matrix) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);  // Clear previous frame
-    ctx.fillStyle = "black";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let y = 0; y < matrix.length; y++) {
-        for (let x = 0; x < matrix[y].length; x++) {
-            if (matrix[y][x]) {
-                ctx.fillRect(
-                    x,
-                    y,
-                    1,
-                    1);
-            }
+    for (let y = 0; y < 16; y++) {
+        for (let x = 0; x < 32; x++) {
+            const lit = matrix[y]?.[x];
+            ctx.fillStyle = lit ? LCD_ON : LCD_OFF;
+            ctx.beginPath();
+            ctx.roundRect(x * CELL, y * CELL, PIXEL_SIZE, PIXEL_SIZE, 1.5);
+            ctx.fill();
         }
     }
 }
 
 // Function to draw icons
+async function colorizeIcons(background) {
+    for (let i = 0; i < 8; i++) {
+        const img = new Image();
+        img.src = `www/img/${background}/icon${i}.png`;
+
+        await new Promise(resolve => {
+            if (img.complete) resolve();
+            else img.onload = resolve;
+        });
+
+        for (const [id, color] of [
+            [`icon-${i}-on`,  LCD_ON],
+            [`icon-${i}-off`, LCD_OFF]
+        ]) {
+            const offscreen = new OffscreenCanvas(img.naturalWidth, img.naturalHeight);
+            const ctx = offscreen.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            ctx.globalCompositeOperation = "source-in";
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, offscreen.width, offscreen.height);
+
+            const blob = await offscreen.convertToBlob();
+            document.getElementById(id).src = URL.createObjectURL(blob);
+        }
+    }
+}
+
 function drawIcons(icons) {
     for (let i = 0; i < 8; i++) {
-        let icon = document.getElementById(`icon-${i}`);
-        if (icon) {
-            icon.style.display = icons[i] ? "block" : "none";
-        }
+        const on  = document.getElementById(`icon-${i}-on`);
+        const off = document.getElementById(`icon-${i}-off`);
+        if (!on || !off) continue;
+        on.style.display  = icons[i] ? "block" : "none";
+        off.style.display = icons[i] ? "none"  : "block";
     }
 }
 
