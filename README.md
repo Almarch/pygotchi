@@ -13,7 +13,7 @@ It delivers a ready-to-use, secure web [application](#%EF%B8%8F-deploy-a-tamagot
 Its [Python core API](#-Python-core-API) can also be reused for further development projects.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/c7f53848-8d65-4571-b077-dde5c283520e" width="300px"/>
+    <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="250px"/>
 </div>
 
 ## 🚀 Run the app locally
@@ -59,7 +59,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/f213dec0-5d3a-4e62-b0da-67b6b878c016" width="300px" />
+    <img src="https://github.com/user-attachments/assets/f213dec0-5d3a-4e62-b0da-67b6b878c016" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -89,7 +89,9 @@ Not all APIs are implemented on the UI, and a swagger allows for a few more func
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
-<img width="800" alt="image" src="https://github.com/user-attachments/assets/7f513e2c-ec32-4367-9fc5-6d1005afa889" />
+<div align="center">
+    <img width="800" alt="image" src="https://github.com/user-attachments/assets/7f513e2c-ec32-4367-9fc5-6d1005afa889" />
+</div>
 
 ### 🏠 IPs & router configuration
 
