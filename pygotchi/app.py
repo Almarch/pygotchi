@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException, WebSocket, WebSocketDisconnect, File, UploadFile, Response
+from fastapi import FastAPI, Request, HTTPException, WebSocket, WebSocketDisconnect, File, UploadFile, Response, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -32,7 +32,7 @@ async def serve_homepage(request: Request):
         game[user].care = Carebot(game[user].tama)
         game[user]._caretask = asyncio.create_task(game[user].care.run())
 
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 @app.websocket("/ws/video")
 async def websocket_video(websocket: WebSocket):
@@ -139,8 +139,11 @@ async def Delete_CPU(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/manage")
-async def Manage(request: Request, do: str):
+@app.post("/manage", summary="Manage (start & stop) the toy",)
+async def Manage(
+    request: Request,
+    do: str = Query(default="start", description="Action to perform: `start` or `stop`")
+):
     user = request.headers.get("x-user-sub") or "default"
     match do:
         case "start":
@@ -153,8 +156,11 @@ async def Manage(request: Request, do: str):
         case _:
             raise HTTPException(status_code=400, detail = "Invalid manage action")
 
-@app.post("/click")
-async def click(request: Request, button: str):
+@app.post("/click", summary="Click a button on the toy")
+async def click(
+    request: Request,
+    button: str = Query(default="A", description="Button(s) to click: `A`, `B`, `C` or `AC`")
+):
     user = request.headers.get("x-user-sub") or "default"
     match button:
         case "A":
@@ -172,8 +178,11 @@ async def click(request: Request, button: str):
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
         
-@app.post("/force_version")
-async def Force_specific_version(request: Request, version: str = "p1"):
+@app.post("/force_version", summary="Force a specific version for the theme and icons")
+async def Force_specific_version(
+    request: Request,
+    version: str = Query(default="p1", description="Version to use: `p1` or `p2`")
+):
     user = request.headers.get("x-user-sub") or "default"
     match version:
         case "p1":
@@ -185,8 +194,11 @@ async def Force_specific_version(request: Request, version: str = "p1"):
         case _:
             raise HTTPException(status_code=400, detail = "Invalid version")
 
-@app.post("/carebot")
-async def Care(request: Request, do: str):
+@app.post("/carebot", summary="Manage the carebot")
+async def Care(
+    request: Request,
+    do: str = Query(default="start", description="Action to perform: `start`, `stop` or `reset`")
+):
     user = request.headers.get("x-user-sub") or "default"
     match do:
         case "start":
@@ -201,8 +213,12 @@ async def Care(request: Request, do: str):
         case _:
             raise HTTPException(status_code=400, detail = "Invalid carebot action")
         
-@app.post("/param_carebot")
-async def Param_Carebot(request: Request, disc: bool = True, check_every: float = 5*60):
+@app.post("/param_carebot", summary="Parameterize the carebot")
+async def Param_Carebot(
+    request: Request,
+    disc: bool = Query(default=True, description="Enable/disable discipline check"),
+    check_every: float = Query(default=5*60, description="Check interval in seconds")
+):
     user = request.headers.get("x-user-sub") or "default"
     game[user].care.parameterize(
         disc = disc, 
@@ -210,7 +226,7 @@ async def Param_Carebot(request: Request, disc: bool = True, check_every: float 
     )
     return {"param": game[user].care.param}
 
-@app.post("/p2")
+@app.post("/p2", summary="Convert the P1 sprites to P2-like ones")
 async def Switch_to_P2(request: Request):
     user = request.headers.get("x-user-sub") or "default"
     try:
@@ -219,7 +235,7 @@ async def Switch_to_P2(request: Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/secret")
+@app.post("/secret", summary="Convert the P1 secret character to a new but familiar one")
 async def Secret_character(request: Request):
     user = request.headers.get("x-user-sub") or "default"
     try:
