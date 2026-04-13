@@ -1,0 +1,102 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #1F1F1F;
+  color: white;
+  font-family: 'Comic Neue', cursive;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-wrapper {
+  position: relative;
+  width: 340px;
+  height: 300px;
+}
+
+.frame-img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-content {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  padding: 40px 50px 36px 50px;
+  z-index: 1;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-group label {
+  font-family: 'Comic Neue', cursive;
+  font-size: 18px;
+  color: #aaa;
+  font-weight: 400;
+}
+
+.field-group input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #555;
+  color: #ddd;
+  font-family: 'Tiny5', monospace;
+  font-size: 20px;
+  padding: 4px 2px;
+  outline: none;
+  width: 100%;
+}
+
+.field-group input:focus {
+  border-bottom-color: #999;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.action-btn {
+  background: linear-gradient(180deg, #606060, #404040);
+  border: 2px solid #2a2a2a;
+  width: 60px;
+  height: 30px;
+  border-radius: 15px;
+  box-shadow:
+    inset -2px -2px 3px rgba(255,255,255,0.1),
+    inset 2px 2px 3px rgba(0,0,0,0.3),
+    2px 2px 4px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.action-btn:hover {
+  background: linear-gradient(180deg, #6a6a6a, #4a4a4a);
+}
+
+.action-btn:active {
+  box-shadow:
+    inset -2px -2px 3px rgba(0,0,0,0.3),
+    inset 2px 2px 3px rgba(255,255,255,0.1);
+  transform: translateY(2px);
+}
