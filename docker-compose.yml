@@ -31,9 +31,11 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: true
       KC_HTTPS_CERTIFICATE_FILE: /etc/x509/https/ssl.crt
       KC_HTTPS_CERTIFICATE_KEY_FILE: /etc/x509/https/ssl.key
+      KC_SPI_THEME_DEFAULT_LOGIN_THEME: pygotchi
     command: ["start"]
     volumes:
       - ./nginx/ssl/:/etc/x509/https/:ro
+      - ./keycloak/themes:/opt/keycloak/themes
     depends_on:
       - keycloak-db
     networks:
