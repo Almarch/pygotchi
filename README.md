@@ -1,5 +1,7 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
+<img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" align="right"/>
+
 The purpose of this Python package is to provide a Tamagotchi emulator as a web service. The client–server logic enables two core features from the original game:
 
 - **Ubiquity**: Just like the original toy could be carried in a kid’s pocket, the web service can be accessed anytime, anywhere from a smartphone.
@@ -11,10 +13,6 @@ Unlike the original though, this project also includes [a bot](#-Automatic-care)
 It delivers a ready-to-use, secure web [application](#%EF%B8%8F-deploy-a-tamagotchi-server) that hosts Tamagotchis for multiple authenticated users.
 
 Its [Python core API](#-Python-core-API) can also be reused for further development projects.
-
-<div align="center">
-    <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="250px"/>
-</div>
 
 ## 🚀 Run the app locally
 
@@ -59,7 +57,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/f213dec0-5d3a-4e62-b0da-67b6b878c016" width="250px" />
+    <img src="https://github.com/user-attachments/assets/4a58f85a-3a03-4731-9f0b-4be928af2bba6" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -89,9 +87,13 @@ Not all APIs are implemented on the UI, and a swagger allows for a few more func
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
+<details><summary>Technical architecture</summary>
+
 <div align="center">
     <img width="800" alt="image" src="https://github.com/user-attachments/assets/7f513e2c-ec32-4367-9fc5-6d1005afa889" />
 </div>
+
+</details>
 
 ### 🏠 IPs & router configuration
 
@@ -180,6 +182,8 @@ docker compose up
 
 ### 🧙‍♂️ Keycloak
 
+<img width="300" alt="keycloak" src="https://github.com/user-attachments/assets/f904cdc6-2694-47ea-ac7a-39f465d4be7d" align = "right"/>
+
 Access keycloak administration board at `https://<your public>/keycloak`.
 
 The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
@@ -187,15 +191,19 @@ The first launch is very long as all services have to be set-up. Once it is read
 - user: `admin`
 - password: `KEYCLOAK_ADMIN_PASSWORD`
 
-From there:
+From there, create a new realm **game**. From the realm **game**:
 
-- Create a new realm: **game**.
-- From the realm **game**, create a new client : **game_client**. For this client:
+- Create a new client : **game_client**. For this client:
     - Enable client authentication.
     - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
     - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
     - Collect the **game_client** secret and keep it at hand.
-- Still from the realm **game**, create one or more new users with custom credentials. Each user access their own Tamagotchi.
+- In the section "Realm settings", tab "Theme", select the login theme: "pygotchi".
+- In the section "Authentication", tab "Required actions", uncheck:
+    - Update profile
+    - Verify emails
+    - Verify profile
+- Create one or more new users. Provide each user a temporary password as credential. Each of the users will access their own private Tamagotchi.
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
 - Replace `your_client_secret` by your actual game **game_client** secret.
@@ -264,3 +272,6 @@ await tama.click("B")
 This work is licensed under GPL-2.0.
 
 All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).
+
+The embedded fonts come from GoogleFonts and the embedded icons come from FontAwesome.
+

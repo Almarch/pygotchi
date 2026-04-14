@@ -106,8 +106,8 @@ async function colorizeIcons(background) {
         });
 
         for (const [id, color] of [
-            [`icon-${i}-on`,  LCD_ON],
-            [`icon-${i}-off`, LCD_OFF]
+            [`tama-icon-${i}-on`,  LCD_ON],
+            [`tama-icon-${i}-off`, LCD_OFF]
         ]) {
             const offscreen = new OffscreenCanvas(img.naturalWidth, img.naturalHeight);
             const ctx = offscreen.getContext("2d");
@@ -124,8 +124,8 @@ async function colorizeIcons(background) {
 
 function drawIcons(icons) {
     for (let i = 0; i < 8; i++) {
-        const on  = document.getElementById(`icon-${i}-on`);
-        const off = document.getElementById(`icon-${i}-off`);
+        const on  = document.getElementById(`tama-icon-${i}-on`);
+        const off = document.getElementById(`tama-icon-${i}-off`);
         if (!on || !off) continue;
         on.style.display  = icons[i] ? "block" : "none";
         off.style.display = icons[i] ? "none"  : "block";
@@ -188,12 +188,13 @@ function setFrequency(freq) {
 
 // Volume slider UI update
 const slider = document.getElementById('volume-slider');
-const volIcon = document.querySelector('.volume-control .fa-solid');
+const volIcon = document.querySelector('.volume-control .fa-icon');
 let lastVolume = slider.value;
 
 function updateVolume() {
     slider.style.setProperty('--val', slider.value * 100 + '%');
-    volIcon.className = slider.value == 0 ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+    volIcon.classList.toggle('fa-icon-volume-xmark-solid', slider.value == 0);
+    volIcon.classList.toggle('fa-icon-volume-solid', slider.value != 0);
     setVolume(slider.value);
 }
 
@@ -351,9 +352,14 @@ document.querySelector("#on-off-switch input").addEventListener("change", functi
 });
 
 const carebotCheckbox = document.querySelector("#carebot");
+const carebotIcon = document.querySelector('label[for="carebot"] .fa-icon');
 let resetTimer = null;
 
 carebotCheckbox.addEventListener("change", function() {
+
+    carebotIcon.classList.toggle('fa-icon-heart-regular', !this.checked);
+    carebotIcon.classList.toggle('fa-icon-heart-solid', this.checked);
+
     if (this.checked) {
         // Annule timer reset si actif
         if (resetTimer) {
