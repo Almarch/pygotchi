@@ -352,9 +352,14 @@ document.querySelector("#on-off-switch input").addEventListener("change", functi
 });
 
 const carebotCheckbox = document.querySelector("#carebot");
+const carebotIcon = document.querySelector('label[for="carebot"] .fa-icon');
 let resetTimer = null;
 
 carebotCheckbox.addEventListener("change", function() {
+
+    carebotIcon.classList.toggle('fa-icon-heart-regular', !this.checked);
+    carebotIcon.classList.toggle('fa-icon-heart-solid', this.checked);
+
     if (this.checked) {
         // Annule timer reset si actif
         if (resetTimer) {
