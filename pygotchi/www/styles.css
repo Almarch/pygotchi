@@ -1,6 +1,11 @@
+@font-face {
+  font-family: "Indie Flower";
+  src: url("./IndieFlower-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
 
 * {
-    font-family: "Comic Neue", cursive;
+    font-family: "Indie Flower", cursive;
     font-weight: 400;
     font-style: normal;
 }
@@ -16,6 +21,58 @@ body {
     align-items: center;
     height: 100vh;
     overflow: hidden;
+}
+
+/* Self-contained FA icons */
+.fa-icon {
+  display: inline-block;
+  width: 2.5em;
+  height: 2.5em;
+  vertical-align: -0.125em;
+  background-color: currentColor; /* hérite la couleur du texte parent */
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.fa-icon-cloud-arrow-up  {
+    -webkit-mask-image: url('fa-icons/cloud-arrow-up-solid-full.svg'); 
+    mask-image: url('fa-icons/cloud-arrow-up-solid-full.svg');
+}
+.fa-icon-code-solid  {
+    -webkit-mask-image: url('fa-icons/code-solid-full.svg'); 
+    mask-image: url('fa-icons/code-solid-full.svg');
+}
+.fa-icon-floppy-disk-solid  {
+    -webkit-mask-image: url('fa-icons/floppy-disk-solid-full.svg'); 
+    mask-image: url('fa-icons/floppy-disk-solid-full.svg');
+}
+.fa-icon-github-brands-solid  {
+    -webkit-mask-image: url('fa-icons/github-brands-solid-full.svg'); 
+    mask-image: url('fa-icons/github-brands-solid-full.svg');
+}
+.fa-icon-heart-regular  {
+    -webkit-mask-image: url('fa-icons/heart-regular-full.svg'); 
+    mask-image: url('fa-icons/heart-regular-full.svg');
+}
+.fa-icon-heart-solid  {
+    -webkit-mask-image: url('fa-icons/heart-solid-full.svg'); 
+    mask-image: url('fa-icons/heart-solid-full.svg');
+}
+.fa-icon-skull-solid  {
+    -webkit-mask-image: url('fa-icons/skull-solid-full.svg'); 
+    mask-image: url('fa-icons/skull-solid-full.svg');
+}
+.fa-icon-volume-solid  {
+    -webkit-mask-image: url('fa-icons/volume-solid-full.svg'); 
+    mask-image: url('fa-icons/volume-solid-full.svg');
+}
+.fa-icon-volume-xmark-solid  {
+    -webkit-mask-image: url('fa-icons/volume-xmark-solid-full.svg'); 
+    mask-image: url('fa-icons/volume-xmark-solid-full.svg');
 }
 
 /* Menu Icon */
@@ -112,7 +169,7 @@ body {
     /* image-rendering: crisp-edges; /* Alternative for some browsers */
 }
 
-.icon {
+.tama-icon {
     position: absolute;
     width: auto;
     height: 10%;
@@ -123,35 +180,35 @@ img[id$="-off"] {
     display: none;
 }
 
-#icon-0-on, #icon-0-off {
+#tama-icon-0-on, #tama-icon-0-off {
     top: 8%;
     left: 10%;
 }
-#icon-1-on, #icon-1-off {
+#tama-icon-1-on, #tama-icon-1-off {
     top: 8%;
     left: 33%;
 }
-#icon-2-on, #icon-2-off {
+#tama-icon-2-on, #tama-icon-2-off {
     top: 8%;
     left: 57%;
 }
-#icon-3-on, #icon-3-off {
+#tama-icon-3-on, #tama-icon-3-off {
     top: 8%;
     left: 80%;
 }
-#icon-4-on, #icon-4-off {
+#tama-icon-4-on, #tama-icon-4-off {
     top: 82%;
     left: 10%;
 }
-#icon-5-on, #icon-5-off {
+#tama-icon-5-on, #tama-icon-5-off {
     top: 82%;
     left: 33%;
 }
-#icon-6-on, #icon-6-off {
+#tama-icon-6-on, #tama-icon-6-off {
     top: 82%;
     left: 57%;
 }
-#icon-7-on, #icon-7-off {
+#tama-icon-7-on, #tama-icon-7-off {
     top: 82%;
     left: 80%;
 }
@@ -218,6 +275,7 @@ img[id$="-off"] {
 #AC {
     position: relative;
     font-size: 20px;
+    font-weight:600;
     width: 70px; 
     height: 38px;
     border-radius: 25px;
@@ -297,9 +355,9 @@ input:checked + .slider:before {
 
 /* Upload Button */
 .up-down {
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
-    padding: 12px 20px;
+    padding: 5px 5px;
     border: none;
     border-radius: 25px; /* Candy-style rounded buttons */
     transition: transform 0.2s, box-shadow 0.2s;
@@ -363,13 +421,13 @@ input#carebot:checked + label[for="carebot"]::before {
 .swagger-link {
     position: absolute;
     right: 50px;
-    font-size: 18px;
+    font-size: 9px;
 }
 
 .github-link {
     position: absolute;
     right: 10px;
-    font-size: 22px;
+    font-size: 11px;
 }
 
 .swagger-link, .github-link {
@@ -384,7 +442,7 @@ input#carebot:checked + label[for="carebot"]::before {
 .volume-control {
     flex-direction: column;
     align-items: flex-start;
-    font-size: 1.2em;
+    font-size: 18px;
 }
 
 .volume-control label {

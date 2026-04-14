@@ -264,3 +264,6 @@ await tama.click("B")
 This work is licensed under GPL-2.0.
 
 All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).
+
+The embedded fonts come from GoogleFonts and the embedded icons come from FontAwesome.
+

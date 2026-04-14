@@ -1,3 +1,15 @@
+@font-face {
+  font-family: "Indie Flower";
+  src: url("./IndieFlower-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Silkscreen";
+  src: url("./Silkscreen-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -7,7 +19,6 @@
 body {
   background: #1F1F1F;
   color: white;
-  font-family: 'Comic Neue', cursive;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -32,7 +43,6 @@ body {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  padding: 20px 50px;
   z-index: 1;
 }
 
@@ -43,10 +53,10 @@ body {
 }
 
 .field-group label {
-  font-family: 'Comic Neue', cursive;
-  font-size: 18px;
-  color: #aaa;
+  font-family: "Indie Flower", cursive;
   font-weight: 400;
+  font-size: 24px;
+  color: #aaa;
 }
 
 .field-group input {
@@ -54,7 +64,8 @@ body {
   border: none;
   border-bottom: 1px solid #555;
   color: #ddd;
-  font-family: 'Tiny5', monospace;
+  font-family: "Silkscreen", monospace;
+  font-weight: 400;
   font-size: 20px;
   padding: 4px 2px;
   outline: none;
