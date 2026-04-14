@@ -1,7 +1,5 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-<img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" align="right"/>
-
 The purpose of this Python package is to provide a Tamagotchi emulator as a web service. The client–server logic enables two core features from the original game:
 
 - **Ubiquity**: Just like the original toy could be carried in a kid’s pocket, the web service can be accessed anytime, anywhere from a smartphone.
@@ -13,6 +11,10 @@ Unlike the original though, this project also includes [a bot](#-Automatic-care)
 It delivers a ready-to-use, secure web [application](#%EF%B8%8F-deploy-a-tamagotchi-server) that hosts Tamagotchis for multiple authenticated users.
 
 Its [Python core API](#-Python-core-API) can also be reused for further development projects.
+
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" />
+</div>
 
 ## 🚀 Run the app locally
 
@@ -57,7 +59,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/4a58f85a-3a03-4731-9f0b-4be928af2bba6" width="250px" />
+    <img src="https://github.com/user-attachments/assets/b4ace249-eeec-41c4-9c5f-a70035c07843" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -182,8 +184,6 @@ docker compose up
 
 ### 🧙‍♂️ Keycloak
 
-<img width="300" alt="keycloak" src="https://github.com/user-attachments/assets/f904cdc6-2694-47ea-ac7a-39f465d4be7d" align = "right"/>
-
 Access keycloak administration board at `https://<your public>/keycloak`.
 
 The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
@@ -204,6 +204,10 @@ From there, create a new realm **game**. From the realm **game**:
     - Verify emails
     - Verify profile
 - Create one or more new users. Provide each user a temporary password as credential. Each of the users will access their own private Tamagotchi.
+
+<div align="center">
+    <img width="300" alt="image" src="https://github.com/user-attachments/assets/f904cdc6-2694-47ea-ac7a-39f465d4be7d" />
+</div>
 
 Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
 - Replace `your_client_secret` by your actual game **game_client** secret.
