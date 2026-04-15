@@ -34,7 +34,7 @@ async def serve_homepage(request: Request):
 
     return templates.TemplateResponse(request, "index.html")
 
-@app.websocket("/ws/video")
+@app.websocket("/ws/audiovideo")
 async def websocket_video(websocket: WebSocket):
     user = websocket.headers.get("x-user-sub") or "default"
     await websocket.accept()
@@ -44,26 +44,30 @@ async def websocket_video(websocket: WebSocket):
                 {
                     "matrix": await game[user].tama.matrix(),
                     "icons": await game[user].tama.icons(),
-                    "runs": await game[user].tama.runs(),
-                    "care": game[user].care.active,
-                    "background": game[user].tama.version if game[user].tama.version is not None else "p1"
+                    "freq": await game[user].tama.freq(),
                 }
             )
-            await asyncio.sleep(1 / 5)
+            await asyncio.sleep(1 / 30) # 30 FPS
     except WebSocketDisconnect:
         print("Client disconnected")
     except Exception as e:
         print(f"WebSocket error: {e}")
         await websocket.close(code=1011)
 
-@app.websocket("/ws/audio")
-async def websocket_audio(websocket: WebSocket):
+@app.websocket("/ws/state")
+async def websocket_video(websocket: WebSocket):
     user = websocket.headers.get("x-user-sub") or "default"
     await websocket.accept()
     try:
         while True:
-            await websocket.send_json({"freq": await game[user].tama.freq()})
-            await asyncio.sleep(1 / 20)
+            await websocket.send_json(
+                {
+                    "runs": await game[user].tama.runs(),
+                    "care": game[user].care.active,
+                    "background": game[user].tama.version if game[user].tama.version is not None else "p1",
+                }
+            )
+            await asyncio.sleep(1 / 5)
     except WebSocketDisconnect:
         print("Client disconnected")
     except Exception as e:
