@@ -34,6 +34,15 @@ if [ -z "$IP" ]; then
   exit 1
 fi
 
+# ── Check dependencies ───────────────────────────────────────────────────────────
+
+for cmd in jq curl openssl docker; do
+  if ! command -v $cmd > /dev/null 2>&1; then
+    echo "Missing required command: $cmd"
+    exit 1
+  fi
+done
+
 # ── Fresh install ───────────────────────────────────────────────────────────
 
 bash reset.sh -y
