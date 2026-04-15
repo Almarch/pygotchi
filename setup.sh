@@ -47,6 +47,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout nginx/ssl/ssl.key \
   -out    nginx/ssl/ssl.crt \
   -subj   "/CN=$IP"
+chmod 644 nginx/ssl/ssl.key nginx/ssl/ssl.crt
 
 # ── Secrets ───────────────────────────────────────────────────────────────────
 echo "KEYCLOAK_ADMIN_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 | head -n 1)" > .env
