@@ -138,7 +138,7 @@ sudo ufw status
 
 ### 🐙 Configure docker
 
-Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6.
+Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6. This may be or not be required depending on your set-up.
 
 **Warning**: this overwrites `/etc/docker/daemon.json`. If you already have custom parameters, edit the file instead of overwriting it.
 
