@@ -48,4 +48,4 @@ rm -f .env
 # ── Restore nginx.conf ────────────────────────────────────────────────────────
 git checkout nginx/nginx.conf
 
-echo "Reset complete. Run ./setup.sh -ip <IP> to start fresh."
+echo "Reset complete"

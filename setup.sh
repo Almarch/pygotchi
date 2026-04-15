@@ -5,8 +5,11 @@ set -e
 # ./setup.sh -ip <IP>
 #
 # Examples:
+#   ./setup.sh -ip localhost        # local setup
 #   ./setup.sh -ip 127.0.0.1        # local setup
+#   ./setup.sh -ip [::1]            # local setup (IPv6)
 #   ./setup.sh -ip 11.22.33.44      # public server
+#   ./setup.sh -ip [1:2:3:4:5:6]    # public server (IPv6)
 # ──────────────────────────────────────────────────────────────────────────────
 
 IP=""
@@ -33,8 +36,11 @@ fi
 
 echo "IP: $IP"
 
+# ── Fresh install ───────────────────────────────────────────────────────────
+
+bash reset.sh -y
+
 # ── SSL certificate ───────────────────────────────────────────────────────────
-mkdir -p nginx/ssl
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout nginx/ssl/ssl.key \
   -out    nginx/ssl/ssl.crt \
@@ -46,61 +52,72 @@ echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 
 
 source .env
 
+echo "All secrets set up"
+echo "Running Docker compose..."
+
 # ── Docker compose up ─────────────────────────────────────────────────────────
 docker compose build
 docker compose pull
 docker compose up -d
 
-# ── Wait for Keycloak ─────────────────────────────────────────────────────────
+echo "Docker compose running"
+
+# ── Wait for Keycloak & get token ─────────────────────────────────────────────────────────
 echo "Waiting for Keycloak..."
-until docker compose exec -T keycloak \
-    /opt/keycloak/bin/kcadm.sh config credentials \
-    --server http://localhost:8080 \
-    --realm master \
-    --user admin \
-    --password "$KEYCLOAK_ADMIN_PASSWORD" \
-    > /dev/null 2>&1; do
-  sleep 5
+until TOKEN=$(
+  curl -sk -X POST \
+    "https://$IP/keycloak/realms/master/protocol/openid-connect/token" \
+    -d "client_id=admin-cli" \
+    -d "username=admin" \
+    -d "password=$KEYCLOAK_ADMIN_PASSWORD" \
+    -d "grant_type=password" |
+    jq -r '.access_token' 2>/dev/null
+  ) &&
+  [ -n "$TOKEN" ] &&
+  [ "$TOKEN" != "null" ];
+  do
+    sleep 5
 done
 
+echo "Configuring Keycloak..."
+
 # ── Retrieve client secret ────────────────────────────────────────────────────
-CLIENT_UUID=$(docker compose exec -T keycloak \
-    /opt/keycloak/bin/kcadm.sh get clients \
-    --server http://localhost:8080 \
-    -r game \
-    --fields id,clientId \
-    | jq -r '.[] | select(.clientId=="game_client") | .id')
+# UUID du client
+CLIENT_UUID=$(curl -sk \
+  "https://$IP/keycloak/admin/realms/game/clients?clientId=game_client" \
+  -H "Authorization: Bearer $TOKEN" | jq -r '.[0].id')
 
-if [ -z "$CLIENT_UUID" ] || [ "$CLIENT_UUID" = "null" ]; then
-  echo "Client game_client not found in realm game."
-  echo "Make sure realm-game.json was imported correctly."
-  exit 1
-fi
-
-SECRET=$(docker compose exec -T keycloak \
-    /opt/keycloak/bin/kcadm.sh get \
-    "clients/$CLIENT_UUID/client-secret" \
-    --server http://localhost:8080 \
-    -r game \
-    | jq -r '.value')
+# Secret
+SECRET=$(curl -sk \
+  "https://$IP/keycloak/admin/realms/game/clients/$CLIENT_UUID/client-secret" \
+  -H "Authorization: Bearer $TOKEN" | jq -r '.value')
 
 # ── Update redirect URIs ──────────────────────────────────────────────────────
-docker compose exec -T keycloak \
-    /opt/keycloak/bin/kcadm.sh update \
-    "clients/$CLIENT_UUID" \
-    --server http://localhost:8080 \
-    -r game \
-    -s "redirectUris=[\"https://$IP/*\"]" \
-    -s "webOrigins=[\"https://$IP\"]"
+curl -sk -X PUT \
+  "https://$IP/keycloak/admin/realms/game/clients/$CLIENT_UUID" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d "{\"redirectUris\":[\"https://$IP/*\"],\"webOrigins\":[\"https://$IP\"]}"
+
+echo "Keycloak configured"
+echo "Configuring nginx..."
 
 # ── Patch nginx.conf ──────────────────────────────────────────────────────────
-sed -i "s/your_client_secret/$SECRET/g" nginx/nginx.conf
-sed -i "s/127\.0\.0\.1/$IP/g"           nginx/nginx.conf
+sed -i "s/your_client_secret/$SECRET/g"  nginx/nginx.conf
+sed -i "/resolver/!s/127\.0\.0\.1/$IP/g" nginx/nginx.conf
 
 echo "KEYCLOAK_CLIENT_SECRET=$SECRET" >> .env
+
+echo "nginx configured"
+echo "Restarting nginx..."
 
 # ── Restart webserver ─────────────────────────────────────────────────────────
 docker compose restart webserver
 
 echo "Setup complete. App available at: https://$IP"
-echo "Create your users at: https://$IP/keycloak/admin/master/console/#/game/users"
+echo "Create your users at: https://$IP/keycloak/"
+echo "Username: admin"
+echo "Password: $KEYCLOAK_ADMIN_PASSWORD"
+echo "Realm: Game"
+echo "Don't forget to provide the users with credentials"
+echo "The app runs at: https://$IP/"
