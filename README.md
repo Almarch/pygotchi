@@ -136,29 +136,7 @@ sudo systemctl enable ufw
 sudo ufw status
 ```
 
-### 🔑 Keys & secrets
-
-The connection has to be encrypted using a SSL key.
-
-From `/pygotchi`:
-
-```sh
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/ssl.key -out nginx/ssl/ssl.crt -subj "/CN=localhost"
-```
-
-This key will have to be renewed after one year. The certificates are self-signed so the browser will present a warning. See [this section](#-domain-name) to use CA-signed certificate.
-
-Then set up the secrets. Still from `/pygotchi`:
-
-```sh
-echo "KEYCLOAK_ADMIN_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 | head -n 1)" > .env
-echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 | head -n 1)" >> .env
-cat .env
-```
-
-Keep the `KEYCLOAK_ADMIN_PASSWORD` at hand.
-
-### 🐙 Run with docker-compose
+### 🐙 Configure docker
 
 Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6.
 
@@ -172,55 +150,30 @@ echo '{
 sudo systemctl restart docker
 ```
 
-Launch the web app with its dependency services using docker-compose.
+### 🔐 Set the server up
 
 From `/pygotchi`:
 
 ```sh
-docker compose build
-docker compose pull
-docker compose up
+./setup.sh <your public IP>
 ```
 
-### 🧙‍♂️ Keycloak
+The app is now secured & available world-wide at `https://<your public IP>`.
 
-Access keycloak administration board at `https://<your public>/keycloak`.
+The SSL key will have to be renewed after one year. The certificates are self-signed so the browser will present a warning.
 
-The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
+### 👾 Add new players
+
+Access keycloak administration board at `https://<your public>/keycloak`. Authentify as :
 
 - user: `admin`
-- password: `KEYCLOAK_ADMIN_PASSWORD`
+- password: `KEYCLOAK_ADMIN_PASSWORD`, that can be read in `.env`.
 
-From there, create a new realm **game**. From the realm **game**:
-
-- Create a new client : **game_client**. For this client:
-    - Enable client authentication.
-    - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
-    - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
-    - Collect the **game_client** secret and keep it at hand.
-- In the section "Realm settings", tab "Theme", select the login theme: "pygotchi".
-- In the section "Authentication", tab "Required actions", uncheck:
-    - Update profile
-    - Verify emails
-    - Verify profile
-- Create one or more new users. Provide each user a temporary password as credential. Each of the users will access their own private Tamagotchi.
+Switch to the realm **game**, and create one or more new users. Provide each user a temporary password as credential. Each of the users will access their own private Tamagotchi.
 
 <div align="center">
     <img width="300" alt="image" src="https://github.com/user-attachments/assets/f904cdc6-2694-47ea-ac7a-39f465d4be7d" />
 </div>
-
-Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
-- Replace `your_client_secret` by your actual game **game_client** secret.
-- Replace `127.0.0.1` by either `<your public IPv4>` or `[<your public IPv6>]`.
-
-Finally, re-launch the docker-compose cluster :
-
-```sh
-docker compose down
-docker compose up -d
-```
-
-The app is now secured & available world-wide at `https://<your public IP>`.
 
 ### 🏰 Domain name
 
