@@ -155,7 +155,7 @@ sudo systemctl restart docker
 From `/pygotchi`:
 
 ```sh
-./setup.sh <your public IP>
+./setup.sh -ip <your public IP>
 ```
 
 The app is now secured & available world-wide at `https://<your public IP>`.
