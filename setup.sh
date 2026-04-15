@@ -34,11 +34,13 @@ if [ -z "$IP" ]; then
   exit 1
 fi
 
-echo "IP: $IP"
-
 # ── Fresh install ───────────────────────────────────────────────────────────
 
 bash reset.sh -y
+
+# ── Patch nginx.conf 1/2 ──────────────────────────────────────────────────────────
+sed -i "/resolver/!s/127\.0\.0\.1/$IP/g" nginx/nginx.conf
+echo "Nginx configured with IP: $IP"
 
 # ── SSL certificate ───────────────────────────────────────────────────────────
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -53,14 +55,11 @@ echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 
 source .env
 
 echo "All secrets set up"
-echo "Running Docker compose..."
 
 # ── Docker compose up ─────────────────────────────────────────────────────────
 docker compose build
 docker compose pull
 docker compose up -d
-
-echo "Docker compose running"
 
 # ── Wait for Keycloak & get token ─────────────────────────────────────────────────────────
 echo "Waiting for Keycloak..."
@@ -100,15 +99,13 @@ curl -sk -X PUT \
   -d "{\"redirectUris\":[\"https://$IP/*\"],\"webOrigins\":[\"https://$IP\"]}"
 
 echo "Keycloak configured"
-echo "Configuring nginx..."
 
-# ── Patch nginx.conf ──────────────────────────────────────────────────────────
+# ── Patch nginx.conf 2/2 ──────────────────────────────────────────────────────────
 sed -i "s/your_client_secret/$SECRET/g"  nginx/nginx.conf
-sed -i "/resolver/!s/127\.0\.0\.1/$IP/g" nginx/nginx.conf
+echo "Nginx configured with Keycloak client secret"
 
 echo "KEYCLOAK_CLIENT_SECRET=$SECRET" >> .env
 
-echo "nginx configured"
 echo "Restarting nginx..."
 
 # ── Restart webserver ─────────────────────────────────────────────────────────
