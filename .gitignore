@@ -3,5 +3,5 @@ pygotchi.egg-info
 build
 *.pyc
 nginx/ssl/*
-keycloak/*
+keycloak/data/*
 .env

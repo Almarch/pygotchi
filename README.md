@@ -13,7 +13,7 @@ It delivers a ready-to-use, secure web [application](#%EF%B8%8F-deploy-a-tamagot
 Its [Python core API](#-Python-core-API) can also be reused for further development projects.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="250px"/>
+    <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" />
 </div>
 
 ## 🚀 Run the app locally
@@ -59,7 +59,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/f213dec0-5d3a-4e62-b0da-67b6b878c016" width="250px" />
+    <img src="https://github.com/user-attachments/assets/b4ace249-eeec-41c4-9c5f-a70035c07843" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -89,9 +89,13 @@ Not all APIs are implemented on the UI, and a swagger allows for a few more func
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
 
+<details><summary>Technical architecture</summary>
+
 <div align="center">
     <img width="800" alt="image" src="https://github.com/user-attachments/assets/7f513e2c-ec32-4367-9fc5-6d1005afa889" />
 </div>
+
+</details>
 
 ### 🏠 IPs & router configuration
 
@@ -132,31 +136,9 @@ sudo systemctl enable ufw
 sudo ufw status
 ```
 
-### 🔑 Keys & secrets
+### 🐙 Configure docker
 
-The connection has to be encrypted using a SSL key.
-
-From `/pygotchi`:
-
-```sh
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/ssl.key -out nginx/ssl/ssl.crt -subj "/CN=localhost"
-```
-
-This key will have to be renewed after one year. The certificates are self-signed so the browser will present a warning. See [this section](#-domain-name) to use CA-signed certificate.
-
-Then set up the secrets. Still from `/pygotchi`:
-
-```sh
-echo "KEYCLOAK_ADMIN_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 | head -n 1)" > .env
-echo "KEYCLOAK_DB_PASSWORD=$(cat /dev/urandom | tr -dc 'A-Za-z0-9' | fold -w 32 | head -n 1)" >> .env
-cat .env
-```
-
-Keep the `KEYCLOAK_ADMIN_PASSWORD` at hand.
-
-### 🐙 Run with docker-compose
-
-Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6.
+Update the docker daemon to forbid direct iptables manipulation by docker and to enable IPv6. This may be or not be required depending on your set-up.
 
 **Warning**: this overwrites `/etc/docker/daemon.json`. If you already have custom parameters, edit the file instead of overwriting it.
 
@@ -168,47 +150,30 @@ echo '{
 sudo systemctl restart docker
 ```
 
-Launch the web app with its dependency services using docker-compose.
+### 🔐 Set the server up
 
 From `/pygotchi`:
 
 ```sh
-docker compose build
-docker compose pull
-docker compose up
-```
-
-### 🧙‍♂️ Keycloak
-
-Access keycloak administration board at `https://<your public>/keycloak`.
-
-The first launch is very long as all services have to be set-up. Once it is ready, authentify as :
-
-- user: `admin`
-- password: `KEYCLOAK_ADMIN_PASSWORD`
-
-From there:
-
-- Create a new realm: **game**.
-- From the realm **game**, create a new client : **game_client**. For this client:
-    - Enable client authentication.
-    - Enable the standard authentication flow. Keep all other authentication flows disabled. This is the standard configuration.
-    - Configure the valid redirect URI & Web origin: `https://<your public IPv4>/*` and/or `https://[<your public IPv6>]/*`.
-    - Collect the **game_client** secret and keep it at hand.
-- Still from the realm **game**, create one or more new users with custom credentials. Each user access their own Tamagotchi.
-
-Then, update `nginx/nginx.conf`, in the  `location / { access_by_lua_block { local opts = {...}}}` compartment:
-- Replace `your_client_secret` by your actual game **game_client** secret.
-- Replace `127.0.0.1` by either `<your public IPv4>` or `[<your public IPv6>]`.
-
-Finally, re-launch the docker-compose cluster :
-
-```sh
-docker compose down
-docker compose up -d
+./setup.sh -ip <your public IP>
 ```
 
 The app is now secured & available world-wide at `https://<your public IP>`.
+
+The SSL key will have to be renewed after one year. The certificates are self-signed so the browser will present a warning.
+
+### 👾 Add new players
+
+Access keycloak administration board at `https://<your public>/keycloak`. Authentify as :
+
+- user: `admin`
+- password: `KEYCLOAK_ADMIN_PASSWORD`, that can be read in `.env`.
+
+Switch to the realm **game**, and create one or more new users. Provide each user a temporary password as credential. Each of the users will access their own private Tamagotchi.
+
+<div align="center">
+    <img width="300" alt="image" src="https://github.com/user-attachments/assets/f904cdc6-2694-47ea-ac7a-39f465d4be7d" />
+</div>
 
 ### 🏰 Domain name
 
@@ -264,3 +229,6 @@ await tama.click("B")
 This work is licensed under GPL-2.0.
 
 All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).
+
+The embedded fonts come from GoogleFonts and the embedded icons come from FontAwesome.
+
