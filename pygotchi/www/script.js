@@ -24,33 +24,12 @@ const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
 const wsHost = window.location.hostname;
 const wsPort = window.location.port ? `:${window.location.port}` : ""; // Keep same port if specified
 
-// Web Video API setup
-const PIXEL_SIZE = 7;
-const GAP = 1;
-const CELL = PIXEL_SIZE + GAP;
-const LCD_ON = "#1c2a0a";
-const LCD_OFF = "rgba(80, 100, 20, 0.06)";
+// Params Websocket
+const wsParams = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/params`);
 
-const canvas = document.createElement("canvas");
-canvas.id = "canvas-pixels";
-canvas.width  = 32 * CELL - GAP;
-canvas.height = 16 * CELL - GAP;
-const ctx = canvas.getContext("2d");
-document.getElementById("canvas-pixels").appendChild(canvas);
-
-const wsScreen = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/video`);
-
-wsScreen.onmessage = function(event) {
+wsParams.onmessage = function(event) {
     const data = JSON.parse(event.data);
     
-    if (data.matrix) {  // Ensure matrix exists before rendering
-        drawMatrix(data.matrix);
-    }
-
-    if (data.icons) { 
-        drawIcons(data.icons);
-    }
-
     if (data.background) {
         updateBackground(data.background);
     }
@@ -78,6 +57,34 @@ async function updateBackground(background) {
     mainImage.src = `www/img/${background}/background.png`;
     await colorizeIcons(background);
 }
+
+// Web Video API setup
+const PIXEL_SIZE = 7;
+const GAP = 1;
+const CELL = PIXEL_SIZE + GAP;
+const LCD_ON = "#1c2a0a";
+const LCD_OFF = "rgba(80, 100, 20, 0.06)";
+
+const canvas = document.createElement("canvas");
+canvas.id = "canvas-pixels";
+canvas.width  = 32 * CELL - GAP;
+canvas.height = 16 * CELL - GAP;
+const ctx = canvas.getContext("2d");
+document.getElementById("canvas-pixels").appendChild(canvas);
+
+const wsScreen = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/video`);
+
+wsScreen.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    
+    if (data.matrix) {  // Ensure matrix exists before rendering
+        drawMatrix(data.matrix);
+    }
+
+    if (data.icons) { 
+        drawIcons(data.icons);
+    }
+};
 
 // Function to draw pixels
 function drawMatrix(matrix) {
@@ -131,7 +138,6 @@ function drawIcons(icons) {
         off.style.display = icons[i] ? "none"  : "block";
     }
 }
-
 
 // Web Audio API setup
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
