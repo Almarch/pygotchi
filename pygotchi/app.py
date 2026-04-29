@@ -10,8 +10,8 @@ from .p2 import p2
 from .secret import secret
 from types import SimpleNamespace
 
-_VIDEO_FREQ = 30 # Like TamaLIB default framerate
-_AUDIO_FREQ = 30
+_VIDEO_FREQ = 20
+_AUDIO_FREQ = 20
 _PARAMS_FREQ = 1
 
 app = FastAPI(
