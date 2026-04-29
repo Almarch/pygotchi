@@ -12,7 +12,7 @@ from types import SimpleNamespace
 
 _VIDEO_FREQ = 30 # Like TamaLIB default framerate
 _AUDIO_FREQ = 30
-_PARAMS_FREQ = 5
+_PARAMS_FREQ = 1
 
 app = FastAPI(
     docs_url="/swagger",
