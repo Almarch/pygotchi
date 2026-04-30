@@ -46,8 +46,8 @@ async def websocket_video(websocket: WebSocket):
         while True:
             await websocket.send_json(
                 {
-                    "matrix": await game[user].tama.matrix(),
-                    "icons": await game[user].tama.icons(),
+                    "matrix": list(await game[user].tama.matrix_bytes()),
+                    "icons":  (await game[user].tama.icons_byte())[0],
                 }
             )
             await asyncio.sleep(1 / _VIDEO_FREQ)

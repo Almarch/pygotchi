@@ -174,7 +174,9 @@ public:
 
   // Getters
   std::vector<bool> GetIcons();
+  uint8_t GetIconsByte();
   std::vector<std::vector<bool>> GetMatrix();
+  std::vector<uint8_t> GetMatrixBytes();
   int GetFreq();
   std::vector<bool> GetButton();
   std::vector<int> GetCPU();
@@ -2209,6 +2211,14 @@ std::vector<bool> Tama::GetIcons() {
     return icon;
   }
 
+  uint8_t Tama::GetIconsByte() {
+    uint8_t byte = 0;
+    for (int i = 0; i < ICON_NUM; i++) {
+        if (icon_buffer[i] != 0) byte |= (1 << i);
+    }
+    return byte;
+  }
+
   std::vector<std::vector<bool>> Tama::GetMatrix() {
     std::vector<std::vector<bool>> matrix(LCD_HEIGHT, std::vector<bool>(LCD_WIDTH, false));
     int i, j, k;
@@ -2220,6 +2230,14 @@ std::vector<bool> Tama::GetIcons() {
         }
     }
     return matrix;
+  }
+
+  std::vector<uint8_t> Tama::GetMatrixBytes() {
+    std::vector<uint8_t> bytes(LCD_HEIGHT * (LCD_WIDTH / 8));
+    for (int i = 0; i < LCD_HEIGHT; i++)
+        for (int j = 0; j < LCD_WIDTH / 8; j++)
+            bytes[i * (LCD_WIDTH / 8) + j] = matrix_buffer[i][j];
+    return bytes;
   }
 
 int Tama::GetFreq() { return play_freq; }
@@ -2310,7 +2328,9 @@ PYBIND11_MODULE(_tamalib, m) {
         .def("Runs", &Tama::Runs)
         .def("GetFreq", &Tama::GetFreq)
         .def("GetMatrix", &Tama::GetMatrix)
+        .def("GetMatrixBytes", &Tama::GetMatrixBytes)
         .def("GetIcons", &Tama::GetIcons)
+        .def("GetIconsByte", &Tama::GetIconsByte)
         .def("SetCPU", &Tama::SetCPU)
         .def("GetCPU", &Tama::GetCPU)
         .def("GetROM", &Tama::GetROM)

@@ -5,3 +5,4 @@ build
 nginx/ssl/*
 keycloak/data/*
 .env
+rom.bin
