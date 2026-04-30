@@ -408,12 +408,13 @@ label[for="carebot"] .fa-icon {
 /* Swagger and GitHub Links */
 
 .bottom-right-links {
-    position: absolute;
-    bottom: 20px;
-    right: 5px;
+    margin-top: auto;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
-    height: 40px;
+    gap: 15px;
+    padding-right: 5px;
+    padding-bottom: 10px;
 }
 
 .swagger-link {
@@ -429,6 +430,7 @@ label[for="carebot"] .fa-icon {
 }
 
 .swagger-link, .github-link {
+    position: static;
     color: rgba(255, 255, 255, 0.7);
 }
 
