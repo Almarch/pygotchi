@@ -10,6 +10,10 @@ from .p2 import p2
 from .secret import secret
 from types import SimpleNamespace
 
+_VIDEO_FREQ = 20
+_AUDIO_FREQ = 20
+_PARAMS_FREQ = 1
+
 app = FastAPI(
     docs_url="/swagger",
     openapi_url="/openapi.json",
@@ -42,14 +46,11 @@ async def websocket_video(websocket: WebSocket):
         while True:
             await websocket.send_json(
                 {
-                    "matrix": await game[user].tama.matrix(),
-                    "icons": await game[user].tama.icons(),
-                    "runs": await game[user].tama.runs(),
-                    "care": game[user].care.active,
-                    "background": game[user].tama.version if game[user].tama.version is not None else "p1"
+                    "matrix": list(await game[user].tama.matrix_bytes()),
+                    "icons":  (await game[user].tama.icons_byte())[0],
                 }
             )
-            await asyncio.sleep(1 / 5)
+            await asyncio.sleep(1 / _VIDEO_FREQ)
     except WebSocketDisconnect:
         print("Client disconnected")
     except Exception as e:
@@ -63,7 +64,27 @@ async def websocket_audio(websocket: WebSocket):
     try:
         while True:
             await websocket.send_json({"freq": await game[user].tama.freq()})
-            await asyncio.sleep(1 / 20)
+            await asyncio.sleep(1 / _AUDIO_FREQ)
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        print(f"WebSocket error: {e}")
+        await websocket.close(code=1011)
+
+@app.websocket("/ws/params")
+async def websocket_params(websocket: WebSocket):
+    user = websocket.headers.get("x-user-sub") or "default"
+    await websocket.accept()
+    try:
+        while True:
+            await websocket.send_json(
+                {
+                    "runs": await game[user].tama.runs(),
+                    "care": game[user].care.active,
+                    "background": game[user].tama.version if game[user].tama.version is not None else "p1"
+                }
+            )
+            await asyncio.sleep(1 / _PARAMS_FREQ)
     except WebSocketDisconnect:
         print("Client disconnected")
     except Exception as e:

@@ -36,11 +36,11 @@
           <label for="password-confirm">Confirm:</label>
           <input type="password" id="password-confirm" name="password-confirm" autocomplete="new-password">
         </div>
-        <#if messagesPerField?? && messagesPerField.existsError('password', 'password-confirm')>
+        <#-- <#if messagesPerField?? && messagesPerField.existsError('password', 'password-confirm')>
           <div class="field-group">
             <span class="error-text">${kcSanitize(messagesPerField.getFirstError('password', 'password-confirm'))?no_esc}</span>
           </div>
-        </#if>
+        </#if> -->
         <div class="btn-row">
           <button class="action-btn" type="submit"></button>
         </div>

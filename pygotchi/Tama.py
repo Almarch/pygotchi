@@ -28,31 +28,37 @@ def _worker(conn):
     _0CPU[59] = 4
     _0CPU[63] = 2
 
-    def click(button, value: bool = True):
+    def click(button, value: bool = True) -> None:
         for b in button:
             tamalib.SetButton({"A": 0, "B": 1, "C": 2}[b], value)
 
-    def runs():
+    def runs() -> bool:
         return tamalib.Runs()
 
-    def start():
+    def start() -> None:
         if not runs():
             tamalib.Start()
 
-    def stop():
+    def stop() -> None:
         tamalib.Stop()
         time.sleep(0.1)
 
-    def matrix():
+    def matrix() -> list[list[bool]]:
         return tamalib.GetMatrix()
 
-    def freq():
+    def matrix_bytes() -> bytes:
+        return bytes(tamalib.GetMatrixBytes())
+    
+    def freq() -> int:
         return tamalib.GetFreq()
 
-    def icons():
+    def icons() -> list[bool]:
         return tamalib.GetIcons()
 
-    def reset(what):
+    def icons_byte() -> bytes:
+        return bytes([tamalib.GetIconsByte()])
+
+    def reset(what) -> None:
         stop()
         if what == "CPU":
             tamalib.SetCPU(_0CPU)
@@ -60,7 +66,7 @@ def _worker(conn):
             tamalib.SetROM(_0ROM)
             tamalib.SetCPU(_0CPU)
 
-    def dump(what):
+    def dump(what) -> bytes:
         running = tamalib.Runs()
         stop()
         if what == "CPU":
@@ -73,7 +79,7 @@ def _worker(conn):
             tamalib.Start()
         return int2bin(obj)
 
-    def load(what, binbuf):
+    def load(what, binbuf) -> None:
         obj = bin2int(binbuf)
         stop()
         if what == "CPU":
@@ -112,10 +118,14 @@ def _worker(conn):
                 stop(); result = True
             elif method == "matrix":
                 result = matrix()
+            elif method == "matrix_bytes":
+                result = matrix_bytes()
             elif method == "freq":
                 result = freq()
             elif method == "icons":
                 result = icons()
+            elif method == "icons_byte":
+                result = icons_byte()
             elif method == "click":
                 click(*args, **kwargs); result = True
             elif method == "reset":
@@ -191,6 +201,9 @@ class Tama:
     async def matrix(self):
         return await self._call("matrix")
 
+    async def matrix_bytes(self):
+        return await self._call("matrix_bytes")
+
     async def Matrix(self) -> np.ndarray:
         mat = await self.matrix()
         return np.array(mat).reshape((16, 32))
@@ -206,6 +219,9 @@ class Tama:
 
     async def icons(self):
         return await self._call("icons")
+
+    async def icons_byte(self):
+        return await self._call("icons_byte")
 
     async def click(self, button, delay: float = 0.1):
         await self._call("click", button, True)

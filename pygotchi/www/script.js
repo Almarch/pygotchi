@@ -24,33 +24,12 @@ const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
 const wsHost = window.location.hostname;
 const wsPort = window.location.port ? `:${window.location.port}` : ""; // Keep same port if specified
 
-// Web Video API setup
-const PIXEL_SIZE = 7;
-const GAP = 1;
-const CELL = PIXEL_SIZE + GAP;
-const LCD_ON = "#1c2a0a";
-const LCD_OFF = "rgba(80, 100, 20, 0.06)";
+// Params Websocket
+const wsParams = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/params`);
 
-const canvas = document.createElement("canvas");
-canvas.id = "canvas-pixels";
-canvas.width  = 32 * CELL - GAP;
-canvas.height = 16 * CELL - GAP;
-const ctx = canvas.getContext("2d");
-document.getElementById("canvas-pixels").appendChild(canvas);
-
-const wsScreen = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/video`);
-
-wsScreen.onmessage = function(event) {
+wsParams.onmessage = function(event) {
     const data = JSON.parse(event.data);
     
-    if (data.matrix) {  // Ensure matrix exists before rendering
-        drawMatrix(data.matrix);
-    }
-
-    if (data.icons) { 
-        drawIcons(data.icons);
-    }
-
     if (data.background) {
         updateBackground(data.background);
     }
@@ -79,18 +58,47 @@ async function updateBackground(background) {
     await colorizeIcons(background);
 }
 
-// Function to draw pixels
-function drawMatrix(matrix) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// Web Video API setup
+const PIXEL_SIZE = 7;
+const GAP = 1;
+const CELL = PIXEL_SIZE + GAP;
+const LCD_ON = "#1c2a0a";
+const LCD_OFF = "rgba(80, 100, 20, 0.06)";
 
-    for (let y = 0; y < 16; y++) {
-        for (let x = 0; x < 32; x++) {
-            const lit = matrix[y]?.[x];
-            ctx.fillStyle = lit ? LCD_ON : LCD_OFF;
-            ctx.beginPath();
-            ctx.roundRect(x * CELL, y * CELL, PIXEL_SIZE, PIXEL_SIZE, 1.5);
-            ctx.fill();
-        }
+const canvas = document.createElement("canvas");
+canvas.id = "canvas-pixels";
+canvas.width  = 32 * CELL - GAP;
+canvas.height = 16 * CELL - GAP;
+const ctx = canvas.getContext("2d");
+document.getElementById("canvas-pixels").appendChild(canvas);
+
+const wsScreen = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/video`);
+
+wsScreen.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    
+    if (data.matrix !== undefined) {
+        drawMatrix(data.matrix);
+    }
+
+    if (data.icons !== undefined) { 
+        drawIcons(data.icons);
+    }
+};
+
+// Function to draw pixels
+function drawMatrix(bytes) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < 512; i++) {
+        const byteIndex = Math.floor(i / 8);
+        const bitIndex  = 7 - (i % 8);
+        const lit = (bytes[byteIndex] >> bitIndex) & 1;
+        const x = i % 32;
+        const y = Math.floor(i / 32);
+        ctx.fillStyle = lit ? LCD_ON : LCD_OFF;
+        ctx.beginPath();
+        ctx.roundRect(x * CELL, y * CELL, PIXEL_SIZE, PIXEL_SIZE, 1.5);
+        ctx.fill();
     }
 }
 
@@ -122,16 +130,16 @@ async function colorizeIcons(background) {
     }
 }
 
-function drawIcons(icons) {
+function drawIcons(iconByte) {
     for (let i = 0; i < 8; i++) {
+        const lit = (iconByte >> i) & 1;
         const on  = document.getElementById(`tama-icon-${i}-on`);
         const off = document.getElementById(`tama-icon-${i}-off`);
         if (!on || !off) continue;
-        on.style.display  = icons[i] ? "block" : "none";
-        off.style.display = icons[i] ? "none"  : "block";
+        on.style.display = lit ? "block" : "none";
+        off.style.display = lit ? "none"  : "block";
     }
 }
-
 
 // Web Audio API setup
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
