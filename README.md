@@ -185,14 +185,14 @@ For further security, purchase a domain name and use a trusted connection. To do
 
 <img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
 
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, TamaLIB was ported on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Currently, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python.
+The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, TamaLIB was ported on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python.
 
-Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R. The following features were permitted by switching the project from R to Python:
+Python is more production oriented, with a broad community and better performances than R. The following features were permitted by switching the project from R to Python:
 - implementing the buzzer sound using websockets ;
 - switching the carebot server-side using the better distinction between back and front ;
 - multiplayer management using the multiprocesses & async framework.
 
-There is still work to do. Pygotchi has to be adapted to all new first generation Tamagotchis, following TamaLIB recent developments ([Issue #3](https://github.com/Almarch/pygotchi/issues/3)). From there, a specific carebot could be developed for each species.
+There is still work to do. Pygotchi has to be adapted to all new first generation Tamagotchis, following TamaLIB recent developments ([Issue #3](https://github.com/Almarch/pygotchi/issues/3)). From there, a specific carebot can be developed for each species.
 
 The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
 
@@ -222,7 +222,6 @@ tama = await Tama.new("rom.bin")
 await tama.print()
 await tama.click("B")
 ```
-
 
 ## ⚖️ License
 
