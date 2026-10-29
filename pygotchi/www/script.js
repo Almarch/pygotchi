@@ -38,6 +38,10 @@ wsParams.onmessage = function(event) {
         updateIcons(data.icons);
     }
 
+    if (data.care_available !== undefined) {
+        updateCareAvailable(data.care_available);
+    }
+    
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
         if (switchElement.checked !== data.runs) {  // Only update if the state changes
@@ -63,6 +67,16 @@ async function updateBackground(background) {
 
 async function updateIcons(icons) {
     await colorizeIcons(icons);
+}
+
+const carebotLabel = document.querySelector('label[for="carebot"]') ?? carebotCheckbox.closest("label");
+async function updateCareAvailable(care_available) {
+    // Force value to false when care is unavailable
+    if (!care_available) carebotCheckbox.checked = false;
+    // Lock and hide when unavailable, unlock and show otherwise; the element stays in the DOM
+    carebotCheckbox.disabled = !care_available;
+    carebotCheckbox.hidden = !care_available;
+    if (carebotLabel) carebotLabel.hidden = !care_available;
 }
 
 // Web Video API setup

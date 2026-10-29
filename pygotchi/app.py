@@ -95,12 +95,15 @@ async def websocket_params(websocket: WebSocket):
                     background = "p1"
                     icons = "p1"
 
+            care_available = game[user].tama.version in ["p1", "p2w", "p2j"]
+
             await websocket.send_json(
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
                     "background": background,
-                    "icons": icons
+                    "icons": icons,
+                    "care_available": care_available,
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)

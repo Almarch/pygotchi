@@ -405,6 +405,10 @@ label[for="carebot"] .fa-icon {
     top: -0.3em;
 }
 
+label[for="carebot"][hidden] {
+    display: none;
+}
+
 /* Swagger and GitHub Links */
 
 .bottom-right-links {
