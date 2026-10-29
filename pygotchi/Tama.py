@@ -16,7 +16,7 @@ def _worker(conn):
 
     def click(button, value: bool = True) -> None:
         for b in button:
-            tamalib.SetButton({"A": 0, "B": 1, "C": 2}[b], value)
+            tamalib.SetButton({"A": 0, "B": 1, "C": 2, "T": 3}[b], value)
 
     def runs() -> bool:
         return tamalib.Runs()

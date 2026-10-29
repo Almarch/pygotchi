@@ -14,6 +14,13 @@ document.getElementById("to-shake").addEventListener("click", function() {
         navigator.vibrate(500);
     }
 
+    // The screen acts as the tap sensor (4th TamaLIB input).
+    fetch("/click?button=T", {
+        method: "POST",
+        headers: { "accept": "application/json" }
+    })
+    .catch(error => console.error("Error:", error));
+
     setTimeout(() => {
         this.classList.remove("shake");
     }, 500);

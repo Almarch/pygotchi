@@ -199,7 +199,7 @@ async def Manage(
 @app.post("/click", summary="Click a button on the toy")
 async def click(
     request: Request,
-    button: str = Query(default="A", description="Button(s) to click: `A`, `B`, `C` or `AC`")
+    button: str = Query(default="A", description="Button(s) to click: `A`, `B`, `C`, `T` (tap) or `AC`")
 ):
     user = request.headers.get("x-user-sub") or "default"
     match button:
@@ -212,6 +212,9 @@ async def click(
         case "C":
             await game[user].tama.click("C", .05)
             return {"clicked": "C"}
+        case "T":
+            await game[user].tama.click("T", .1)
+            return {"clicked": "T"}
         case "AC":
             await game[user].tama.click(["A","C"], .5)
             return {"clicked": "A+C"}

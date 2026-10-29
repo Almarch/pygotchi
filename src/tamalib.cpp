@@ -18,7 +18,8 @@ extern "C" {
 /* The Python side stores ROMs as packed 12-bit words (3 bytes for 2 words).
  * TamaLIB expects one u12_t per instruction. */
 #define ROM_WORDS 8192
-#define BUTTON_NUM 3
+/* Includes BTN_TAP, the 4th TamaLIB input (tap sensor). */
+#define BUTTON_NUM (BTN_TAP + 1)
 
 static std::vector<u8_t> rom_buffer;
 static std::vector<u12_t> program(ROM_WORDS, 0);
