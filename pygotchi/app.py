@@ -204,13 +204,13 @@ async def click(
     user = request.headers.get("x-user-sub") or "default"
     match button:
         case "A":
-            await game[user].tama.click("A", .1)
+            await game[user].tama.click("A", .05)
             return {"clicked": "A"}
         case "B":
-            await game[user].tama.click("B", .1)
+            await game[user].tama.click("B", .05)
             return {"clicked": "B"}
         case "C":
-            await game[user].tama.click("C", .1)
+            await game[user].tama.click("C", .05)
             return {"clicked": "C"}
         case "AC":
             await game[user].tama.click(["A","C"], .5)
