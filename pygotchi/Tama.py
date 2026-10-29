@@ -12,21 +12,7 @@ def _worker(conn):
     tamalib = Tamalib()
 
     _0ROM = [0 for _ in range(9216)]
-    _0CPU = [0 for _ in range(384)]
-    _0CPU[ 1] = 1
-    _0CPU[ 8] = 1
-    _0CPU[32] = 96
-    _0CPU[33] = 219
-    _0CPU[34] = 127
-    _0CPU[35] = 42
-    _0CPU[36] = 203
-    _0CPU[37] = 113
-    _0CPU[43] = 12
-    _0CPU[47] = 10
-    _0CPU[51] = 8
-    _0CPU[55] = 6
-    _0CPU[59] = 4
-    _0CPU[63] = 2
+    _0CPU = tamalib.GetCPU()
 
     def click(button, value: bool = True) -> None:
         for b in button:
