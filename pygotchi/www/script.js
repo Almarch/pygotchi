@@ -34,6 +34,14 @@ wsParams.onmessage = function(event) {
         updateBackground(data.background);
     }
 
+    if (data.icons) {
+        updateIcons(data.icons);
+    }
+
+    if (data.care_available !== undefined) {
+        updateCareAvailable(data.care_available);
+    }
+    
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
         if (switchElement.checked !== data.runs) {  // Only update if the state changes
@@ -54,8 +62,21 @@ wsParams.onmessage = function(event) {
 // Function to update the UI with the correct background
 const mainImage = document.getElementById("main-image");
 async function updateBackground(background) {
-    mainImage.src = `www/img/${background}/background.png`;
-    await colorizeIcons(background);
+    mainImage.src = `www/img/background/${background}/background.png`;
+}
+
+async function updateIcons(icons) {
+    await colorizeIcons(icons);
+}
+
+const carebotLabel = document.querySelector('label[for="carebot"]') ?? carebotCheckbox.closest("label");
+async function updateCareAvailable(care_available) {
+    // Force value to false when care is unavailable
+    if (!care_available) carebotCheckbox.checked = false;
+    // Lock and hide when unavailable, unlock and show otherwise; the element stays in the DOM
+    carebotCheckbox.disabled = !care_available;
+    carebotCheckbox.hidden = !care_available;
+    if (carebotLabel) carebotLabel.hidden = !care_available;
 }
 
 // Web Video API setup
@@ -103,10 +124,10 @@ function drawMatrix(bytes) {
 }
 
 // Function to draw icons
-async function colorizeIcons(background) {
+async function colorizeIcons(icons) {
     for (let i = 0; i < 8; i++) {
         const img = new Image();
-        img.src = `www/img/${background}/icon${i}.png`;
+        img.src = `www/img/icons/${icons}/icon${i}.png`;
 
         await new Promise(resolve => {
             if (img.complete) resolve();
