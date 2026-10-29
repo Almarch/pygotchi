@@ -1,0 +1,3 @@
+[submodule "tamalib"]
+	path = tamalib
+	url = https://github.com/jcrona/tamalib
