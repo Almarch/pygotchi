@@ -17,12 +17,11 @@ class Carebot:
         while True:
             if self.active:
                 match self.tama.version:
-                    case "p1" | "p2w" | "p2j":
+                    case "p1" | "p2" :
                         new_state = await carestep_p1p2(
                             self.tama,
                             self.state,
                             self.param,
-                            self.tama.version == "p2j",
                         )
                         with self._lock:
                             self.state = new_state
@@ -34,7 +33,7 @@ class Carebot:
 
     def start(self):
         match self.tama.version:
-            case "p1" | "p2w" | "p2j":
+            case "p1" | "p2" :
                 with self._lock:
                     self.active = True
             case _:
@@ -48,7 +47,7 @@ class Carebot:
     def reset(self):
         with self._lock:
             match self.tama.version:
-                case "p1" | "p2w" | "p2j":
+                case "p1" | "p2" :
                     self.state = copy.deepcopy(state0_p1p2)
 
     def parameterize(self, disc, check_every):

@@ -82,12 +82,9 @@ async def websocket_params(websocket: WebSocket):
                 case "p1":
                     background = "p1"
                     icons = "p1"
-                case "p2w":
+                case "p2":
                     background = "p2"
                     icons = "p1"
-                case "p2j":
-                    background = "p2"
-                    icons = "p2j"
                 case "angel":
                     background = "angel"
                     icons = "angel"
@@ -95,7 +92,7 @@ async def websocket_params(websocket: WebSocket):
                     background = "p1"
                     icons = "p1"
 
-            care_available = game[user].tama.version in ["p1", "p2w", "p2j"]
+            care_available = game[user].tama.version in ["p1", "p2"]
 
             await websocket.send_json(
                 {

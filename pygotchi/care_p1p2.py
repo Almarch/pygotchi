@@ -379,22 +379,14 @@ def feed(x="top", times=1):
     todo["actions"].extend(out)
     return todo
 
-def light(ツ = False):
-    if ツ:
-        steps = 3
-    else:
-        steps = 2
+def light():
     todo = empty_todo.copy()
-    todo["actions"] = ["A"] * steps + ["B", "A", "B"] + out
+    todo["actions"] = ["A"] * 2 + ["B", "A", "B"] + out
     return todo
 
-def play_game(times=1, ツ = False):
-    if ツ:
-        steps = 2
-    else:
-        steps = 3
+def play_game(times=1):
     todo = empty_todo.copy()
-    todo["actions"] = ["A"] * steps + ["B"]
+    todo["actions"] = ["A"] * 3 + ["B"]
 
     for _ in range(times):
         playlist = random.choices(["A", "B"], k=5)
@@ -462,9 +454,7 @@ state0 = {
 
 ### Care step & global algorithmics
 
-async def carestep(tama, state, param, ツ = False):
-    # ツ tells if the light and play icons are in
-    # Western (False) or Japanese (True) order
+async def carestep(tama, state, param):
 
     t1 = time.monotonic()
     elapsed = t1 - state["t0"]
@@ -498,7 +488,7 @@ async def carestep(tama, state, param, ツ = False):
             if state["doing"] == "try_to_clean":
                 if await is_dirty(tama, "top"):
                     # still dirty => asleep, turn the light off
-                    state["todo"] = light(ツ)
+                    state["todo"] = light()
                     state["doing"] = ""
 
             elif state["doing"] == "check_arrow":
@@ -533,11 +523,11 @@ async def carestep(tama, state, param, ツ = False):
             state["todo"] = unclock()
 
         elif await is_dark(tama):
-            state["todo"] = light(ツ)
+            state["todo"] = light()
 
         # cares
         elif await is_asleep(tama,"on"):
-            state["todo"] = light(ツ)
+            state["todo"] = light()
 
         elif await is_dirty(tama, "top"):
             # double poop: try to clean - or is it asleep ?
@@ -560,10 +550,7 @@ async def carestep(tama, state, param, ツ = False):
             state["doing"] = "check_arrow"
 
         elif state["stats"]["happiness"] < 4 and not state["scold"]:
-            state["todo"] = play_game(
-                times = min(2, 4 - state["stats"]["happiness"]),
-                ツ = ツ,
-            )
+            state["todo"] = play_game(times = min(2, 4 - state["stats"]["happiness"]))
             state["stats"]["happiness"] = 4
             state["next_check"] = 0
 
