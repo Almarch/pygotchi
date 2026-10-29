@@ -194,7 +194,7 @@ Python is more production oriented, with a [broad community](https://github.blog
 
 There is still work to do. Pygotchi has to be adapted to all new first generation Tamagotchis, following TamaLIB recent developments ([Issue #3](https://github.com/Almarch/pygotchi/issues/3)). From there, a specific carebot could be developed for each species.
 
-The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix)).
+The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
 
 ### 🥚 Python core API
 
