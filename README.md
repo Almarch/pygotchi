@@ -76,6 +76,8 @@ The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997
 
 The automatic care works on the server side, so the bot keeps caring for the pet when the user session is closed. It is automatically adapted to the ROM version. Currently, only P1 and P2 are supported.
 
+The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
+
 ### 🎵 Control the sound
 
 The sound is controlled either :
@@ -179,26 +181,9 @@ Switch to the realm **game**, and create one or more new users. Provide each use
 
 For further security, purchase a domain name and use a trusted connection. To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and parameterize keycloak and `nginx.conf` accordingly.
 
-## 📐 Technical aspects
+## 🥚 Python core API
 
-### ☕ Background
-
-<img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
-
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, TamaLIB was ported on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python.
-
-Python is more production oriented, with a broad community and better performances than R. The following features were permitted by switching the project from R to Python:
-- implementing the buzzer sound using websockets ;
-- switching the carebot server-side using the better distinction between back and front ;
-- multiplayer management using the multiprocesses & async framework.
-
-There is still work to do. Pygotchi has to be adapted to all new first generation Tamagotchis, following TamaLIB recent developments ([Issue #3](https://github.com/Almarch/pygotchi/issues/3)). From there, a specific carebot can be developed for each species.
-
-The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
-
-### 🥚 Python core API
-
-The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the carebot that both operate on `Tama()`.
+The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. [TamaLIB](https://github.com/jcrona/tamalib) is the engine, and the C++ deepest layer. It is bound with an intermediate C++ wrapper. Then, [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py) is a Python object serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the carebot that both operate on `Tama()`.
 
 The Python core API may directly be interacted with in an async framework.
 
