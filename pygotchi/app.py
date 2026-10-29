@@ -77,11 +77,30 @@ async def websocket_params(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
+
+            match game[user].tama.version:
+                case "p1":
+                    background = "p1"
+                    icons = "p1"
+                case "p2w":
+                    background = "p2"
+                    icons = "p1"
+                case "p2j":
+                    background = "p2"
+                    icons = "p2j"
+                case "angel":
+                    background = "angel"
+                    icons = "angel"
+                case _:
+                    background = "p1"
+                    icons = "p1"
+
             await websocket.send_json(
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
-                    "background": game[user].tama.version if game[user].tama.version is not None else "p1"
+                    "background": background,
+                    "icons": icons
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)

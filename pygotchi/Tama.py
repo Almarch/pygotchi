@@ -238,10 +238,10 @@ class Tama:
                     self.version = "p1"
                 case '6c7af647b3f10e4da83c46a75ea6a62da29d26315677fbfd270d15c278a24b39':
                     ''' Pseudo-P2: P1 with P2 sprites '''
-                    self.version = "p2"
+                    self.version = "p2w"
                 case '7ee70ec703f390e17f6a3a4c817ba6e6f6ea97a718969aefd8641b7e2e1aa6c8':
                     ''' Original Japanese P2 '''
-                    self.version = "p2"
+                    self.version = "p2j"
                 case '9142d58924afe0e122b446c605157f5ba99826c546daf949ebc57438384f9342':
                     ''' Umino '''
                     self.version = "umino"
