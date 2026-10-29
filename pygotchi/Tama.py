@@ -253,8 +253,22 @@ class Tama:
                 case '6c7af647b3f10e4da83c46a75ea6a62da29d26315677fbfd270d15c278a24b39':
                     ''' Pseudo-P2: P1 with P2 sprites '''
                     self.version = "p2"
+                case '7ee70ec703f390e17f6a3a4c817ba6e6f6ea97a718969aefd8641b7e2e1aa6c8':
+                    ''' Original Japanese P2 '''
+                    self.version = "p2"
+                case '9142d58924afe0e122b446c605157f5ba99826c546daf949ebc57438384f9342':
+                    ''' Umino '''
+                    self.version = "umino"
+                case 'a956dcf287a58396f60332434184e10099e257f83610368bc8ab24d59a9d0d7e':
+                    ''' Morino '''
+                    self.version = "morino"
+                case 'ca00d3bfcf854cd6fc5a7d7dbf991f72cd5419a91cdd010f88d354e1bdccd2f2':
+                    ''' Angel '''
+                    self.version = "angel"
                 case _:
                     self.version = None
+
+        print("version: " + self.version)
 
         return await self._call("load", what, binbuf)
 
