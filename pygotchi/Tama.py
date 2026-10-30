@@ -4,6 +4,12 @@ import hashlib
 import numpy as np
 from threading import Lock
 import time
+import json
+from importlib.resources import files
+
+ROM_DB: dict[str, dict] = json.loads(
+    files("pygotchi").joinpath("sha.json").read_text(encoding="utf-8")
+)
 
 def _worker(conn):
     from ._tamalib import Tama as Tamalib
@@ -149,6 +155,8 @@ class Tama:
         self._proc = ctx.Process(target=_worker, args=(child_conn,), daemon=True)
         self._proc.start()
         self._lock = Lock()
+        self.version = None
+        self.language = None
 
     def close(self):
         if self._proc.is_alive():
@@ -224,37 +232,13 @@ class Tama:
         return await self._call("dump", what)
 
     async def load(self, what: str, binbuf: bytes):
-        
-        if what == "ROM":    
+        if what == "ROM":
             digest = hashlib.sha256(binbuf).hexdigest()
-            print("ROM digest: " + digest)
-
-            match digest:
-                case '67b6388f26e2e3f15674932baf2fc2fb1c6f388cc0f16ea1aa0f441db1a4f43c':
-                    ''' Original (Western) P1 '''
-                    self.version = "p1"
-                case 'eaa515606427eae26d0bf5c14ac437c12b96935238280d944b0b4b1d98ce701b':
-                    ''' P1 with alternative secret character '''
-                    self.version = "p1"
-                case '6c7af647b3f10e4da83c46a75ea6a62da29d26315677fbfd270d15c278a24b39':
-                    ''' Pseudo-P2: P1 with (Western) P2 sprites '''
-                    self.version = "p2"
-                case '7ee70ec703f390e17f6a3a4c817ba6e6f6ea97a718969aefd8641b7e2e1aa6c8':
-                    ''' Original (Japanese)P2 '''
-                    self.version = "p2"
-                case '9142d58924afe0e122b446c605157f5ba99826c546daf949ebc57438384f9342':
-                    ''' Umino (Ocean) '''
-                    self.version = "umino"
-                case 'a956dcf287a58396f60332434184e10099e257f83610368bc8ab24d59a9d0d7e':
-                    ''' Morino (Garden) '''
-                    self.version = "morino"
-                case 'ca00d3bfcf854cd6fc5a7d7dbf991f72cd5419a91cdd010f88d354e1bdccd2f2':
-                    ''' Angel '''
-                    self.version = "angel"
-                case _:
-                    self.version = None
-
-        print("version: " + self.version)
+            entry = ROM_DB.get(digest, {})
+            self.version = entry.get("version")
+            self.language = entry.get("language")
+            print(f"ROM digest: {digest}")
+            print(f"version: {self.version}")
+            print(f"language: {self.language}")
 
         return await self._call("load", what, binbuf)
-

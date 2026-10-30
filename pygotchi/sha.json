@@ -1,0 +1,37 @@
+{
+    "67b6388f26e2e3f15674932baf2fc2fb1c6f388cc0f16ea1aa0f441db1a4f43c": {
+        "name": "Original (Western) P1",
+        "version": "p1",
+        "language": "en"
+    },
+    "eaa515606427eae26d0bf5c14ac437c12b96935238280d944b0b4b1d98ce701b": {
+        "name": "P1 with alternative secret character",
+        "version": "p1",
+        "language": "en"
+    },
+    "6c7af647b3f10e4da83c46a75ea6a62da29d26315677fbfd270d15c278a24b39": {
+        "name": "Pseudo-P2: P1 with (Western) P2 sprites",
+        "version": "p2",
+        "language": "en"
+    },
+    "7ee70ec703f390e17f6a3a4c817ba6e6f6ea97a718969aefd8641b7e2e1aa6c8": {
+        "name": "Original (Japanese) P2",
+        "version": "p2",
+        "language": "ja"
+    },
+    "9142d58924afe0e122b446c605157f5ba99826c546daf949ebc57438384f9342": {
+        "name": "Umino (Ocean)",
+        "version": "ocean",
+        "language": "ja"
+    },
+    "a956dcf287a58396f60332434184e10099e257f83610368bc8ab24d59a9d0d7e": {
+        "name": "Morino (Garden)",
+        "version": "garden",
+        "language": "ja"
+    },
+    "ca00d3bfcf854cd6fc5a7d7dbf991f72cd5419a91cdd010f88d354e1bdccd2f2": {
+        "name": "Angel",
+        "version": "angel",
+        "language": "ja"
+    }
+}
