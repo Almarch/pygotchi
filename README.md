@@ -14,7 +14,7 @@ Unlike the original toy, this project also includes [a bot](#-Automatic-care) ab
 
 Pygotchi covers different scopes:
 
-- For the full [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server). The project encompasses a ready-to-use, secure web application that hosts Tamagotchis for multiple authenticated users.
+- It is tailored for [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server). The project encompasses a ready-to-use, secure web application that hosts Tamagotchis for multiple authenticated users.
 
 - It can also be used locally, from a mere desktop computer. Install pygotchi [locally](#-run-the-app-locally), and it is ready to play.
 
