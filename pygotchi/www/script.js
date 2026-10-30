@@ -48,6 +48,10 @@ wsParams.onmessage = function(event) {
     if (data.care_available !== undefined) {
         updateCareAvailable(data.care_available);
     }
+
+    if (data.translation_available !== undefined) {
+        updateTranslationAvailable(data.translation_available);
+    }
     
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
@@ -85,6 +89,21 @@ async function updateCareAvailable(care_available) {
     carebotCheckbox.hidden = !care_available;
     if (carebotLabel) carebotLabel.hidden = !care_available;
 }
+
+const translateIcon = document.getElementById("translate");
+function updateTranslationAvailable(available) {
+    translateIcon.hidden = !available;
+}
+
+translateIcon.addEventListener("click", function() {
+    fetch("/translate?to=en", {
+        method: "POST",
+        headers: { "accept": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Translated:", data))
+    .catch(error => console.error("Error:", error));
+});
 
 // Web Video API setup
 const PIXEL_SIZE = 7;

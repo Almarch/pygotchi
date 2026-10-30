@@ -8,6 +8,7 @@ from .Tama import Tama, ROM_DB
 from .Carebot import Carebot
 from .p2 import p2
 from .secret import secret
+from .translate import translate
 from types import SimpleNamespace
 from enum import Enum
 
@@ -29,6 +30,11 @@ templates = Jinja2Templates(directory=www_dir)
 Version = Enum(
     "Version",
     {v: v for v in dict.fromkeys(entry["version"] for entry in ROM_DB.values())},
+    type=str,
+)
+Language = Enum(
+    "Language",
+    {l: l for l in dict.fromkeys(entry["language"] for entry in ROM_DB.values())},
     type=str,
 )
 
@@ -99,15 +105,14 @@ async def websocket_params(websocket: WebSocket):
                     background = "p1"
                     icons = "p1"
 
-            care_available = game[user].tama.version in ["p1", "p2"]
-
             await websocket.send_json(
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
                     "background": background,
                     "icons": icons,
-                    "care_available": care_available,
+                    "care_available": game[user].tama.version in ["p1", "p2"],
+                    "translation_available": game[user].tama.language == "ja",
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)
@@ -238,6 +243,18 @@ async def Force_specific_version(
     tama.version = version.value
     tama.language = "en"  # forcing a version forces English
     return {"background": f"{version.value} theme"}
+
+@app.post("/translate", summary="Translate the ROM to another language")
+async def Translate(
+    request: Request,
+    to: Language = Query(default=Language("en"), description="Target language"),
+):
+    user = request.headers.get("x-user-sub") or "default"
+    try:
+        await translate(game[user].tama, to.value)
+        return {"translate": to.value}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/carebot", summary="Manage the carebot")
 async def Care(
