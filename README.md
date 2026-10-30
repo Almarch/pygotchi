@@ -6,23 +6,21 @@ The purpose of this project is to provide a Tamagotchi emulator as a web service
 
 - **Real-time consistency**: The creature follows a strict schedule that the player must handle throughout the day. The server ensures time is properly tracked.
 
-Unlike the original though, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy.
-
-It delivers a ready-to-use, secure web application that hosts Tamagotchis for multiple authenticated users.
+Unlike the original toy, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" />
 </div>
 
-Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates any first-gen Tamagotchi (P1, P2, Angel, Garden, Ocean, etc.).
+Pygotchi covers different scopes:
 
-Pygotchi can cover different scopes:
-
-- For the full [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server), allowing real-time consistency and ubiquity but requiring a server.
+- For the full [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server). The project encompasses a ready-to-use, secure web application that hosts Tamagotchis for multiple authenticated users.
 
 - It can also be used locally, from a mere desktop computer. Install pygotchi [locally](#-run-the-app-locally), and it is ready to play.
 
 - Its [Python core API](#-Python-core-API) is designed to be usable for further development projects.
+
+Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates any first-gen Tamagotchi (P1, P2, Angel, Garden, Ocean, etc.).
 
 ## 🚀 Run the app locally
 
