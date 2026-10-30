@@ -19,6 +19,11 @@
         "version": "p2",
         "language": "ja"
     },
+    "ca00d3bfcf854cd6fc5a7d7dbf991f72cd5419a91cdd010f88d354e1bdccd2f2": {
+        "name": "Angel",
+        "version": "angel",
+        "language": "ja"
+    },
     "9142d58924afe0e122b446c605157f5ba99826c546daf949ebc57438384f9342": {
         "name": "Umino (Ocean)",
         "version": "ocean",
@@ -27,11 +32,6 @@
     "a956dcf287a58396f60332434184e10099e257f83610368bc8ab24d59a9d0d7e": {
         "name": "Morino (Garden)",
         "version": "garden",
-        "language": "ja"
-    },
-    "ca00d3bfcf854cd6fc5a7d7dbf991f72cd5419a91cdd010f88d354e1bdccd2f2": {
-        "name": "Angel",
-        "version": "angel",
         "language": "ja"
     }
 }
