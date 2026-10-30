@@ -220,7 +220,7 @@ await tama.click("B")
 
 ## ⚖️ License
 
-This work is licensed under GPL-2.0.
+This work is licensed under GPL-3.0.
 
 Most graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com).
 
