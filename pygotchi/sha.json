@@ -14,6 +14,11 @@
         "version": "p2",
         "language": "en"
     },
+    "efd0eb757a052e109ec65e3e695653b63bbcd76506e9cdf17e3dd6bab2eb609a": {
+        "name": "Original (Japanese) P1",
+        "version": "p1",
+        "language": "ja"
+    },
     "7ee70ec703f390e17f6a3a4c817ba6e6f6ea97a718969aefd8641b7e2e1aa6c8": {
         "name": "Original (Japanese) P2",
         "version": "p2",
@@ -33,5 +38,25 @@
         "name": "Morino (Garden)",
         "version": "garden",
         "language": "ja"
+    },
+    "95d9dfe5cc3acbb84b555f3ff12e906caf838d19621106b9158af08b1b33471d": {
+        "name": "Genjintch (Japanese)",
+        "version": "genjintch",
+        "language": "ja"
+    },
+    "6722497ff4ce7c12fb380da31a067485ad8e42e0de156d770e426c9059d5eb6c": {
+        "name": "Yasashii (Japanese)",
+        "version": "yasashii",
+        "language": "ja"
+    },
+    "b4eecf69ef28de62c4b4270c5773f229e1ba9591cfd6669f2d14e0adbd8e7481": {
+        "name": "TamaOtchi (Japanese)",
+        "version": "tamaotch",
+        "language": "ja"
+    },
+    "d90e8e2081e1fe44528a0d23a45e6542320c96a6574e5d5f8448f88a97f75a30": {
+        "name": "Mothra",
+        "version": "mothra",
+        "language": "en"
     }
 }

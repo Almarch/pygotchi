@@ -106,7 +106,7 @@ async def websocket_params(websocket: WebSocket):
                     icons = "p1"
 
             care_available = game[user].tama.version in ["p1", "p2"]
-            translation_available = game[user].tama.language == "ja" and game[user].tama.version in ["p2","angel"]
+            translation_available = game[user].tama.language == "ja" and game[user].tama.version in ["p1","p2","angel"]
 
             await websocket.send_json(
                 {
