@@ -4,11 +4,13 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import asyncio
 import os
-from .Tama import Tama
+from .Tama import Tama, ROM_DB
 from .Carebot import Carebot
 from .p2 import p2
 from .secret import secret
+from .translate import translate
 from types import SimpleNamespace
+from enum import Enum
 
 _VIDEO_FREQ = 20
 _AUDIO_FREQ = 20
@@ -24,6 +26,17 @@ _pkg_dir = os.path.dirname(__file__)
 www_dir = os.path.join(_pkg_dir, "www")
 app.mount("/www", StaticFiles(directory=www_dir))
 templates = Jinja2Templates(directory=www_dir)
+
+Version = Enum(
+    "Version",
+    {v: v for v in dict.fromkeys(entry["version"] for entry in ROM_DB.values())},
+    type=str,
+)
+Language = Enum(
+    "Language",
+    {l: l for l in dict.fromkeys(entry["language"] for entry in ROM_DB.values())},
+    type=str,
+)
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_homepage(request: Request):
@@ -93,6 +106,7 @@ async def websocket_params(websocket: WebSocket):
                     icons = "p1"
 
             care_available = game[user].tama.version in ["p1", "p2"]
+            translation_available = game[user].tama.language == "ja" and game[user].tama.version in ["p2","angel"]
 
             await websocket.send_json(
                 {
@@ -101,6 +115,7 @@ async def websocket_params(websocket: WebSocket):
                     "background": background,
                     "icons": icons,
                     "care_available": care_available,
+                    "translation_available": translation_available,
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)
@@ -220,6 +235,29 @@ async def click(
             return {"clicked": "A+C"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
+
+@app.post("/force_version", summary="Force a specific version for the theme and icons")
+async def Force_specific_version(
+    request: Request,
+    version: Version = Query(default=Version("p1"), description="Version to use"),
+):
+    user = request.headers.get("x-user-sub") or "default"
+    tama = game[user].tama
+    tama.version = version.value
+    tama.language = "en"  # forcing a version forces English
+    return {"background": f"{version.value} theme"}
+
+@app.post("/translate", summary="Translate the ROM to another language")
+async def Translate(
+    request: Request,
+    to: Language = Query(default=Language("en"), description="Target language"),
+):
+    user = request.headers.get("x-user-sub") or "default"
+    try:
+        await translate(game[user].tama, to.value)
+        return {"translate": to.value}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/carebot", summary="Manage the carebot")
 async def Care(

@@ -1,3 +1,5 @@
 include src/hal_types.h
 include src/tamalib.cpp
 recursive-include src/tamalib *.c *.h
+include pygotchi/sha.json
+recursive-include pygotchi/www *

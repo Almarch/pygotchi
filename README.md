@@ -65,7 +65,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/b4ace249-eeec-41c4-9c5f-a70035c07843" width="250px" />
+    <img src="https://github.com/user-attachments/assets/e8e4b98c-39af-43a1-8f1f-0c326140a2e2" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -83,6 +83,10 @@ The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997
 The automatic care works on the server side, so the bot keeps caring for the pet when the user session is closed. It is automatically adapted to the ROM version. Currently, only P1 and P2 are supported.
 
 The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
+
+### 🔤 Translate
+
+Some ROMs are distributed in Japanese. Using [TamaTool](https://github.com/jcrona/tamatool) sprite editor, an English translation of the game text has been made available.
 
 ### 🎵 Control the sound
 

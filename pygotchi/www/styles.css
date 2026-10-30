@@ -74,6 +74,10 @@ body {
     -webkit-mask-image: url('fa-icons/volume-xmark-solid-full.svg'); 
     mask-image: url('fa-icons/volume-xmark-solid-full.svg');
 }
+.fa-icon-language-solid  {
+    -webkit-mask-image: url('fa-icons/language-solid-full.svg'); 
+    mask-image: url('fa-icons/language-solid-full.svg');
+}
 
 /* Menu Icon */
 /* Menu Icon (☰) */
@@ -466,4 +470,21 @@ label[for="carebot"][hidden] {
     border: 3px solid #69c4ff;
     box-shadow: 0 2px 0 #006eb0;
     cursor: grab;
+}
+
+/* Translation */
+#translate {
+    font-size: 1em;
+    color: lightblue;
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+#translate:hover {
+    transform: scale(1.1);
+    color: deepskyblue;
+}
+
+#translate[hidden] {
+    display: none;
 }

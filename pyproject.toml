@@ -11,14 +11,15 @@ name = "pygotchi"
 version = "0.0.0"
 requires-python = ">=3.10"
 dependencies = [
-    "pybind11",
     "thread6",
     "fastapi",
     "uvicorn",
     "jinja2",
-    "asyncio",
     "python-multipart",
     "websockets",
     "numpy"
 ]
+
+[tool.setuptools.package-data]
+pygotchi = ["sha.json", "www/**/*"]
 
