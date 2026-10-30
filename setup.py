@@ -6,11 +6,11 @@ ext_modules = [
         "pygotchi._tamalib",
         sources=[
             "src/tamalib.cpp",
-            "tamalib/cpu.c",
-            "tamalib/hw.c",
-            "tamalib/tamalib.c",
+            "src/tamalib/cpu.c",
+            "src/tamalib/hw.c",
+            "src/tamalib/tamalib.c",
         ],
-        include_dirs=[pybind11.get_include(), "tamalib"],
+        include_dirs=[pybind11.get_include(), "src/tamalib"],
         language="c++"
     )
 ]

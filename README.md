@@ -27,7 +27,7 @@ Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulate
 Clone the repo:
 
 ```sh
-git clone https://github.com/almarch/pygotchi.git
+git clone --recurse-submodules --remote-submodules https://github.com/almarch/pygotchi.git
 ```
 
 ### 🐋 Run with Docker
