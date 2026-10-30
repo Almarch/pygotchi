@@ -20,7 +20,7 @@ Pygotchi can cover different scopes:
 
 - For the full [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server), allowing real-time consistency and ubiquity but requiring a server.
 
-- It can also be used locally, from a mere desktop computer. Install pygotchi locally (#-run-the-app-locally), and it's ready to play.
+- It can also be used locally, from a mere desktop computer. Install pygotchi [locally](#-run-the-app-locally), and it is ready to play.
 
 - Its [Python core API](#-Python-core-API) is designed to be usable for further development projects.
 
