@@ -18,7 +18,7 @@ Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulate
 
 Pygotchi can cover different scopes:
 
-- For the full [web déployement](#%EF%B8%8F-deploy-a-tamagotchi-server), allowing real-time consistency and ubiquity but requiring a server.
+- For the full [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server), allowing real-time consistency and ubiquity but requiring a server.
 
 - It can also be used locally, from a mere desktop computer. Install pygotchi locally (#-run-the-app-locally), and it's ready to play.
 
