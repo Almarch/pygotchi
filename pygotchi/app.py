@@ -91,20 +91,7 @@ async def websocket_params(websocket: WebSocket):
     try:
         while True:
 
-            match game[user].tama.version:
-                case "p1":
-                    background = "p1"
-                    icons = "p1"
-                case "p2":
-                    background = "p2"
-                    icons = "p1"
-                case "angel":
-                    background = "angel"
-                    icons = "angel"
-                case _:
-                    background = "p1"
-                    icons = "p1"
-
+            version = game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel"] else "p1"
             care_available = game[user].tama.version in ["p1", "p2"]
             translation_available = game[user].tama.language == "ja" and game[user].tama.version in ["p1","p2","angel"]
 
@@ -112,8 +99,7 @@ async def websocket_params(websocket: WebSocket):
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
-                    "background": background,
-                    "icons": icons,
+                    "version": version,
                     "care_available": care_available,
                     "translation_available": translation_available,
                 }

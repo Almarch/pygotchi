@@ -37,12 +37,9 @@ const wsParams = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/params`);
 wsParams.onmessage = function(event) {
     const data = JSON.parse(event.data);
     
-    if (data.background) {
-        updateBackground(data.background);
-    }
-
-    if (data.icons) {
-        updateIcons(data.icons);
+    if (data.version) {
+        updateBackground(data.version);
+        updateIcons(data.version);
     }
 
     if (data.care_available !== undefined) {
@@ -72,12 +69,12 @@ wsParams.onmessage = function(event) {
 
 // Function to update the UI with the correct background
 const mainImage = document.getElementById("main-image");
-async function updateBackground(background) {
-    mainImage.src = `www/img/background/${background}/background.png`;
+async function updateBackground(version) {
+    mainImage.src = `www/img/${version}/background.png`;
 }
 
-async function updateIcons(icons) {
-    await colorizeIcons(icons);
+async function updateIcons(version) {
+    await colorizeIcons(version);
 }
 
 const carebotLabel = document.querySelector('label[for="carebot"]') ?? carebotCheckbox.closest("label");
@@ -150,10 +147,10 @@ function drawMatrix(bytes) {
 }
 
 // Function to draw icons
-async function colorizeIcons(icons) {
+async function colorizeIcons(version) {
     for (let i = 0; i < 8; i++) {
         const img = new Image();
-        img.src = `www/img/icons/${icons}/icon${i}.png`;
+        img.src = `www/img/${version}/icon${i}.png`;
 
         await new Promise(resolve => {
             if (img.complete) resolve();
