@@ -8,7 +8,7 @@ from .Tama import Tama, ROM_DB
 from .Carebot import Carebot
 from .p2 import p2
 from .secret import secret
-from .translate import translate
+from .Translator import Translator
 from types import SimpleNamespace
 from enum import Enum
 
@@ -47,6 +47,7 @@ async def serve_homepage(request: Request):
         game[user] = SimpleNamespace()
         game[user].tama = Tama()
         game[user].care = Carebot(game[user].tama)
+        game[user].translator = Translator(game[user].tama)
         game[user]._caretask = asyncio.create_task(game[user].care.run())
 
     return templates.TemplateResponse(request, "index.html")
@@ -59,7 +60,7 @@ async def websocket_video(websocket: WebSocket):
         while True:
             await websocket.send_json(
                 {
-                    "matrix": list(await game[user].tama.matrix_bytes()),
+                    "matrix": list(await game[user].translator.translate()),
                     "icons":  (await game[user].tama.icons_byte())[0],
                 }
             )
@@ -93,7 +94,8 @@ async def websocket_params(websocket: WebSocket):
 
             version = game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel"] else "p1"
             care_available = game[user].tama.version in ["p1", "p2"]
-            translation_available = game[user].tama.language == "ja" and game[user].tama.version in ["p1","p2","angel"]
+            translation_available = game[user].translator.available
+            translation_active = game[user].translator.active
 
             await websocket.send_json(
                 {
@@ -102,6 +104,7 @@ async def websocket_params(websocket: WebSocket):
                     "version": version,
                     "care_available": care_available,
                     "translation_available": translation_available,
+                    "translation_active": translation_active,
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)
@@ -233,17 +236,21 @@ async def Force_specific_version(
     tama.language = "en"  # forcing a version forces English
     return {"background": f"{version.value} theme"}
 
-@app.post("/translate", summary="Translate the ROM to another language")
-async def Translate(
+@app.post("/translator", summary="Manage the screen translator")
+async def Translator_manage(
     request: Request,
-    to: Language = Query(default=Language("en"), description="Target language"),
+    do: str = Query(default="start", description="Action to perform: `start` or `stop`")
 ):
     user = request.headers.get("x-user-sub") or "default"
-    try:
-        await translate(game[user].tama, to.value)
-        return {"translate": to.value}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    match do:
+        case "start":
+            game[user].translator.start()
+            return {"translator": "started"}
+        case "stop":
+            game[user].translator.stop()
+            return {"translator": "stopped"}
+        case _:
+            raise HTTPException(status_code=400, detail="Invalid translator action")
 
 @app.post("/carebot", summary="Manage the carebot")
 async def Care(

@@ -49,6 +49,10 @@ wsParams.onmessage = function(event) {
     if (data.translation_available !== undefined) {
         updateTranslationAvailable(data.translation_available);
     }
+
+    if (data.translation_active !== undefined && translatorCheckbox.checked !== data.translation) {
+        renderTranslator(data.translation_active);
+    }
     
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
@@ -103,7 +107,13 @@ function renderTranslator(active) {
 
 translatorCheckbox.addEventListener("change", function() {
     renderTranslator(this.checked);
-    // TODO: POST /translator?do=start|stop once the API exists
+    fetch(`/translator?do=${this.checked ? "start" : "stop"}`, {
+        method: "POST",
+        headers: { "accept": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Translator:", data))
+    .catch(error => console.error("Error:", error));
 });
 
 renderTranslator(translatorCheckbox.checked);
