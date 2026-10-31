@@ -6,7 +6,7 @@ The purpose of this project is to provide a Tamagotchi emulator as a web service
 
 - **Real-time consistency**: The creature follows a strict schedule that the player must handle throughout the day. The server ensures time is properly tracked.
 
-Unlike the original toy, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy.
+Unlike the original toy, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy. For original ROMs, an English [translation](#-translate) of Japanese in-game texts is available.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" />
@@ -14,13 +14,13 @@ Unlike the original toy, this project also includes [a bot](#-Automatic-care) ab
 
 Pygotchi covers different scopes:
 
-- It is tailored for [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server). The project encompasses a ready-to-use, secure web application that hosts Tamagotchis for multiple authenticated users.
+- It can simply be used from a desktop computer. Install pygotchi [locally](#-run-the-app-locally) using `python` or `docker`, and it is ready to play.
 
-- It can also be used locally, from a mere desktop computer. Install pygotchi [locally](#-run-the-app-locally), and it is ready to play.
+- It is overall tailored for [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server). The project encompasses a secure web application that hosts Tamagotchis for multiple authenticated users.
 
-- Its [Python core API](#-Python-core-API) is designed to be usable for further development projects.
+- Its [Python core API](#-Python-core-API) is designed to be recycled into further development projects.
 
-Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates any first-gen Tamagotchi (P1, P2, Angel, Garden, Ocean, etc.).
+Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates any first-gen Tamagotchi (P1, P2, Angel, Garden, Ocean, etc. *though some are still under activate development*).
 
 ## 🚀 Run the app locally
 
@@ -86,7 +86,7 @@ The automatic care feature is inspired from [Tamatrix](https://github.com/hortin
 
 ### 🔤 Translate
 
-Some ROMs are distributed in Japanese. Using the translation icon, all texts appear switched to English. The user choice is saved server-side, and it does not affect the ROM.
+Some ROMs are distributed in Japanese. Using the translation icon, all texts appear switched to English. The user preference is saved server-side and it does not affect the ROM.
 
 ### 🎵 Control the sound
 
