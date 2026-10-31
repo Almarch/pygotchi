@@ -26,4 +26,4 @@ class Translator:
         matrix = await self.tama.matrix_bytes()
         if not (self.active and self.available):
             return matrix
-        return await do_translation(matrix)
+        return do_translation(matrix)

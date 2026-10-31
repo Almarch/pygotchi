@@ -2,11 +2,32 @@ import numpy as np
 
 ### Utilities
 
-async def two_thirds(matrix):
+def unpack(frame: bytes) -> np.ndarray:
+    """Unpack a 64-byte LCD frame into a 16x32 boolean matrix (MSB first, row-major)."""
+    return np.unpackbits(np.frombuffer(frame, dtype=np.uint8)).reshape(16, 32).astype(bool)
+
+def pack(matrix: np.ndarray) -> bytes:
+    """Pack a 16x32 boolean matrix into a 64-byte LCD frame."""
+    return np.packbits(matrix.astype(np.uint8)).tobytes()
+
+def translate(frame: bytes) -> bytes:
+    """Replace every exactly-matching Japanese zone with its English counterpart."""
+    raw = unpack(frame)
+    out = raw.copy()
+    changed = False
+    for entry in DB.values():
+        zone = entry["zone"]
+        if np.array_equal(zone(raw), entry["ja"]):
+            zone(out)[:] = entry["en"]
+            changed = True
+    return pack(out) if changed else frame
+
+def two_thirds(matrix):
     return matrix[:, 8:32]
 
 DB = {
     "food": {
+        "zone": two_thirds,
         "ja": np.array([
             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],

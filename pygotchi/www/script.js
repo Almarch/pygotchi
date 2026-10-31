@@ -50,7 +50,7 @@ wsParams.onmessage = function(event) {
         updateTranslationAvailable(data.translation_available);
     }
 
-    if (data.translation_active !== undefined && translatorCheckbox.checked !== data.translation) {
+    if (data.translation_active !== undefined && translatorCheckbox.checked !== data.translation_active) {
         renderTranslator(data.translation_active);
     }
     
