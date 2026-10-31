@@ -49,6 +49,10 @@ wsParams.onmessage = function(event) {
     if (data.translation_available !== undefined) {
         updateTranslationAvailable(data.translation_available);
     }
+
+    if (data.translation_active !== undefined && translatorCheckbox.checked !== data.translation_active) {
+        renderTranslator(data.translation_active);
+    }
     
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
@@ -87,20 +91,32 @@ async function updateCareAvailable(care_available) {
     if (carebotLabel) carebotLabel.hidden = !care_available;
 }
 
-const translateIcon = document.getElementById("translate");
+const translatorCheckbox = document.getElementById("translator");
+const translatorLabel = document.querySelector('label[for="translator"]');
+
 function updateTranslationAvailable(available) {
-    translateIcon.hidden = !available;
+    translatorCheckbox.disabled = !available;
+    translatorLabel.hidden = !available;
 }
 
-translateIcon.addEventListener("click", function() {
-    fetch("/translate?to=en", {
+function renderTranslator(active) {
+    // Visual state only: never sends a request
+    translatorCheckbox.checked = active;
+    translatorLabel.title = `Translation: ${active ? "on" : "off"}`;
+}
+
+translatorCheckbox.addEventListener("change", function() {
+    renderTranslator(this.checked);
+    fetch(`/translator?do=${this.checked ? "start" : "stop"}`, {
         method: "POST",
         headers: { "accept": "application/json" }
     })
     .then(response => response.json())
-    .then(data => console.log("Translated:", data))
+    .then(data => console.log("Translator:", data))
     .catch(error => console.error("Error:", error));
 });
+
+renderTranslator(translatorCheckbox.checked);
 
 // Web Video API setup
 const PIXEL_SIZE = 7;
