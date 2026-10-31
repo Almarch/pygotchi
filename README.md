@@ -20,7 +20,7 @@ Pygotchi covers different scopes:
 
 - Its [Python core API](#-Python-core-API) is designed to be recycled into further development projects.
 
-Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates any first-gen Tamagotchi (P1, P2, Angel, Garden, Ocean, etc. *though some are still under activate development*).
+Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates any first-gen Tamagotchi (P1, P2, Angel, Garden, Ocean, etc. *though some are still under active development*).
 
 ## 🚀 Run the app locally
 
