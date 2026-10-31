@@ -87,20 +87,26 @@ async function updateCareAvailable(care_available) {
     if (carebotLabel) carebotLabel.hidden = !care_available;
 }
 
-const translateIcon = document.getElementById("translate");
+const translatorCheckbox = document.getElementById("translator");
+const translatorLabel = document.querySelector('label[for="translator"]');
+
 function updateTranslationAvailable(available) {
-    translateIcon.hidden = !available;
+    translatorCheckbox.disabled = !available;
+    translatorLabel.hidden = !available;
 }
 
-translateIcon.addEventListener("click", function() {
-    fetch("/translate?to=en", {
-        method: "POST",
-        headers: { "accept": "application/json" }
-    })
-    .then(response => response.json())
-    .then(data => console.log("Translated:", data))
-    .catch(error => console.error("Error:", error));
+function renderTranslator(active) {
+    // Visual state only: never sends a request
+    translatorCheckbox.checked = active;
+    translatorLabel.title = `Translation: ${active ? "on" : "off"}`;
+}
+
+translatorCheckbox.addEventListener("change", function() {
+    renderTranslator(this.checked);
+    // TODO: POST /translator?do=start|stop once the API exists
 });
+
+renderTranslator(translatorCheckbox.checked);
 
 // Web Video API setup
 const PIXEL_SIZE = 7;

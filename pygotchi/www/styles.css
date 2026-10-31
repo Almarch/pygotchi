@@ -472,19 +472,45 @@ label[for="carebot"][hidden] {
     cursor: grab;
 }
 
-/* Translation */
-#translate {
-    font-size: 1em;
-    color: lightblue;
+/* Translation toggle */
+input#translator {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+label[for="translator"] {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
     cursor: pointer;
-    transition: transform 0.2s, color 0.2s;
+    transition: transform 0.2s;
 }
 
-#translate:hover {
+label[for="translator"]:hover {
     transform: scale(1.1);
-    color: deepskyblue;
 }
 
-#translate[hidden] {
+label[for="translator"] .fa-icon {
+    color: #808080;
+    opacity: 0.35;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+input#translator:checked + label .fa-icon {
+    color: #69c4ff;
+    opacity: 1;
+}
+
+input#translator:focus-visible + label {
+    outline: 2px solid #69c4ff;
+    outline-offset: 4px;
+    border-radius: 6px;
+}
+
+label[for="translator"][hidden] {
     display: none;
 }
