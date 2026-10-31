@@ -65,7 +65,7 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/e8e4b98c-39af-43a1-8f1f-0c326140a2e2" width="250px" />
+    <img src="https://github.com/user-attachments/assets/fb448e1b-3ff7-4654-9d56-0c5d0fd204ca" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
@@ -86,7 +86,7 @@ The automatic care feature is inspired from [Tamatrix](https://github.com/hortin
 
 ### 🔤 Translate
 
-Some ROMs are distributed in Japanese. Using [TamaTool](https://github.com/jcrona/tamatool) sprite editor, an English translation of the game text has been made available.
+Some ROMs are distributed in Japanese. Using the translation icon, all texts appear switched to English. The user choice is saved server-side, and it does not affect the ROM.
 
 ### 🎵 Control the sound
 
