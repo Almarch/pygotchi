@@ -467,7 +467,7 @@ async def is_egg(tama):
 
     return (
 
-        # p1
+        # western p1
         np.all(pic1 == egg1) or
         np.all(pic1 == egg2) or
         np.all(pic2 == egg1) or
@@ -479,11 +479,17 @@ async def is_egg(tama):
         np.all(pic2 == egg3) or
         np.all(pic2 == egg4) or
 
-        # japanese p2
-        np.all(pic1 == egg4) or
+        # japanese p1
         np.all(pic1 == egg5) or
-        np.all(pic2 == egg4) or
-        np.all(pic2 == egg5)
+        np.all(pic1 == egg6) or
+        np.all(pic2 == egg5) or
+        np.all(pic2 == egg6) or
+
+        # japanese p2
+        np.all(pic1 == egg7) or
+        np.all(pic1 == egg8) or
+        np.all(pic2 == egg7) or
+        np.all(pic2 == egg8)
     )
 
 async def read_number(tama):

@@ -32,11 +32,6 @@ Version = Enum(
     {v: v for v in dict.fromkeys(entry["version"] for entry in ROM_DB.values())},
     type=str,
 )
-Language = Enum(
-    "Language",
-    {l: l for l in dict.fromkeys(entry["language"] for entry in ROM_DB.values())},
-    type=str,
-)
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_homepage(request: Request):
@@ -233,7 +228,6 @@ async def Force_specific_version(
     user = request.headers.get("x-user-sub") or "default"
     tama = game[user].tama
     tama.version = version.value
-    tama.language = "en"  # forcing a version forces English
     return {"background": f"{version.value} theme"}
 
 @app.post("/translator", summary="Manage the screen translator")
