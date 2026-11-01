@@ -86,20 +86,14 @@ async def websocket_params(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
-
-            version = game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel"] else "p1"
-            care_available = game[user].tama.version in ["p1", "p2"]
-            translation_available = game[user].translator.available
-            translation_active = game[user].translator.active
-
             await websocket.send_json(
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
-                    "version": version,
-                    "care_available": care_available,
-                    "translation_available": translation_available,
-                    "translation_active": translation_active,
+                    "version": game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel", "garden", "ocean"] else "p1",
+                    "care_available": game[user].care.available,
+                    "translation_available": game[user].translator.available,
+                    "translation_active": game[user].translator.active,
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)

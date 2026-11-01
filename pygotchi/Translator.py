@@ -10,7 +10,7 @@ class Translator:
 
     @property
     def available(self) -> bool:
-        return self.tama.language == "ja" and self.tama.version in ["p1", "p2", "angel"]
+        return self.tama.language == "ja" and self.tama.version in ["p1", "p2", "angel", "garden", "ocean"]
 
     def start(self) -> None:
         with self._lock:
@@ -26,4 +26,4 @@ class Translator:
         matrix = await self.tama.matrix_bytes()
         if not (self.active and self.available):
             return matrix
-        return do_translation(matrix)
+        return do_translation(matrix, version = self.tama.version)
