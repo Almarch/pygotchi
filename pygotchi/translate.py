@@ -10,20 +10,18 @@ def pack(matrix: np.ndarray) -> bytes:
     """Pack a 16x32 boolean matrix into a 64-byte LCD frame."""
     return np.packbits(matrix.astype(np.uint8)).tobytes()
 
-def translate(frame: bytes, version) -> bytes:
-    """Replace every exactly-matching Japanese zone with its English counterpart."""
+def translate(frame: bytes, version: str | None) -> bytes:
+    """Replace every exactly-matching Japanese zone with its English counterpart.
+    """
     raw = unpack(frame)
     out = raw.copy()
     changed = False
+    overrides = OVERRIDES.get(version, {})
 
-    db = DB
-    if version == "garden":
-        db["stats"]["en"] = np.roll(yr, -1, axis=0)
-
-    for entry in db.values():
+    for key, entry in DB.items():
         zone = entry["zone"]
         if np.array_equal(zone(raw), entry["ja"]):
-            zone(out)[:] = entry["en"]
+            zone(out)[:] = overrides.get(key, entry["en"])
             changed = True
     return pack(out) if changed else frame
 
@@ -466,5 +464,11 @@ DB = {
             [0,0,1,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0],
         ]),
         "en": hungry,
+    },
+}
+
+OVERRIDES = {
+    "garden": {
+        "stats": np.roll(yr, -1, axis=0),
     },
 }
