@@ -90,7 +90,7 @@ async def websocket_params(websocket: WebSocket):
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
-                    "version": game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel", "garden"] else "p1",
+                    "version": game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel", "garden", "ocean"] else "p1",
                     "care_available": game[user].care.available,
                     "translation_available": game[user].translator.available,
                     "translation_active": game[user].translator.active,
