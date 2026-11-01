@@ -12,6 +12,7 @@ class Carebot:
             "check_every": 5*60
         }
         self._lock = Lock()
+        self.available = self.tama.version in ["p1", "p2"]
 
     async def run(self):
         while True:
