@@ -4,6 +4,12 @@ import hashlib
 import numpy as np
 from threading import Lock
 import time
+import json
+from importlib.resources import files
+
+ROM_DB: dict[str, dict] = json.loads(
+    files("pygotchi").joinpath("sha.json").read_text(encoding="utf-8")
+)
 
 def _worker(conn):
     from ._tamalib import Tama as Tamalib
@@ -12,25 +18,11 @@ def _worker(conn):
     tamalib = Tamalib()
 
     _0ROM = [0 for _ in range(9216)]
-    _0CPU = [0 for _ in range(384)]
-    _0CPU[ 1] = 1
-    _0CPU[ 8] = 1
-    _0CPU[32] = 96
-    _0CPU[33] = 219
-    _0CPU[34] = 127
-    _0CPU[35] = 42
-    _0CPU[36] = 203
-    _0CPU[37] = 113
-    _0CPU[43] = 12
-    _0CPU[47] = 10
-    _0CPU[51] = 8
-    _0CPU[55] = 6
-    _0CPU[59] = 4
-    _0CPU[63] = 2
+    _0CPU = tamalib.GetCPU()
 
     def click(button, value: bool = True) -> None:
         for b in button:
-            tamalib.SetButton({"A": 0, "B": 1, "C": 2}[b], value)
+            tamalib.SetButton({"A": 0, "B": 1, "C": 2, "T": 3}[b], value)
 
     def runs() -> bool:
         return tamalib.Runs()
@@ -163,6 +155,8 @@ class Tama:
         self._proc = ctx.Process(target=_worker, args=(child_conn,), daemon=True)
         self._proc.start()
         self._lock = Lock()
+        self.version = None
+        self.language = None
 
     def close(self):
         if self._proc.is_alive():
@@ -238,23 +232,13 @@ class Tama:
         return await self._call("dump", what)
 
     async def load(self, what: str, binbuf: bytes):
-        
-        if what == "ROM":    
+        if what == "ROM":
             digest = hashlib.sha256(binbuf).hexdigest()
-            print("ROM digest: " + digest)
-
-            match digest:
-                case '67b6388f26e2e3f15674932baf2fc2fb1c6f388cc0f16ea1aa0f441db1a4f43c':
-                    ''' Original P1 '''
-                    self.version = "p1"
-                case 'eaa515606427eae26d0bf5c14ac437c12b96935238280d944b0b4b1d98ce701b':
-                    ''' P1 with alternative secret character '''
-                    self.version = "p1"
-                case '6c7af647b3f10e4da83c46a75ea6a62da29d26315677fbfd270d15c278a24b39':
-                    ''' Pseudo-P2: P1 with P2 sprites '''
-                    self.version = "p2"
-                case _:
-                    self.version = None
+            entry = ROM_DB.get(digest, {})
+            self.version = entry.get("version")
+            self.language = entry.get("language")
+            print(f"ROM digest: {digest}")
+            print(f"version: {self.version}")
+            print(f"language: {self.language}")
 
         return await self._call("load", what, binbuf)
-

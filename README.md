@@ -1,27 +1,33 @@
 # <img src="pygotchi/www/img/favicon.png" alt="PyGoTcHi" width="40"/> The Tamagotchi is live online ! 
 
-The purpose of this Python package is to provide a Tamagotchi emulator as a web service. The client–server logic enables two core features from the original game:
+The purpose of this project is to provide a Tamagotchi emulator as a web service. The client–server logic enables two core features from the original game:
 
 - **Ubiquity**: Just like the original toy could be carried in a kid’s pocket, the web service can be accessed anytime, anywhere from a smartphone.
 
 - **Real-time consistency**: The creature follows a strict schedule that the player must handle throughout the day. The server ensures time is properly tracked.
 
-Unlike the original though, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy.
-
-It delivers a ready-to-use, secure web [application](#%EF%B8%8F-deploy-a-tamagotchi-server) that hosts Tamagotchis for multiple authenticated users.
-
-Its [Python core API](#-Python-core-API) can also be reused for further development projects.
+Unlike the original toy, this project also includes [a bot](#-Automatic-care) able to care for the pet when the user is busy. For original ROMs, an English [translation](#-translate) of Japanese in-game texts is available.
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/f5e3f590-4189-4534-9eb7-2a74fca51bb6" width="200px" />
 </div>
+
+Pygotchi covers different scopes:
+
+- It can simply be used from a desktop computer. Install pygotchi [locally](#-run-the-app-locally) using `python` or `docker`, and it is ready to play.
+
+- It is overall tailored for [web deployement](#%EF%B8%8F-deploy-a-tamagotchi-server). The project encompasses a secure web application that hosts Tamagotchis for multiple authenticated users.
+
+- Its [Python core API](#-Python-core-API) is designed to be recycled into further development projects.
+
+Pygotchi is built upon [TamaLIB](https://github.com/jcrona/tamalib), and emulates vintage Tamagotchis (P1, P2, Angel, Garden, Ocean, etc.).
 
 ## 🚀 Run the app locally
 
 Clone the repo:
 
 ```sh
-git clone https://github.com/almarch/pygotchi.git
+git clone --recurse-submodules https://github.com/almarch/pygotchi.git
 ```
 
 ### 🐋 Run with Docker
@@ -59,12 +65,12 @@ The game is controlled with 3 buttons (A, B, C) with respect to the original toy
 A menu (☰) allows administration over the game.
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/b4ace249-eeec-41c4-9c5f-a70035c07843" width="250px" />
+    <img src="https://github.com/user-attachments/assets/fb448e1b-3ff7-4654-9d56-0c5d0fd204ca" width="250px" />
 </div>
 
 ### 🧬 Load a ROM
 
-From the administration menu, flash a ROM. It should be a 12ko `.bin` file. Use the switch button to get the emulation started. The ROM is loaded on the server, and the emulation runs server-side. The ROM version is automatically detected and the graphical theme (background, icons) is adapted accordindingly.
+From the administration menu, flash a ROM. It should be a 12ko (P1, P2) or 16ko (Angel, Garden, Ocean, etc.) `.bin` file. Use the switch button to get the emulation started. The ROM is loaded on the server, and the emulation runs server-side. The ROM version is automatically detected and the graphical theme (background, icons) is adapted accordindingly.
 
 ### 💾 Save the game
 
@@ -75,6 +81,12 @@ The game may be saved any time using the Save CPU button from the administration
 The Tamagotchi won an [Ig Nobel prize](https://improbable.com/ig/winners/#ig1997) for diverting millions of people from their professional duties. It is not a fatality: check this option and a friendly bot will care for your pet, freeing you up for more important (though probably less fun) stuff.
 
 The automatic care works on the server side, so the bot keeps caring for the pet when the user session is closed. It is automatically adapted to the ROM version. Currently, only P1 and P2 are supported.
+
+The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
+
+### 🔤 Translate
+
+Some ROMs are distributed in Japanese. Using the translation icon, all texts appear switched to English. The user preference is saved server-side and it does not affect the ROM.
 
 ### 🎵 Control the sound
 
@@ -88,6 +100,8 @@ Not all APIs are implemented on the UI, and a swagger allows for a few more func
 ## ☁️ Deploy a Tamagotchi server
 
 If you have a PC that may stay on and a personal fixed IP, then you can turn it into a Tamagotchi server.
+
+If you don't have a PC that can be used as a server, or you don't have a fixed, personal IP ; then you may opt for a VPS. A "bare-metal" VPS does the job and is relatively cheap. The public IP is provided by the cloud provider. Very little configuration is required.
 
 <details><summary>Technical architecture</summary>
 
@@ -113,8 +127,6 @@ The router configuration depends on the internet supplier. The router configurat
 The router should be parameterized as such:
 - ports 80 and 443 should be open to TCP ;
 - ports 80 and 443 should redirect to your linux server, identified with its private IP.
-
-If you don't have a PC that can be used as a server, or you don't have a fixed, personal IP ; then you may opt for a VPS. A "bare-metal" VPS does the job and is relatively cheap. The public IP is provided by the cloud provider. Very little configuration is required.
 
 ### 🧱 Firewall
 
@@ -179,28 +191,11 @@ Switch to the realm **game**, and create one or more new users. Provide each use
 
 For further security, purchase a domain name and use a trusted connection. To do so, include [certbot](https://hub.docker.com/r/certbot/certbot) to the docker-compose stack and parameterize keycloak and `nginx.conf` accordingly.
 
-## 📐 Technical aspects
+## 🥚 Python core API
 
-### ☕ Background
+The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. TamaLIB is the engine, and the C++ deepest layer. It is bound with an intermediate C++ wrapper. Then, [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py) is a Python object serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the carebot that both operate on `Tama()`.
 
-<img src="https://static.wikia.nocookie.net/tamagotchi/images/a/a9/ZucchitchiScan.png/revision/latest?cb=20220513211400" alt="zucchitchi" width="80" align="right"/>
-
-The Tamagotchi has been a social phenomenon back in the 1990's. The original game has been revived through [TamaLIB](https://github.com/jcrona/tamalib), an agnostic, cross platform emulator. TamaLIB has then been implemented on [Arduino](https://github.com/GaryZ88/Arduinogotchi) with a refactoring. From the Arduino version, TamaLIB was ported on 2 high-abstraction level, object-oriented languages: [R](https://github.com/almarch/tamaR), then Python. Currently, all C++ code has been merged into a monolithic `tamalib.cpp` file as the dependency management was not trivial for binding to Python.
-
-Python is more production oriented, with a [broad community](https://github.blog/news-insights/octoverse/octoverse-2024/) and better performances than R. The following features were permitted by switching the project from R to Python:
-- implementing the buzzer sound using websockets ;
-- switching the carebot server-side using the better distinction between back and front ;
-- multiplayer management using the multiprocesses & async framework.
-
-There is still work to do. Pygotchi has to be adapted to all new first generation Tamagotchis, following TamaLIB recent developments ([Issue #3](https://github.com/Almarch/pygotchi/issues/3)). From there, a specific carebot could be developed for each species.
-
-The automatic care feature is inspired from [Tamatrix](https://github.com/hortinstein/tamatrix) (see also the [dockerized version](https://github.com/greysonp/tamatrix-docker)).
-
-### 🥚 Python core API
-
-The Python core of the project may be distinguished from the auxiliary web application infrastructure. The Python core is nested like Russian dolls of increasing abstraction. Tamalib is the C++ deepest layer. The intermediate abstraction layer is [`Tama()`](https://github.com/Almarch/pygotchi/blob/main/pygotchi/Tama.py), a Python object bound to the C++ engine serving as an API for user-level commands. Finally, the last layers are the FastAPI web service and the carebot that both operate on `Tama()`.
-
-The Python core API may directly be interacted with in an async framework.
+The Python core API `Tama()` may directly be interacted with in an async framework.
 
 In CLI:
 
@@ -223,12 +218,11 @@ await tama.print()
 await tama.click("B")
 ```
 
-
 ## ⚖️ License
 
-This work is licensed under GPL-2.0.
+This work is licensed under GPL-3.0.
 
-All graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com/wiki/Tamagotchi_(1996_Pet)).
+Most graphical resources come from the extraordinarily rich Tamagotchi [fandom](https://tamagotchi.fandom.com).
 
 The embedded fonts come from GoogleFonts and the embedded icons come from FontAwesome.
 

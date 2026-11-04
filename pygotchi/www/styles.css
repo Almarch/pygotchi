@@ -74,6 +74,10 @@ body {
     -webkit-mask-image: url('fa-icons/volume-xmark-solid-full.svg'); 
     mask-image: url('fa-icons/volume-xmark-solid-full.svg');
 }
+.fa-icon-language-solid  {
+    -webkit-mask-image: url('fa-icons/language-solid-full.svg'); 
+    mask-image: url('fa-icons/language-solid-full.svg');
+}
 
 /* Menu Icon */
 /* Menu Icon (☰) */
@@ -172,8 +176,9 @@ body {
 .tama-icon {
     position: absolute;
     width: auto;
-    height: 10%;
+    height: 12.5%;
     z-index: 2;
+    transform: translate(-50%, -50%)
 }
 
 img[id$="-off"] {
@@ -181,36 +186,36 @@ img[id$="-off"] {
 }
 
 #tama-icon-0-on, #tama-icon-0-off {
-    top: 8%;
-    left: 10%;
+    top: 12.5%;
+    left: 12.5%;
 }
 #tama-icon-1-on, #tama-icon-1-off {
-    top: 8%;
-    left: 33%;
+    top: 12.5%;
+    left: 37.5%;
 }
 #tama-icon-2-on, #tama-icon-2-off {
-    top: 8%;
-    left: 57%;
+    top: 12.5%;
+    left: 62.5%;
 }
 #tama-icon-3-on, #tama-icon-3-off {
-    top: 8%;
-    left: 80%;
+    top: 12.5%;
+    left: 87.5%;
 }
 #tama-icon-4-on, #tama-icon-4-off {
-    top: 82%;
-    left: 10%;
+    top: 87.5%;
+    left: 12.5%;
 }
 #tama-icon-5-on, #tama-icon-5-off {
-    top: 82%;
-    left: 33%;
+    top: 87.5%;
+    left: 37.5%;
 }
 #tama-icon-6-on, #tama-icon-6-off {
-    top: 82%;
-    left: 57%;
+    top: 87.5%;
+    left: 62.5%;
 }
 #tama-icon-7-on, #tama-icon-7-off {
-    top: 82%;
-    left: 80%;
+    top: 87.5%;
+    left: 87.5%;
 }
 
 /* Shake Animation */
@@ -405,6 +410,10 @@ label[for="carebot"] .fa-icon {
     top: -0.3em;
 }
 
+label[for="carebot"][hidden] {
+    display: none;
+}
+
 /* Swagger and GitHub Links */
 
 .bottom-right-links {
@@ -462,4 +471,47 @@ label[for="carebot"] .fa-icon {
     border: 3px solid #69c4ff;
     box-shadow: 0 2px 0 #006eb0;
     cursor: grab;
+}
+
+/* Translation toggle */
+input#translator {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+label[for="translator"] {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+label[for="translator"]:hover {
+    transform: scale(1.1);
+}
+
+label[for="translator"] .fa-icon {
+    color: #808080;
+    opacity: 0.35;
+    transition: color 0.2s, opacity 0.2s;
+}
+
+input#translator:checked + label .fa-icon {
+    color: #69c4ff;
+    opacity: 1;
+}
+
+input#translator:focus-visible + label {
+    outline: 2px solid #69c4ff;
+    outline-offset: 4px;
+    border-radius: 6px;
+}
+
+label[for="translator"][hidden] {
+    display: none;
 }

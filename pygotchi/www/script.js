@@ -14,6 +14,13 @@ document.getElementById("to-shake").addEventListener("click", function() {
         navigator.vibrate(500);
     }
 
+    // The screen acts as the tap sensor (4th TamaLIB input).
+    fetch("/click?button=T", {
+        method: "POST",
+        headers: { "accept": "application/json" }
+    })
+    .catch(error => console.error("Error:", error));
+
     setTimeout(() => {
         this.classList.remove("shake");
     }, 500);
@@ -30,10 +37,23 @@ const wsParams = new WebSocket(`${wsProtocol}${wsHost}${wsPort}/ws/params`);
 wsParams.onmessage = function(event) {
     const data = JSON.parse(event.data);
     
-    if (data.background) {
-        updateBackground(data.background);
+    if (data.version) {
+        updateBackground(data.version);
+        updateIcons(data.version);
     }
 
+    if (data.care_available !== undefined) {
+        updateCareAvailable(data.care_available);
+    }
+
+    if (data.translation_available !== undefined) {
+        updateTranslationAvailable(data.translation_available);
+    }
+
+    if (data.translation_active !== undefined && translatorCheckbox.checked !== data.translation_active) {
+        renderTranslator(data.translation_active);
+    }
+    
     if (data.runs !== undefined) {
         let switchElement = document.querySelector("#on-off-switch input");
         if (switchElement.checked !== data.runs) {  // Only update if the state changes
@@ -53,10 +73,50 @@ wsParams.onmessage = function(event) {
 
 // Function to update the UI with the correct background
 const mainImage = document.getElementById("main-image");
-async function updateBackground(background) {
-    mainImage.src = `www/img/${background}/background.png`;
-    await colorizeIcons(background);
+async function updateBackground(version) {
+    mainImage.src = `www/img/${version}/background.png`;
 }
+
+async function updateIcons(version) {
+    await colorizeIcons(version);
+}
+
+const carebotLabel = document.querySelector('label[for="carebot"]') ?? carebotCheckbox.closest("label");
+async function updateCareAvailable(care_available) {
+    // Force value to false when care is unavailable
+    if (!care_available) carebotCheckbox.checked = false;
+    // Lock and hide when unavailable, unlock and show otherwise; the element stays in the DOM
+    carebotCheckbox.disabled = !care_available;
+    carebotCheckbox.hidden = !care_available;
+    if (carebotLabel) carebotLabel.hidden = !care_available;
+}
+
+const translatorCheckbox = document.getElementById("translator");
+const translatorLabel = document.querySelector('label[for="translator"]');
+
+function updateTranslationAvailable(available) {
+    translatorCheckbox.disabled = !available;
+    translatorLabel.hidden = !available;
+}
+
+function renderTranslator(active) {
+    // Visual state only: never sends a request
+    translatorCheckbox.checked = active;
+    translatorLabel.title = `Translation: ${active ? "on" : "off"}`;
+}
+
+translatorCheckbox.addEventListener("change", function() {
+    renderTranslator(this.checked);
+    fetch(`/translator?do=${this.checked ? "start" : "stop"}`, {
+        method: "POST",
+        headers: { "accept": "application/json" }
+    })
+    .then(response => response.json())
+    .then(data => console.log("Translator:", data))
+    .catch(error => console.error("Error:", error));
+});
+
+renderTranslator(translatorCheckbox.checked);
 
 // Web Video API setup
 const PIXEL_SIZE = 7;
@@ -103,10 +163,10 @@ function drawMatrix(bytes) {
 }
 
 // Function to draw icons
-async function colorizeIcons(background) {
+async function colorizeIcons(version) {
     for (let i = 0; i < 8; i++) {
         const img = new Image();
-        img.src = `www/img/${background}/icon${i}.png`;
+        img.src = `www/img/${version}/icon${i}.png`;
 
         await new Promise(resolve => {
             if (img.complete) resolve();

@@ -1,2 +1,4 @@
-keycloak/
-nginx/
+keycloak
+nginx
+.git
+.env
