@@ -1,19 +1,20 @@
-ARG OPENRESTY_VERSION=1.27.1.2-1
+FROM openresty/openresty:1.27.1.2-1-focal
 
-# ---- Build stage: the fat variant ships luarocks and a C toolchain ----
-FROM openresty/openresty:${OPENRESTY_VERSION}-alpine-fat AS builder
+RUN apt update && apt install -y build-essential libreadline-dev unzip wget \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install into a dedicated tree so the output location is explicit
-RUN luarocks --tree=/rocks install lua-resty-http 0.17.1 \
- && luarocks --tree=/rocks install lua-resty-session 4.1.1 \
- && luarocks --tree=/rocks install lua-resty-jwt 0.2.2 \
- && luarocks --tree=/rocks install lua-resty-openidc 1.8.0-1
+ENV LUAROCKS_VERSION=3.12.2
 
-# ---- Runtime stage: minimal image, no toolchain ----
-FROM openresty/openresty:${OPENRESTY_VERSION}-alpine
+RUN wget https://luarocks.org/releases/luarocks-${LUAROCKS_VERSION}.tar.gz \
+    && tar zxpf luarocks-${LUAROCKS_VERSION}.tar.gz \
+    && cd luarocks-${LUAROCKS_VERSION} \
+    && ./configure --with-lua=/usr/local/openresty/luajit \
+    && make && make install \
+    && cd .. && rm -rf luarocks-${LUAROCKS_VERSION} luarocks-${LUAROCKS_VERSION}.tar.gz
 
-# site/lualib is in OpenResty's default package.path and package.cpath
-COPY --from=builder /rocks/share/lua/5.1/ /usr/local/openresty/site/lualib/
-COPY --from=builder /rocks/lib/lua/5.1/   /usr/local/openresty/site/lualib/
+RUN luarocks install lua-resty-http 0.17.1 \
+    && luarocks install lua-resty-session 4.1.1 \
+    && luarocks install lua-resty-jwt 0.2.2 \
+    && luarocks install lua-resty-openidc 1.8.0-1
 
 CMD ["openresty", "-g", "daemon off;"]
