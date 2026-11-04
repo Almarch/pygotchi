@@ -17,7 +17,7 @@ dependencies = [
     "jinja2",
     "python-multipart",
     "websockets",
-    "numpy"
+    "numpy",
 ]
 
 [tool.setuptools.package-data]

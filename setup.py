@@ -21,21 +21,12 @@ setup(
     python_requires=">=3.10",
     packages=[
         "pygotchi",
-        "pygotchi.www",
-        "pygotchi.www.img",
-        "pygotchi.www.img.p1",
-        "pygotchi.www.img.p2",
-        "pygotchi.www.img.angel",
     ],
     ext_modules=ext_modules,
     install_requires=["pybind11"],
     package_data={
         "pygotchi": [
-            "www/**/*", 
-            "www/img/**/*",
-            "www/img/p1/*.png",
-            "www/img/p2/*.png",
-            "www/img/angel/*.png",
+            "www/**/*",
         ],
     },
     include_package_data=True,
