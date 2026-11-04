@@ -69,6 +69,12 @@ echo "All secrets set up"
 # ── Docker compose up ─────────────────────────────────────────────────────────
 docker compose build
 docker compose pull
+
+
+# ── Cleanup build leftovers ───────────────────────────────────────────────────
+docker builder prune -af   # builder stages + cached base layers
+docker image prune -f      # dangling images
+
 docker compose up -d
 
 # ── Wait for Keycloak & get token ─────────────────────────────────────────────────────────

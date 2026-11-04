@@ -1,13 +1,17 @@
-FROM python:3.10
+ARG PYTHON_VERSION=3.10
 
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir build
+FROM python:${PYTHON_VERSION} AS builder
 
-WORKDIR /app
-COPY . /app/pygotchi
+WORKDIR /src
+COPY . .
 
-RUN python -m build /app/pygotchi
-RUN pip install --no-cache-dir /app/pygotchi
+RUN pip install --no-cache-dir build \
+ && python -m build --wheel --outdir /wheels .
+
+FROM python:${PYTHON_VERSION}-slim
+
+RUN --mount=type=bind,from=builder,source=/wheels,target=/wheels \
+    pip install --no-cache-dir /wheels/*.whl
 
 EXPOSE 80
 CMD ["python", "-m", "pygotchi", "0.0.0.0", "80"]

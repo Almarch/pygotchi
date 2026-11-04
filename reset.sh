@@ -37,7 +37,7 @@ fi
 docker compose down -v
 
 # ── Keycloak database ─────────────────────────────────────────────────────────
-docker run --rm -v "$(pwd)/keycloak/data:/data" postgres:latest bash -c "rm -rf /data/*"
+docker run --rm -v "$(pwd)/keycloak/data:/data" postgres:alpine bash -c "rm -rf /data/*"
 
 # ── SSL certificates ──────────────────────────────────────────────────────────
 rm -f nginx/ssl/ssl.key nginx/ssl/ssl.crt
