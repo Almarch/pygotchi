@@ -4,11 +4,13 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import asyncio
 import os
-from .Tama import Tama
+from .Tama import Tama, ROM_DB
 from .Carebot import Carebot
 from .p2 import p2
 from .secret import secret
+from .Translator import Translator
 from types import SimpleNamespace
+from enum import Enum
 
 _VIDEO_FREQ = 20
 _AUDIO_FREQ = 20
@@ -25,6 +27,12 @@ www_dir = os.path.join(_pkg_dir, "www")
 app.mount("/www", StaticFiles(directory=www_dir))
 templates = Jinja2Templates(directory=www_dir)
 
+Version = Enum(
+    "Version",
+    {v: v for v in dict.fromkeys(entry["version"] for entry in ROM_DB.values())},
+    type=str,
+)
+
 @app.get("/", response_class=HTMLResponse)
 async def serve_homepage(request: Request):
     user = request.headers.get("x-user-sub") or "default"
@@ -34,6 +42,7 @@ async def serve_homepage(request: Request):
         game[user] = SimpleNamespace()
         game[user].tama = Tama()
         game[user].care = Carebot(game[user].tama)
+        game[user].translator = Translator(game[user].tama)
         game[user]._caretask = asyncio.create_task(game[user].care.run())
 
     return templates.TemplateResponse(request, "index.html")
@@ -46,7 +55,7 @@ async def websocket_video(websocket: WebSocket):
         while True:
             await websocket.send_json(
                 {
-                    "matrix": list(await game[user].tama.matrix_bytes()),
+                    "matrix": list(await game[user].translator.translate()),
                     "icons":  (await game[user].tama.icons_byte())[0],
                 }
             )
@@ -81,7 +90,10 @@ async def websocket_params(websocket: WebSocket):
                 {
                     "runs": await game[user].tama.runs(),
                     "care": game[user].care.active,
-                    "background": game[user].tama.version if game[user].tama.version is not None else "p1"
+                    "version": game[user].tama.version if game[user].tama.version in ["p1", "p2", "angel", "garden", "ocean"] else "p1",
+                    "care_available": game[user].care.available,
+                    "translation_available": game[user].translator.available,
+                    "translation_active": game[user].translator.active,
                 }
             )
             await asyncio.sleep(1 / _PARAMS_FREQ)
@@ -180,40 +192,53 @@ async def Manage(
 @app.post("/click", summary="Click a button on the toy")
 async def click(
     request: Request,
-    button: str = Query(default="A", description="Button(s) to click: `A`, `B`, `C` or `AC`")
+    button: str = Query(default="A", description="Button(s) to click: `A`, `B`, `C`, `T` (tap) or `AC`")
 ):
     user = request.headers.get("x-user-sub") or "default"
     match button:
         case "A":
-            await game[user].tama.click("A", .1)
+            await game[user].tama.click("A", .05)
             return {"clicked": "A"}
         case "B":
-            await game[user].tama.click("B", .1)
+            await game[user].tama.click("B", .05)
             return {"clicked": "B"}
         case "C":
-            await game[user].tama.click("C", .1)
+            await game[user].tama.click("C", .05)
             return {"clicked": "C"}
+        case "T":
+            await game[user].tama.click("T", .1)
+            return {"clicked": "T"}
         case "AC":
             await game[user].tama.click(["A","C"], .5)
             return {"clicked": "A+C"}
         case _:
             raise HTTPException(status_code=400, detail = "Invalid click action")
-        
+
 @app.post("/force_version", summary="Force a specific version for the theme and icons")
 async def Force_specific_version(
     request: Request,
-    version: str = Query(default="p1", description="Version to use: `p1` or `p2`")
+    version: Version = Query(default=Version("p1"), description="Version to use"),
 ):
     user = request.headers.get("x-user-sub") or "default"
-    match version:
-        case "p1":
-            game[user].tama.version = "p1"
-            return {"background": "p1 theme"}
-        case "p2":
-            game[user].tama.version = "p2"
-            return {"background": "p2 theme"}
+    tama = game[user].tama
+    tama.version = version.value
+    return {"background": f"{version.value} theme"}
+
+@app.post("/translator", summary="Manage the screen translator")
+async def Translator_manage(
+    request: Request,
+    do: str = Query(default="start", description="Action to perform: `start` or `stop`")
+):
+    user = request.headers.get("x-user-sub") or "default"
+    match do:
+        case "start":
+            game[user].translator.start()
+            return {"translator": "started"}
+        case "stop":
+            game[user].translator.stop()
+            return {"translator": "stopped"}
         case _:
-            raise HTTPException(status_code=400, detail = "Invalid version")
+            raise HTTPException(status_code=400, detail="Invalid translator action")
 
 @app.post("/carebot", summary="Manage the carebot")
 async def Care(

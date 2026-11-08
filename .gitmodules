@@ -1,0 +1,3 @@
+[submodule "tamalib"]
+	path = src/tamalib
+	url = https://github.com/almarch/tamalib

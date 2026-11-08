@@ -6,7 +6,7 @@ services:
       - internal_network
 
   keycloak-db:
-    image: postgres:latest
+    image: postgres:alpine
     restart: always
     environment:
       POSTGRES_DB: keycloak

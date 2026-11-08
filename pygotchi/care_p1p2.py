@@ -5,6 +5,10 @@ import asyncio
 
 ### Utilities
 
+async def top_left(tama):
+    to_check = await tama.Matrix()
+    return to_check[0:8, 0:8]
+
 async def top_right(tama):
     to_check = await tama.Matrix()
     return to_check[0:8, 24:32]
@@ -125,6 +129,17 @@ dead2 = np.array([
     [0,0,0,0,0,0,0,0],
 ])
 
+dead3 = np.array([
+    [1,1,1,0,0,0,0,0],
+    [0,0,0,1,0,0,0,0],
+    [1,1,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [1,1,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [1,1,1,1,1,1,0,0],
+    [0,0,0,0,0,0,0,0],
+])
+
 yr = np.array([
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
@@ -212,7 +227,182 @@ egg4 = np.array([
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ])
 
+egg5 = np.array([
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,0,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,1,0,0,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,0,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,0,0,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+])
+
+egg6 = np.array([
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,0],
+    [0,0,0,1,1,0,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,1,0,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+])
+
+egg7 = np.array([
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0],
+    [0,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0],
+    [0,0,0,1,1,1,0,0,0,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0],
+    [0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+])
+
+egg8 = np.array([
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],
+    [0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0],
+    [0,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0],
+    [0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,1,1,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,0,0,0,1,1,1,0,0,0],
+    [0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,0],
+    [0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0],
+    [0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+])
+
+num1 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+])
+
+num2 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,0],
+    [0,0,1,0,0,0,0,0],
+    [0,0,1,1,1,1,0,0],
+])
+
+num3 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,0,0,1,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,1,1,0,0,0],
+])
+
+num4 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,1,0,0,0],
+    [0,0,1,0,1,0,0,0],
+    [0,0,1,0,1,0,0,0],
+    [0,0,1,1,1,1,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,0,1,0,0,0],
+])
+
+num6 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,1,0,0,0,0,0],
+    [0,0,1,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,1,1,0,0,0],
+])
+
+num7 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,1,1,1,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,0,0,1,0,0],
+    [0,0,0,0,1,0,0,0],
+    [0,0,0,1,0,0,0,0],
+    [0,0,0,1,0,0,0,0],
+    [0,0,0,1,0,0,0,0],
+])
+
+num8 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,1,1,0,0,0],
+])
+
+num9 = np.array([
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,1,1,0,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,1,1,1,0,0],
+    [0,0,0,0,0,1,0,0],
+    [0,0,1,0,0,1,0,0],
+    [0,0,0,1,1,0,0,0],
+])
+
 ### Checks
+
+NUMBERS = {
+    1: num1,
+    2: num2,
+    3: num3,
+    4: num4,
+    6: num6,
+    7: num7,
+    8: num8,
+    9: num9
+}
 
 async def is_sick(tama):
     to_check = await top_right(tama)
@@ -255,6 +445,7 @@ async def is_dead(tama):
     return (
         np.all(to_check == dead1) or
         np.all(to_check == dead2) or
+        np.all(to_check == dead3) or
         np.all(to_check == yr)
     )
 
@@ -267,7 +458,7 @@ async def nb_hearts(tama):
     h4 = np.all(to_check[:, 24:32] == heart)
     return 4 - h1 - h2 - h3 - h4
 
-async def is_egg(tama, egg1 = egg1, egg2 = egg2):
+async def is_egg(tama):
     to_check = await tama.Matrix()
     pic1 = to_check[0:16,8:24]
     await asyncio.sleep(.25)
@@ -276,18 +467,45 @@ async def is_egg(tama, egg1 = egg1, egg2 = egg2):
 
     return (
 
-        # p1
+        # western p1
         np.all(pic1 == egg1) or
         np.all(pic1 == egg2) or
         np.all(pic2 == egg1) or
         np.all(pic2 == egg2) or
         
-        # p2
+        # western p2
         np.all(pic1 == egg3) or
         np.all(pic1 == egg4) or
         np.all(pic2 == egg3) or
-        np.all(pic2 == egg4)
+        np.all(pic2 == egg4) or
+
+        # japanese p1
+        np.all(pic1 == egg5) or
+        np.all(pic1 == egg6) or
+        np.all(pic2 == egg5) or
+        np.all(pic2 == egg6) or
+
+        # japanese p2
+        np.all(pic1 == egg7) or
+        np.all(pic1 == egg8) or
+        np.all(pic2 == egg7) or
+        np.all(pic2 == egg8)
     )
+
+async def read_number(tama):
+    pic = await top_left(tama)
+    for n, sprite in NUMBERS.items():
+        if np.all(pic == sprite):
+            return n
+    return None
+
+async def choose_move(tama):
+    n = await read_number(tama)
+    if n in (1, 2, 3, 4):
+        return "B"
+    if n in (6, 7, 8, 9):
+        return "A"
+    return random.choice(["A", "B"]) # 5 or P1
 
 ### Actions
 
@@ -340,22 +558,24 @@ def light():
     todo["actions"] = ["A"] * 2 + ["B", "A", "B"] + out
     return todo
 
-def play_game(times=1):
+def play_game():
+    """Enter the mini-game; rounds are then played one by one by game_round."""
     todo = empty_todo.copy()
-    todo["actions"] = ["A"] * 3 + ["B"]
+    todo["actions"] = ["A"] * 3 + ["B", 5]  # menu + intro
+    return todo
 
-    for _ in range(times):
-        playlist = random.choices(["A", "B"], k=5)
-        interleaved = []
-        for p in playlist:
-            interleaved.append(p)
-            interleaved.append(8)
-        todo["actions"].extend(
-            [5] +           # intro
-            interleaved +   # chaque match + résultat
-            [8]             # score final + résultat
-        )
-    todo["actions"].extend(out)
+async def game_round(tama, game):
+    todo = empty_todo.copy()
+    todo["actions"] = [await choose_move(tama), 8]  # move + result
+    game["rounds"] -= 1
+    if game["rounds"] == 0:
+        game["matches"] -= 1
+        todo["actions"].append(8)  # final score
+        if game["matches"] > 0:
+            game["rounds"] = 5
+            todo["actions"].append(5)  # intro of the next match
+        else:
+            todo["actions"].extend(out)
     return todo
 
 def heal():
@@ -474,6 +694,11 @@ async def carestep(tama, state, param):
                 ):
                     state["scold"] = True
 
+            elif state["doing"] == "game":
+                state["todo"] = await game_round(tama, state["game"])
+                if state["game"]["matches"] == 0:
+                    state["doing"] = ""
+
         # check bad screens (clock, light off when not asleep)
         elif await is_clock(tama):
             state["todo"] = unclock()
@@ -506,7 +731,9 @@ async def carestep(tama, state, param):
             state["doing"] = "check_arrow"
 
         elif state["stats"]["happiness"] < 4 and not state["scold"]:
-            state["todo"] = play_game(times = min(2, 4 - state["stats"]["happiness"]))
+            state["todo"] = play_game()
+            state["game"] = {"matches": min(2, 4 - state["stats"]["happiness"]), "rounds": 5}
+            state["doing"] = "game"
             state["stats"]["happiness"] = 4
             state["next_check"] = 0
 
